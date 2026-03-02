@@ -36,12 +36,11 @@ ENV NODE_ENV=production
 ENV PORT=3000
 
 # Copy standalone output
-# The turbopack root: ".." config nests output under standalone/frontend/
-# so we copy from there. The top-level standalone/ has the node_modules trace.
-COPY --from=builder /app/.next/standalone/frontend ./
-COPY --from=builder /app/.next/static ./.next/static
-COPY --from=builder /app/public ./public
+# turbopack.root: ".." nests output under the WORKDIR name (app/ in Docker)
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./app/.next/static
+COPY --from=builder /app/public ./app/public
 
 EXPOSE 3000
 
-CMD ["node", "server.js"]
+CMD ["node", "app/server.js"]

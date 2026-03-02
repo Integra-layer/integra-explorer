@@ -17,9 +17,9 @@ export function getPusher(): Pusher | null {
   if (!pusherInstance) {
     pusherInstance = new Pusher(key, {
       wsHost: host || window.location.hostname,
-      wsPort: Number(process.env.NEXT_PUBLIC_PUSHER_PORT || 6002),
-      wssPort: Number(process.env.NEXT_PUBLIC_PUSHER_PORT || 6002),
-      forceTLS: false,
+      wssPort: 443,
+      wsPort: 443,
+      forceTLS: true,
       disableStats: true,
       enabledTransports: ["ws", "wss"],
       cluster: "mt1",
