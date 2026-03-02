@@ -1,0 +1,240 @@
+# Integra Explorer — Docker Compose for Hetzner Gateway (46.225.231.81)
+# Usage: docker compose -f docker/docker-compose.integra.yml --env-file docker/.env.integra up -d
+#
+# Host already runs: Caddy (reverse proxy), integra-portal (port 3000),
+# testnet validator, Blockscout, PM2 processes.
+# We do NOT include Caddy or PgBouncer — Caddy on the host handles TLS/routing.
+
+networks:
+  explorer:
+    driver: bridge
+
+volumes:
+  pgdata:
+    driver: local
+  redisdata:
+    driver: local
+
+services:
+  postgres:
+    image: timescale/timescaledb:2.11.1-pg14
+    container_name: integra-explorer-postgres
+    restart: unless-stopped
+    networks:
+      - explorer
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ethernal
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:6.2-alpine
+    container_name: integra-explorer-redis
+    restart: unless-stopped
+    networks:
+      - explorer
+    command: redis-server --save 20 1 --loglevel warning
+    volumes:
+      - redisdata:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  soketi:
+    image: quay.io/soketi/soketi:1.6.1-16-debian
+    container_name: integra-explorer-soketi
+    restart: unless-stopped
+    networks:
+      - explorer
+    ports:
+      - "6002:6001"
+    environment:
+      SOKETI_DEFAULT_APP_ID: default-app
+      SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
+      SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
+      SOKETI_HOST: "0.0.0.0"
+      SOKETI_PORT: "6001"
+
+  backend:
+    image: antoinedc44/ethernal-backend:latest
+    container_name: integra-explorer-backend
+    restart: unless-stopped
+    networks:
+      - explorer
+    ports:
+      - "8890:8888"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      soketi:
+        condition: service_started
+    environment:
+      # Database (direct connection, no PgBouncer)
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ethernal
+      # Redis
+      REDIS_URL: redis://redis:6379
+      # Secrets
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENCRYPTION_JWT_SECRET: ${ENCRYPTION_JWT_SECRET}
+      SECRET: ${SECRET}
+      # Soketi (WebSocket)
+      SOKETI_DEFAULT_APP_ID: default-app
+      SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
+      SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
+      SOKETI_HOST: soketi
+      SOKETI_PORT: "6001"
+      # App config
+      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      SELF_HOSTED: "true"
+      DEFAULT_PLAN_SLUG: self-hosted
+      PORT: "8888"
+      NODE_ENV: production
+      CORS_DOMAIN: "*"
+      # Auth
+      AUTH_SECRET: ${AUTH_SECRET}
+      FIREBASE_SIGNER_KEY: ${FIREBASE_SIGNER_KEY}
+      FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
+      FIREBASE_ROUNDS: "8"
+      FIREBASE_MEM_COST: "14"
+      # Bull Board (background job dashboard)
+      BULLBOARD_USERNAME: ${BULLBOARD_USERNAME:-ethernal}
+      BULLBOARD_PASSWORD: ${BULLBOARD_PASSWORD}
+
+  high_priority_worker:
+    image: antoinedc44/ethernal-backend:latest
+    container_name: integra-explorer-worker-high
+    restart: unless-stopped
+    networks:
+      - explorer
+    command: node workers/highPriority.js
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ethernal
+      REDIS_URL: redis://redis:6379
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENCRYPTION_JWT_SECRET: ${ENCRYPTION_JWT_SECRET}
+      SECRET: ${SECRET}
+      SOKETI_DEFAULT_APP_ID: default-app
+      SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
+      SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
+      SOKETI_HOST: soketi
+      SOKETI_PORT: "6001"
+      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      SELF_HOSTED: "true"
+      DEFAULT_PLAN_SLUG: self-hosted
+      NODE_ENV: production
+      FIREBASE_SIGNER_KEY: ${FIREBASE_SIGNER_KEY}
+      FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
+      FIREBASE_ROUNDS: "8"
+      FIREBASE_MEM_COST: "14"
+
+  medium_priority_worker:
+    image: antoinedc44/ethernal-backend:latest
+    container_name: integra-explorer-worker-medium
+    restart: unless-stopped
+    networks:
+      - explorer
+    command: node workers/mediumPriority.js
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ethernal
+      REDIS_URL: redis://redis:6379
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENCRYPTION_JWT_SECRET: ${ENCRYPTION_JWT_SECRET}
+      SECRET: ${SECRET}
+      SOKETI_DEFAULT_APP_ID: default-app
+      SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
+      SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
+      SOKETI_HOST: soketi
+      SOKETI_PORT: "6001"
+      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      SELF_HOSTED: "true"
+      DEFAULT_PLAN_SLUG: self-hosted
+      NODE_ENV: production
+      FIREBASE_SIGNER_KEY: ${FIREBASE_SIGNER_KEY}
+      FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
+      FIREBASE_ROUNDS: "8"
+      FIREBASE_MEM_COST: "14"
+
+  low_priority_worker:
+    image: antoinedc44/ethernal-backend:latest
+    container_name: integra-explorer-worker-low
+    restart: unless-stopped
+    networks:
+      - explorer
+    command: node workers/lowPriority.js
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_HOST: postgres
+      DB_PORT: "5432"
+      DB_USER: postgres
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_NAME: ethernal
+      REDIS_URL: redis://redis:6379
+      ENCRYPTION_KEY: ${ENCRYPTION_KEY}
+      ENCRYPTION_JWT_SECRET: ${ENCRYPTION_JWT_SECRET}
+      SECRET: ${SECRET}
+      SOKETI_DEFAULT_APP_ID: default-app
+      SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
+      SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
+      SOKETI_HOST: soketi
+      SOKETI_PORT: "6001"
+      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      SELF_HOSTED: "true"
+      DEFAULT_PLAN_SLUG: self-hosted
+      NODE_ENV: production
+      FIREBASE_SIGNER_KEY: ${FIREBASE_SIGNER_KEY}
+      FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
+      FIREBASE_ROUNDS: "8"
+      FIREBASE_MEM_COST: "14"
+
+  frontend:
+    image: antoinedc44/ethernal-frontend:latest
+    container_name: integra-explorer-frontend
+    restart: unless-stopped
+    networks:
+      - explorer
+    ports:
+      - "3200:8080"
+    depends_on:
+      backend:
+        condition: service_started

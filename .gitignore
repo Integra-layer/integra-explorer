@@ -67,3 +67,8 @@ pgbouncer/.env.pgbouncer.prod
 
 pgbouncer/
 ethernal-95a14-19f78a7e26cc.json
+
+# Integra deployment secrets (but NOT the .example template)
+docker/.env.integra
+!docker/.env.integra.example
+.env.integra
