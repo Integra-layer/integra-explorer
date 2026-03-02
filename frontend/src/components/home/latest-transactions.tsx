@@ -71,9 +71,9 @@ export function LatestTransactions() {
                   >
                     {truncateHash(tx.hash)}
                   </Link>
-                  {tx.methodDetails?.label && (
+                  {tx.methodDetails?.name && (
                     <span className="hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline">
-                      {tx.methodDetails.label}
+                      {tx.methodDetails.name}
                     </span>
                   )}
                 </div>

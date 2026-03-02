@@ -1,10 +1,11 @@
 "use client";
 
 import { Activity, Users, Fuel, Box } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
 import { NumberTicker } from "@/components/effects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStats } from "@/lib/hooks/use-stats";
-import { useSyncStatus } from "@/lib/hooks/use-stats";
+import { getBlocks } from "@/lib/api/blocks";
 import { cn } from "@/lib/utils";
 
 interface StatCardProps {
@@ -58,7 +59,15 @@ function StatCard({
 
 export function StatsGrid() {
   const { data, isLoading } = useStats();
-  const { data: syncStatus, isLoading: syncLoading } = useSyncStatus();
+
+  // Get latest block number from the blocks API (first block in DESC order)
+  const { data: blocksData, isLoading: blocksLoading } = useQuery({
+    queryKey: ["blocks", 1, 1],
+    queryFn: () => getBlocks({ page: 1, itemsPerPage: 1 }),
+    refetchInterval: 10_000,
+  });
+
+  const latestBlock = blocksData?.items?.[0]?.number;
 
   const gweiValue = data?.averageGasPrice
     ? Number(data.averageGasPrice) / 1e9
@@ -69,8 +78,8 @@ export function StatsGrid() {
       <StatCard
         icon={<Box className="size-4" />}
         label="Latest Block"
-        value={syncStatus?.latestBlock}
-        isLoading={syncLoading}
+        value={latestBlock}
+        isLoading={blocksLoading}
       />
       <StatCard
         icon={<Activity className="size-4" />}
@@ -81,7 +90,7 @@ export function StatsGrid() {
       <StatCard
         icon={<Users className="size-4" />}
         label="Active Wallets"
-        value={data?.cumulativeWalletCount}
+        value={data?.activeWalletCount}
         isLoading={isLoading}
       />
       <StatCard

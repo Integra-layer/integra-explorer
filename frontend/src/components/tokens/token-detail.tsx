@@ -145,8 +145,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
   const tokenName =
     contract.tokenName || knownToken?.name || contract.name || "Unknown Token";
   const tokenSymbol = contract.tokenSymbol || knownToken?.symbol || "???";
-  const tokenDecimals =
-    contract.tokenDecimals ?? knownToken?.decimals ?? 18;
+  const tokenDecimals = contract.tokenDecimals ?? knownToken?.decimals ?? 18;
   const tokenTotalSupply =
     contract.tokenTotalSupply || knownToken?.totalSupply || null;
   const standard = detectStandard(contract.patterns ?? []);
@@ -254,9 +253,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
                 className="font-mono text-xs text-integra-brand hover:underline"
               >
                 <span className="hidden md:inline">{address}</span>
-                <span className="md:hidden">
-                  {truncateAddress(address, 8)}
-                </span>
+                <span className="md:hidden">{truncateAddress(address, 8)}</span>
               </Link>
               <CopyButton text={address} />
             </div>
@@ -277,28 +274,29 @@ export function TokenDetail({ address }: TokenDetailProps) {
       </GlassCard>
 
       {/* ------------------------------------------------------------------ */}
-      {/* Transfer History (placeholder) */}
+      {/* Transfer History — link to address page */}
       {/* ------------------------------------------------------------------ */}
       <GlassCard className="overflow-hidden">
-        <div className="flex items-center gap-2 border-b border-border/50 px-6 py-4">
-          <Coins className="size-4 text-integra-brand" />
-          <h2 className="text-base font-semibold">Transfer History</h2>
+        <div className="flex items-center justify-between border-b border-border/50 px-6 py-4">
+          <div className="flex items-center gap-2">
+            <Coins className="size-4 text-integra-brand" />
+            <h2 className="text-base font-semibold">Transactions</h2>
+          </div>
+          <Link
+            href={`/address/${address}`}
+            className="text-sm text-muted-foreground transition-colors hover:text-integra-brand"
+          >
+            View on address page &rarr;
+          </Link>
         </div>
 
-        <div className="flex flex-col items-center justify-center gap-2 py-16 text-center">
-          <p className="text-sm text-muted-foreground">
-            Transfer history will be available once event indexing is enabled.
-          </p>
-          <p className="text-xs text-muted-foreground/70">
-            View all transactions for this contract on the{" "}
-            <Link
-              href={`/address/${address}`}
-              className="text-integra-brand hover:underline"
-            >
-              address page
-            </Link>
-            .
-          </p>
+        <div className="flex items-center justify-center py-10">
+          <Link
+            href={`/address/${address}`}
+            className="rounded-lg border border-border/50 px-6 py-3 text-sm font-medium text-integra-brand transition-colors hover:bg-muted/50"
+          >
+            View all transactions for this contract
+          </Link>
         </div>
       </GlassCard>
     </motion.div>

@@ -1,14 +1,19 @@
 "use client";
 
+import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { PulseIndicator } from "@/components/effects";
-import { useSyncStatus } from "@/lib/hooks/use-stats";
+import { getBlocks } from "@/lib/api/blocks";
 
 export function NetworkStatusBar() {
-  const { data: syncStatus } = useSyncStatus();
+  const { data, isError } = useQuery({
+    queryKey: ["blocks", 1, 1],
+    queryFn: () => getBlocks({ page: 1, itemsPerPage: 1 }),
+    refetchInterval: 10_000,
+  });
 
-  const isHealthy = syncStatus?.isLive !== false;
-  const latestBlock = syncStatus?.latestBlock;
+  const latestBlock = data?.items?.[0]?.number;
+  const isHealthy = !isError && latestBlock != null;
 
   return (
     <div className="w-full border-b bg-muted/50 py-1.5">
@@ -37,7 +42,7 @@ export function NetworkStatusBar() {
         <div className="flex items-center gap-1.5">
           <PulseIndicator status={isHealthy ? "online" : "offline"} size="sm" />
           <span className={isHealthy ? "text-integra-success" : "text-integra-error"}>
-            {isHealthy ? "Healthy" : "Syncing"}
+            {isHealthy ? "Healthy" : "Connecting"}
           </span>
         </div>
       </div>

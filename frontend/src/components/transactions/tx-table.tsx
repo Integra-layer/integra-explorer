@@ -116,7 +116,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                     {/* Method */}
                     <td className="hidden px-4 py-3 md:table-cell">
                       <Badge variant="outline" className="text-[10px]">
-                        {tx.methodDetails?.label ?? "Transfer"}
+                        {tx.methodDetails?.name ?? "Transfer"}
                       </Badge>
                     </td>
 

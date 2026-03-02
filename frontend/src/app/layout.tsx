@@ -36,8 +36,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <ThemeProvider>
-          <ExplorerProvider>
-            <QueryProvider>
+          <QueryProvider>
+            <ExplorerProvider>
               <PusherProvider>
                 <div className="flex min-h-screen flex-col">
                   <Navbar />
@@ -47,8 +47,8 @@ export default function RootLayout({
                 </div>
                 <CommandPalette />
               </PusherProvider>
-            </QueryProvider>
-          </ExplorerProvider>
+            </ExplorerProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
