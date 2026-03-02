@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Menu, Search } from "lucide-react";
+import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -12,6 +12,7 @@ import {
   SheetTrigger,
   SheetClose,
 } from "@/components/ui/sheet";
+import { SearchBar } from "@/components/search/search-bar";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
 
@@ -37,7 +38,10 @@ export function Navbar() {
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-[#0A0A0F]/80">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
         {/* Left: Wordmark */}
-        <Link href="/" className="flex items-baseline gap-1 font-bold tracking-tight">
+        <Link
+          href="/"
+          className="flex items-baseline gap-1 font-bold tracking-tight"
+        >
           <span className="text-lg text-integra-brand">INTEGRA</span>
           <span className="text-sm text-muted-foreground">EXPLORER</span>
         </Link>
@@ -52,9 +56,7 @@ export function Navbar() {
                 href={link.href}
                 className={cn(
                   "relative px-3 py-1.5 text-sm font-medium transition-colors hover:text-integra-brand",
-                  active
-                    ? "text-integra-brand"
-                    : "text-muted-foreground",
+                  active ? "text-integra-brand" : "text-muted-foreground",
                 )}
               >
                 {link.label}
@@ -69,9 +71,7 @@ export function Navbar() {
         {/* Right: Actions */}
         <div className="flex items-center gap-1">
           <ThemeToggle />
-          <Button variant="ghost" size="icon" aria-label="Search" className="hidden sm:flex">
-            <Search className="size-4" />
-          </Button>
+          <SearchBar variant="nav" className="hidden sm:flex" />
           <Button
             className="hidden bg-gradient-to-r from-integra-pink to-integra-brand text-white hover:opacity-90 sm:flex"
             size="sm"
@@ -82,7 +82,12 @@ export function Navbar() {
           {/* Mobile: Hamburger */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="ghost" size="icon" className="md:hidden" aria-label="Open menu">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden"
+                aria-label="Open menu"
+              >
                 <Menu className="size-5" />
               </Button>
             </SheetTrigger>
@@ -90,7 +95,9 @@ export function Navbar() {
               <SheetHeader>
                 <SheetTitle className="flex items-baseline gap-1 font-bold tracking-tight">
                   <span className="text-lg text-integra-brand">INTEGRA</span>
-                  <span className="text-sm text-muted-foreground">EXPLORER</span>
+                  <span className="text-sm text-muted-foreground">
+                    EXPLORER
+                  </span>
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4">

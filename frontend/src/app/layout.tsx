@@ -5,6 +5,7 @@ import { QueryProvider } from "@/lib/query-provider";
 import { Navbar } from "@/components/layout/navbar";
 import { NetworkStatusBar } from "@/components/layout/network-status-bar";
 import { Footer } from "@/components/layout/footer";
+import { CommandPalette } from "@/components/search/command-palette";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -40,6 +41,7 @@ export default function RootLayout({
               <main className="flex-1">{children}</main>
               <Footer />
             </div>
+            <CommandPalette />
           </QueryProvider>
         </ThemeProvider>
       </body>
