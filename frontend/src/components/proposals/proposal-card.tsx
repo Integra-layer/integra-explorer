@@ -1,11 +1,19 @@
 "use client";
 
 import Link from "next/link";
-import { Clock, CheckCircle2, XCircle, AlertTriangle, Timer } from "lucide-react";
+import { useQuery } from "@tanstack/react-query";
+import {
+  Clock,
+  CheckCircle2,
+  XCircle,
+  AlertTriangle,
+  Timer,
+} from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { HoverLift } from "@/components/effects";
 import { VotingBar } from "./voting-bar";
+import { getProposalTally } from "@/lib/api/proposals";
 import type { CosmosProposal } from "@/lib/api/proposals";
 
 interface ProposalCardProps {
@@ -82,12 +90,20 @@ function getCountdown(endTime: string): string | null {
 export function ProposalCard({ proposal }: ProposalCardProps) {
   const status = getStatusInfo(proposal.status);
   const StatusIcon = status.icon;
+  const isVoting = proposal.status === "PROPOSAL_STATUS_VOTING_PERIOD";
   const isVotingOrConcluded =
     proposal.status !== "PROPOSAL_STATUS_DEPOSIT_PERIOD";
-  const countdown =
-    proposal.status === "PROPOSAL_STATUS_VOTING_PERIOD"
-      ? getCountdown(proposal.voting_end_time)
-      : null;
+  const countdown = isVoting ? getCountdown(proposal.voting_end_time) : null;
+
+  // Fetch live tally for proposals in voting period (final_tally_result is zeros until voting ends)
+  const { data: liveTally } = useQuery({
+    queryKey: ["proposal-tally", proposal.id],
+    queryFn: () => getProposalTally(proposal.id),
+    enabled: isVoting,
+    refetchInterval: 30_000,
+  });
+
+  const tally = liveTally ?? proposal.final_tally_result;
 
   return (
     <Link href={`/proposals/${proposal.id}`}>
@@ -121,9 +137,7 @@ export function ProposalCard({ proposal }: ProposalCardProps) {
             )}
 
             {/* Voting Bar */}
-            {isVotingOrConcluded && (
-              <VotingBar tally={proposal.final_tally_result} />
-            )}
+            {isVotingOrConcluded && <VotingBar tally={tally} />}
 
             {/* Footer: dates + countdown */}
             <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">

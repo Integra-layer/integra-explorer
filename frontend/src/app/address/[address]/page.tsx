@@ -18,26 +18,11 @@ interface AddressPageProps {
 
 export default function AddressPage({ params }: AddressPageProps) {
   const { address } = use(params);
-  const { data: addressData, isLoading, error } = useAddress(address);
+  const { data: addressData, isLoading } = useAddress(address);
 
   const isContract = !!addressData?.contract;
   const hasTokens =
     addressData?.tokenBalances && addressData.tokenBalances.length > 0;
-
-  if (error) {
-    return (
-      <PageTransition>
-        <section className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-            <h1 className="text-2xl font-bold">Address Not Found</h1>
-            <p className="text-muted-foreground">
-              Address {truncateAddress(address, 8)} could not be loaded.
-            </p>
-          </div>
-        </section>
-      </PageTransition>
-    );
-  }
 
   return (
     <PageTransition>
@@ -55,9 +40,7 @@ export default function AddressPage({ params }: AddressPageProps) {
 
             <h1 className="text-2xl font-bold tracking-tight">
               <span className="hidden md:inline">{address}</span>
-              <span className="md:hidden">
-                {truncateAddress(address, 8)}
-              </span>
+              <span className="md:hidden">{truncateAddress(address, 8)}</span>
             </h1>
 
             <CopyButton text={address} />

@@ -32,23 +32,21 @@ function isActiveLink(pathname: string, href: string): boolean {
   return pathname.startsWith(href);
 }
 
-function LogoMark() {
+function LogoMark({ size = 28 }: { size?: number }) {
   return (
     <>
-      {/* Light mode: orange mark */}
       <Image
         src="/logos/integra-mark.svg"
         alt="Integra"
-        width={28}
-        height={28}
+        width={size}
+        height={size}
         className="dark:hidden"
       />
-      {/* Dark mode: white mark */}
       <Image
         src="/logos/integra-mark-white.svg"
         alt="Integra"
-        width={28}
-        height={28}
+        width={size}
+        height={size}
         className="hidden dark:block"
       />
     </>
@@ -64,12 +62,17 @@ export function Navbar() {
         {/* Left: Logo + Wordmark */}
         <Link
           href="/"
-          className="flex items-center gap-2 font-bold tracking-tight"
+          className="flex items-center gap-2.5 font-bold tracking-tight"
         >
-          <LogoMark />
-          <span className="gradient-brand-text text-lg font-bold">
-            EXPLORER
-          </span>
+          <LogoMark size={30} />
+          <div className="flex flex-col leading-none">
+            <span className="text-[15px] font-extrabold tracking-wide">
+              INTEGRA
+            </span>
+            <span className="gradient-brand-text text-[10px] font-bold tracking-[0.2em] uppercase">
+              Explorer
+            </span>
+          </div>
         </Link>
 
         {/* Center: Desktop nav links */}
@@ -119,11 +122,16 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-72">
               <SheetHeader>
-                <SheetTitle className="flex items-center gap-2 font-bold tracking-tight">
-                  <LogoMark />
-                  <span className="gradient-brand-text text-lg font-bold">
-                    EXPLORER
-                  </span>
+                <SheetTitle className="flex items-center gap-2.5 font-bold tracking-tight">
+                  <LogoMark size={30} />
+                  <div className="flex flex-col leading-none">
+                    <span className="text-[15px] font-extrabold tracking-wide">
+                      INTEGRA
+                    </span>
+                    <span className="gradient-brand-text text-[10px] font-bold tracking-[0.2em] uppercase">
+                      Explorer
+                    </span>
+                  </div>
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4">

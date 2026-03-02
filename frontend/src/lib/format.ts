@@ -85,9 +85,31 @@ export function formatTokenAmount(
   return `${whole.toLocaleString()}.${fracStr} ${symbol}`;
 }
 
+// ERC-20 transfer(address,uint256) function selector
+const ERC20_TRANSFER_SELECTOR = "0xa9059cbb";
+
+/**
+ * Check if a transaction looks like an ERC-20 transfer.
+ * Matches on methodDetails name OR the raw data selector.
+ */
+function looksLikeErc20Transfer(tx: {
+  value: string;
+  to: string | null;
+  data: string;
+  methodDetails?: { name: string; label: string } | null;
+}): boolean {
+  if (!tx.to || tx.value !== "0") return false;
+  // Match by methodDetails (when Ethernal decodes it)
+  if (tx.methodDetails?.name === "transfer" && tx.data) return true;
+  // Match by raw data selector (fallback when methodDetails is null)
+  if (tx.data && tx.data.toLowerCase().startsWith(ERC20_TRANSFER_SELECTOR))
+    return true;
+  return false;
+}
+
 /**
  * Format a transaction's display value, detecting ERC-20 transfers.
- * For ERC-20 transfers (value=0, method=transfer), parses token amount from calldata.
+ * Detects via methodDetails OR raw 0xa9059cbb selector.
  * Falls back to native IRL formatting.
  */
 export function formatTxValue(tx: {
@@ -96,13 +118,8 @@ export function formatTxValue(tx: {
   data: string;
   methodDetails?: { name: string; label: string } | null;
 }): string {
-  if (
-    tx.methodDetails?.name === "transfer" &&
-    tx.value === "0" &&
-    tx.to &&
-    tx.data
-  ) {
-    const token = findKnownToken(tx.to);
+  if (looksLikeErc20Transfer(tx)) {
+    const token = findKnownToken(tx.to!);
     if (token) {
       const amount = parseErc20Amount(tx.data);
       if (amount !== null) {
@@ -122,13 +139,8 @@ export function isErc20Transfer(tx: {
   data: string;
   methodDetails?: { name: string; label: string } | null;
 }): boolean {
-  if (
-    tx.methodDetails?.name === "transfer" &&
-    tx.value === "0" &&
-    tx.to &&
-    tx.data
-  ) {
-    return !!findKnownToken(tx.to);
+  if (looksLikeErc20Transfer(tx)) {
+    return !!findKnownToken(tx.to!);
   }
   return false;
 }
