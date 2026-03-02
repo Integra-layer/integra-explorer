@@ -258,13 +258,22 @@ services:
       NODE_ENV: production
 
   frontend:
-    image: antoinedc44/ethernal-frontend:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: /api
+        NEXT_PUBLIC_PUSHER_KEY: ${SOKETI_KEY}
+        NEXT_PUBLIC_PUSHER_HOST: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
+        NEXT_PUBLIC_PUSHER_PORT: "6002"
+        NEXT_PUBLIC_WORKSPACE_ID: "1"
+        NEXT_PUBLIC_COSMOS_API_URL: "https://testnet.integralayer.com/api"
     container_name: integra-explorer-frontend
     restart: unless-stopped
     networks:
       - explorer
     ports:
-      - "3200:8080"
+      - "3200:3000"
     depends_on:
       backend:
         condition: service_started
