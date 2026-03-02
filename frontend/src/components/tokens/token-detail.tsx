@@ -18,6 +18,7 @@ import { GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
 import { truncateAddress } from "@/lib/format";
 import { useTokenContract } from "@/lib/hooks/use-tokens";
 import { findKnownToken } from "@/lib/api/tokens";
+import { ActivityFeed } from "@/components/address/activity-feed";
 
 interface TokenDetailProps {
   address: string;
@@ -274,7 +275,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
       </GlassCard>
 
       {/* ------------------------------------------------------------------ */}
-      {/* Transfer History — link to address page */}
+      {/* Transfer History */}
       {/* ------------------------------------------------------------------ */}
       <GlassCard className="overflow-hidden">
         <div className="flex items-center justify-between border-b border-border/50 px-6 py-4">
@@ -290,13 +291,8 @@ export function TokenDetail({ address }: TokenDetailProps) {
           </Link>
         </div>
 
-        <div className="flex items-center justify-center py-10">
-          <Link
-            href={`/address/${address}`}
-            className="rounded-lg border border-border/50 px-6 py-3 text-sm font-medium text-integra-brand transition-colors hover:bg-muted/50"
-          >
-            View all transactions for this contract
-          </Link>
+        <div className="px-6 py-4">
+          <ActivityFeed address={address} />
         </div>
       </GlassCard>
     </motion.div>

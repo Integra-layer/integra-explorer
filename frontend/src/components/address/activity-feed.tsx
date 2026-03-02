@@ -21,31 +21,11 @@ import {
   truncateHash,
   formatIRL,
   timeAgo,
-  parseErc20Amount,
-  formatTokenAmount,
+  formatTxValue,
 } from "@/lib/format";
 import { fetchApi } from "@/lib/api/client";
-import { findKnownToken } from "@/lib/api/tokens";
 import { useExplorerReady } from "@/lib/explorer-provider";
 import type { Transaction, PaginatedResponse } from "@/lib/api/types";
-
-function formatTxValue(tx: Transaction): string {
-  if (
-    tx.methodDetails?.name === "transfer" &&
-    tx.value === "0" &&
-    tx.to &&
-    tx.data
-  ) {
-    const token = findKnownToken(tx.to);
-    if (token) {
-      const amount = parseErc20Amount(tx.data);
-      if (amount !== null) {
-        return formatTokenAmount(amount, token.decimals, token.symbol);
-      }
-    }
-  }
-  return formatIRL(tx.value);
-}
 
 interface ActivityFeedProps {
   address: string;
