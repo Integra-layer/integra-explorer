@@ -45,75 +45,125 @@
   --radius-2xl: calc(var(--radius) + 8px);
   --radius-3xl: calc(var(--radius) + 12px);
   --radius-4xl: calc(var(--radius) + 16px);
+
+  /* Integra brand colors — usable as Tailwind utilities (e.g. bg-integra-brand, text-integra-pink) */
+  --color-integra-brand: var(--integra-brand);
+  --color-integra-brand-dark: var(--integra-brand-dark);
+  --color-integra-pink: var(--integra-brand-pink);
+  --color-integra-success: var(--integra-success);
+  --color-integra-warning: var(--integra-warning);
+  --color-integra-danger: var(--integra-danger);
+  --color-integra-info: var(--integra-info);
+  --color-integra-surface: var(--integra-surface);
+  --color-integra-text: var(--integra-text);
+  --color-integra-text-muted: var(--integra-text-muted);
 }
 
+/* ---------------------------------------------------------------------------
+   Light theme (default)
+   Maps Integra brand tokens → shadcn CSS variables + custom Integra variables
+   --------------------------------------------------------------------------- */
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+
+  /* Integra brand tokens */
+  --integra-brand: #FF6D49;
+  --integra-brand-dark: #FC4E23;
+  --integra-brand-pink: #F34499;
+  --integra-gradient-button: linear-gradient(135deg, #F34499, #FF4F2E);
+  --integra-bg: #FAFAF8;
+  --integra-surface: #FFFFFF;
+  --integra-text: #1A1A1F;
+  --integra-text-muted: #6B6B76;
+  --integra-success: #1FC16B;
+  --integra-warning: #FA7319;
+  --integra-danger: #FA3748;
+  --integra-info: #335CFF;
+
+  /* shadcn semantic variables — mapped to Integra brand */
+  --background: #FAFAF8;
+  --foreground: #1A1A1F;
+  --card: #FFFFFF;
+  --card-foreground: #1A1A1F;
+  --popover: #FFFFFF;
+  --popover-foreground: #1A1A1F;
+  --primary: #FF6D49;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F5F5F0;
+  --secondary-foreground: #1A1A1F;
+  --muted: #F5F5F0;
+  --muted-foreground: #6B6B76;
+  --accent: #F34499;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FA3748;
+  --border: #E8E8E3;
+  --input: #E8E8E3;
+  --ring: #FF6D49;
+
+  /* Charts — Integra palette */
+  --chart-1: #FF6D49;
+  --chart-2: #F34499;
+  --chart-3: #335CFF;
+  --chart-4: #1FC16B;
+  --chart-5: #FA7319;
+
+  /* Sidebar */
+  --sidebar: #FFFFFF;
+  --sidebar-foreground: #1A1A1F;
+  --sidebar-primary: #FF6D49;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #FFF0EC;
+  --sidebar-accent-foreground: #1A1A1F;
+  --sidebar-border: #E8E8E3;
+  --sidebar-ring: #FF6D49;
 }
 
+/* ---------------------------------------------------------------------------
+   Dark theme
+   --------------------------------------------------------------------------- */
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  /* Integra brand tokens — dark mode overrides */
+  --integra-bg: #0A0A0F;
+  --integra-surface: rgba(23, 23, 28, 0.7);
+  --integra-text: #E6E6E6;
+  --integra-text-muted: #A3A3A3;
+
+  /* shadcn semantic variables — dark mode */
+  --background: #0A0A0F;
+  --foreground: #E6E6E6;
+  --card: #17171C;
+  --card-foreground: #E6E6E6;
+  --popover: #17171C;
+  --popover-foreground: #E6E6E6;
+  --primary: #FF6D49;
+  --primary-foreground: #FFFFFF;
+  --secondary: #1E1E24;
+  --secondary-foreground: #E6E6E6;
+  --muted: #1E1E24;
+  --muted-foreground: #A3A3A3;
+  --accent: #F34499;
+  --accent-foreground: #FFFFFF;
+  --destructive: #FA3748;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #FF6D49;
+
+  /* Charts — adjusted for dark backgrounds */
+  --chart-1: #FF8266;
+  --chart-2: #F76DB5;
+  --chart-3: #5E80FF;
+  --chart-4: #3ED985;
+  --chart-5: #FB9352;
+
+  /* Sidebar */
+  --sidebar: #17171C;
+  --sidebar-foreground: #E6E6E6;
+  --sidebar-primary: #FF6D49;
+  --sidebar-primary-foreground: #FFFFFF;
+  --sidebar-accent: #1E1E24;
+  --sidebar-accent-foreground: #E6E6E6;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #FF6D49;
 }
 
 @layer base {
