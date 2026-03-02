@@ -3,7 +3,7 @@
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { GlassCard } from "@/components/effects";
 import { Badge } from "@/components/ui/badge";
-import { truncateAddress, formatIRL } from "@/lib/format";
+import { truncateAddress, formatTxValue } from "@/lib/format";
 import type { Transaction } from "@/lib/api/types";
 
 interface TxTabsProps {
@@ -17,7 +17,7 @@ interface TxTabsProps {
 function OverviewTab({ transaction: tx }: { transaction: Transaction }) {
   const fromAddr = truncateAddress(tx.from, 6);
   const toAddr = tx.to ? truncateAddress(tx.to, 6) : null;
-  const value = formatIRL(tx.value);
+  const value = formatTxValue(tx);
   const isContractCreation = !tx.to;
   const hasMethod =
     tx.methodDetails?.label && tx.methodDetails.label !== "Transfer";

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -31,19 +32,44 @@ function isActiveLink(pathname: string, href: string): boolean {
   return pathname.startsWith(href);
 }
 
+function LogoMark() {
+  return (
+    <>
+      {/* Light mode: orange mark */}
+      <Image
+        src="/logos/integra-mark.svg"
+        alt="Integra"
+        width={28}
+        height={28}
+        className="dark:hidden"
+      />
+      {/* Dark mode: white mark */}
+      <Image
+        src="/logos/integra-mark-white.svg"
+        alt="Integra"
+        width={28}
+        height={28}
+        className="hidden dark:block"
+      />
+    </>
+  );
+}
+
 export function Navbar() {
   const pathname = usePathname();
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white/80 backdrop-blur-md dark:bg-[#0A0A0F]/80">
       <div className="container mx-auto flex h-14 items-center justify-between px-4">
-        {/* Left: Wordmark */}
+        {/* Left: Logo + Wordmark */}
         <Link
           href="/"
-          className="flex items-baseline gap-1 font-bold tracking-tight"
+          className="flex items-center gap-2 font-bold tracking-tight"
         >
-          <span className="text-lg text-integra-brand">INTEGRA</span>
-          <span className="text-sm text-muted-foreground">EXPLORER</span>
+          <LogoMark />
+          <span className="gradient-brand-text text-lg font-bold">
+            EXPLORER
+          </span>
         </Link>
 
         {/* Center: Desktop nav links */}
@@ -68,8 +94,8 @@ export function Navbar() {
           })}
         </nav>
 
-        {/* Right: Actions */}
-        <div className="flex items-center gap-1">
+        {/* Right: Actions — gap-2 mobile, gap-3 desktop */}
+        <div className="flex items-center gap-2 md:gap-3">
           <ThemeToggle />
           <SearchBar variant="nav" className="hidden sm:flex" />
           <Button
@@ -93,9 +119,9 @@ export function Navbar() {
             </SheetTrigger>
             <SheetContent side="left" className="w-72">
               <SheetHeader>
-                <SheetTitle className="flex items-baseline gap-1 font-bold tracking-tight">
-                  <span className="text-lg text-integra-brand">INTEGRA</span>
-                  <span className="text-sm text-muted-foreground">
+                <SheetTitle className="flex items-center gap-2 font-bold tracking-tight">
+                  <LogoMark />
+                  <span className="gradient-brand-text text-lg font-bold">
                     EXPLORER
                   </span>
                 </SheetTitle>

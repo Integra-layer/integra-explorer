@@ -61,7 +61,7 @@ export function LatestBlocks() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.25 }}
-                className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3 transition-colors hover:bg-muted/30"
+                className="flex flex-wrap items-center gap-x-4 gap-y-1 border-l-2 border-transparent px-5 py-3 transition-all duration-150 hover:border-l-integra-brand hover:bg-muted/30"
               >
                 {/* Block number */}
                 <Link

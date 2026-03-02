@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ExternalLink } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
 
@@ -24,19 +25,51 @@ const footerSections = [
   {
     title: "Community",
     links: [
-      { label: "GitHub", href: "#", external: true },
-      { label: "Twitter / X", href: "#", external: true },
-      { label: "Discord", href: "#", external: true },
-      { label: "Telegram", href: "#", external: true },
+      {
+        label: "GitHub",
+        href: "https://github.com/Integra-layer",
+        external: true,
+      },
+      {
+        label: "Twitter / X",
+        href: "https://lnk.integralayer.com/x",
+        external: true,
+      },
+      {
+        label: "Discord",
+        href: "https://lnk.integralayer.com/discord",
+        external: true,
+      },
+      {
+        label: "Telegram",
+        href: "https://lnk.integralayer.com/telegram",
+        external: true,
+      },
     ],
   },
   {
     title: "Company",
     links: [
-      { label: "About Integra Layer", href: "#", external: true },
-      { label: "Documentation", href: "#", external: true },
-      { label: "Brand Kit", href: "#", external: true },
-      { label: "Contact", href: "#", external: true },
+      {
+        label: "Whitepaper",
+        href: "https://whitepaper.integralayer.com",
+        external: true,
+      },
+      {
+        label: "Blog",
+        href: "https://integralayer.com/blog",
+        external: true,
+      },
+      {
+        label: "Brand Kit",
+        href: "https://integralayer.com/brandkit",
+        external: true,
+      },
+      {
+        label: "Portal",
+        href: "https://testnet.integralayer.com",
+        external: true,
+      },
     ],
   },
 ] as const;
@@ -45,6 +78,27 @@ export function Footer() {
   return (
     <footer className="border-t bg-muted/30">
       <div className="container mx-auto px-4 py-12">
+        {/* Top: Logo + description */}
+        <div className="mb-8 flex items-center gap-3">
+          <Image
+            src="/logos/integra-mark.svg"
+            alt="Integra"
+            width={24}
+            height={24}
+            className="dark:hidden"
+          />
+          <Image
+            src="/logos/integra-mark-white.svg"
+            alt="Integra"
+            width={24}
+            height={24}
+            className="hidden dark:block"
+          />
+          <span className="gradient-brand-text text-sm font-bold">
+            INTEGRA EXPLORER
+          </span>
+        </div>
+
         {/* Link grid */}
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {footerSections.map((section) => (
@@ -85,7 +139,9 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="flex flex-col items-center justify-between gap-2 text-xs text-muted-foreground sm:flex-row">
           <p>&copy; 2026 Integra Layer. All rights reserved.</p>
-          <p>Powered by Ethernal</p>
+          <span className="text-[10px] text-muted-foreground/40">
+            Powered by Ethernal
+          </span>
         </div>
       </div>
     </footer>

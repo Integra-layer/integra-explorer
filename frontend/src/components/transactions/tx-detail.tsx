@@ -13,16 +13,20 @@ import {
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
-  GlassCard,
-  SkeletonShimmer,
-  CopyButton,
-} from "@/components/effects";
+  Tooltip,
+  TooltipTrigger,
+  TooltipContent,
+} from "@/components/ui/tooltip";
+import { GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
 import {
   truncateAddress,
   formatIRL,
   formatGas,
   formatGwei,
   formatNumber,
+  formatTxValue,
+  formatFee,
+  isErc20Transfer,
   timeAgo,
 } from "@/lib/format";
 import { TxFlow } from "./tx-flow";
@@ -80,18 +84,40 @@ function TxDetailSkeleton() {
 function DetailRow({
   label,
   icon: Icon,
+  hint,
   children,
 }: {
   label: string;
   icon?: React.ComponentType<{ className?: string }>;
+  hint?: string;
   children: React.ReactNode;
 }) {
+  const labelContent = (
+    <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+      {Icon && <Icon className="size-3.5" />}
+      {label}
+      {hint && (
+        <span className="inline-flex size-3.5 items-center justify-center rounded-full bg-muted text-[9px] font-bold text-muted-foreground">
+          ?
+        </span>
+      )}
+    </span>
+  );
+
   return (
     <div className="flex flex-col gap-1">
-      <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        {Icon && <Icon className="size-3.5" />}
-        {label}
-      </span>
+      {hint ? (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span className="w-fit cursor-help">{labelContent}</span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-[240px]">
+            {hint}
+          </TooltipContent>
+        </Tooltip>
+      ) : (
+        labelContent
+      )}
       <div className="text-sm">{children}</div>
     </div>
   );
@@ -143,12 +169,9 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
       : "failed"
     : "pending";
 
-  const fee =
-    tx.receipt?.gasUsed && tx.gasPrice
-      ? (Number(tx.receipt.gasUsed) * Number(tx.gasPrice)).toString()
-      : tx.gasUsed && tx.gasPrice
-        ? (Number(tx.gasUsed) * Number(tx.gasPrice)).toString()
-        : "0";
+  const gasUsedForFee = tx.receipt?.gasUsed ?? tx.gasUsed;
+  const feeDisplay = formatFee(gasUsedForFee, tx.gasPrice);
+  const isFree = feeDisplay === "Free";
 
   const gasUsedNum = tx.receipt?.gasUsed ?? tx.gasUsed;
   const gasLimitNum = tx.gas;
@@ -181,13 +204,15 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
         <h1 className="text-2xl font-bold tracking-tight">
           Transaction Details
         </h1>
-        <StatusBadge status={receiptStatus as "success" | "failed" | "pending"} />
+        <StatusBadge
+          status={receiptStatus as "success" | "failed" | "pending"}
+        />
       </div>
 
       {/* ------------------------------------------------------------------ */}
       {/* Flow Diagram */}
       {/* ------------------------------------------------------------------ */}
-      <TxFlow from={tx.from} to={tx.to} value={tx.value} />
+      <TxFlow transaction={tx} />
 
       {/* ------------------------------------------------------------------ */}
       {/* Summary Card */}
@@ -204,11 +229,16 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
 
           {/* Status */}
           <DetailRow label="Status">
-            <StatusBadge status={receiptStatus as "success" | "failed" | "pending"} />
+            <StatusBadge
+              status={receiptStatus as "success" | "failed" | "pending"}
+            />
           </DetailRow>
 
           {/* Block */}
-          <DetailRow label="Block">
+          <DetailRow
+            label="Block"
+            hint="The block number where this transaction was included and confirmed."
+          >
             <div className="flex items-center gap-2">
               <Link
                 href={`/blocks/${tx.blockNumber}`}
@@ -237,9 +267,7 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
                 className="font-mono text-xs text-integra-brand hover:underline"
               >
                 <span className="hidden md:inline">{tx.from}</span>
-                <span className="md:hidden">
-                  {truncateAddress(tx.from, 8)}
-                </span>
+                <span className="md:hidden">{truncateAddress(tx.from, 8)}</span>
               </Link>
               <CopyButton text={tx.from} />
             </div>
@@ -254,9 +282,7 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
                   className="font-mono text-xs text-integra-brand hover:underline"
                 >
                   <span className="hidden md:inline">{tx.to}</span>
-                  <span className="md:hidden">
-                    {truncateAddress(tx.to, 8)}
-                  </span>
+                  <span className="md:hidden">{truncateAddress(tx.to, 8)}</span>
                 </Link>
                 <CopyButton text={tx.to} />
               </div>
@@ -280,16 +306,33 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
 
           {/* Value */}
           <DetailRow label="Value">
-            <span className="font-medium">{formatIRL(tx.value)}</span>
+            <span className="font-medium">{formatTxValue(tx)}</span>
+            {isErc20Transfer(tx) && (
+              <Badge className="ml-2 bg-integra-info/10 text-integra-info text-[10px]">
+                ERC-20
+              </Badge>
+            )}
           </DetailRow>
 
           {/* Gas Price */}
-          <DetailRow label="Gas Price" icon={Fuel}>
-            <span className="font-mono">{formatGwei(tx.gasPrice)} Gwei</span>
+          <DetailRow
+            label="Gas Price"
+            icon={Fuel}
+            hint="The price per unit of computation. Higher gas prices mean faster processing."
+          >
+            <span className="font-mono">
+              {formatGwei(tx.gasPrice)} Gwei
+              {Number(tx.gasPrice) === 0 && (
+                <span className="ml-1 text-muted-foreground">(free)</span>
+              )}
+            </span>
           </DetailRow>
 
           {/* Gas Used */}
-          <DetailRow label="Gas Used">
+          <DetailRow
+            label="Gas Used"
+            hint="How much computation this transaction actually consumed."
+          >
             <span className="font-mono">
               {formatGas(gasUsedNum ?? "0")}
               {gasRatio && (
@@ -302,13 +345,25 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
           </DetailRow>
 
           {/* Nonce */}
-          <DetailRow label="Nonce">
+          <DetailRow
+            label="Nonce"
+            hint="A counter that tracks how many transactions this address has sent. Prevents duplicate transactions."
+          >
             <span className="font-mono">{tx.nonce}</span>
           </DetailRow>
 
           {/* Transaction Fee */}
-          <DetailRow label="Transaction Fee">
-            <span className="font-medium">{formatIRL(fee)}</span>
+          <DetailRow
+            label="Transaction Fee"
+            hint="The total cost paid to process this transaction (gas used x gas price)."
+          >
+            {isFree ? (
+              <Badge className="bg-integra-success/10 text-integra-success">
+                Free
+              </Badge>
+            ) : (
+              <span className="font-medium">{feeDisplay}</span>
+            )}
           </DetailRow>
 
           {/* Transaction Type */}

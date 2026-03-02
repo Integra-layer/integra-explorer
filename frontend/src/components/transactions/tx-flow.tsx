@@ -4,12 +4,11 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown, FileCode } from "lucide-react";
 import { GlassCard, CopyButton } from "@/components/effects";
-import { truncateAddress, formatIRL } from "@/lib/format";
+import { truncateAddress, formatTxValue } from "@/lib/format";
+import type { Transaction } from "@/lib/api/types";
 
 interface TxFlowProps {
-  from: string;
-  to: string | null;
-  value: string;
+  transaction: Transaction;
 }
 
 function AddressCard({
@@ -51,13 +50,13 @@ function AddressCard({
   );
 }
 
-export function TxFlow({ from, to, value }: TxFlowProps) {
-  const formattedValue = formatIRL(value);
+export function TxFlow({ transaction }: TxFlowProps) {
+  const formattedValue = formatTxValue(transaction);
 
   return (
     <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
       {/* From Card */}
-      <AddressCard label="From" address={from} />
+      <AddressCard label="From" address={transaction.from} />
 
       {/* Animated Arrow + Value */}
       <div className="flex flex-col items-center gap-1">
@@ -94,7 +93,11 @@ export function TxFlow({ from, to, value }: TxFlowProps) {
       </div>
 
       {/* To Card */}
-      <AddressCard label="To" address={to} isContract={to === null} />
+      <AddressCard
+        label="To"
+        address={transaction.to}
+        isContract={transaction.to === null}
+      />
     </div>
   );
 }

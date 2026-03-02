@@ -7,36 +7,13 @@ import { ArrowRight, ArrowRightLeft } from "lucide-react";
 import { GlassCard } from "@/components/effects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTransactions } from "@/lib/api/transactions";
-import { findKnownToken } from "@/lib/api/tokens";
 import {
   truncateHash,
   truncateAddress,
   timeAgo,
-  formatIRL,
-  parseErc20Amount,
-  formatTokenAmount,
+  formatTxValue,
 } from "@/lib/format";
 import { useExplorerReady } from "@/lib/explorer-provider";
-import type { Transaction } from "@/lib/api/types";
-
-function formatTxValue(tx: Transaction): string {
-  // ERC-20 transfer: native value is 0, but token amount is in the input data
-  if (
-    tx.methodDetails?.name === "transfer" &&
-    tx.value === "0" &&
-    tx.to &&
-    tx.data
-  ) {
-    const token = findKnownToken(tx.to);
-    if (token) {
-      const amount = parseErc20Amount(tx.data);
-      if (amount !== null) {
-        return formatTokenAmount(amount, token.decimals, token.symbol);
-      }
-    }
-  }
-  return formatIRL(tx.value);
-}
 
 export function LatestTransactions() {
   const isReady = useExplorerReady();
@@ -87,7 +64,7 @@ export function LatestTransactions() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.25 }}
-                className="flex flex-wrap items-center gap-x-4 gap-y-1 px-5 py-3 transition-colors hover:bg-muted/30"
+                className="flex flex-wrap items-center gap-x-4 gap-y-1 border-l-2 border-transparent px-5 py-3 transition-all duration-150 hover:border-l-integra-brand hover:bg-muted/30"
               >
                 {/* Tx hash + method */}
                 <div className="flex items-center gap-2">

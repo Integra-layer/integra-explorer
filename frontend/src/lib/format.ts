@@ -2,6 +2,8 @@
  * Formatting utilities for the Integra Explorer.
  */
 
+import { findKnownToken } from "@/lib/api/tokens";
+
 /**
  * Truncate an address for display: 0x1234567890abcdef -> 0x1234...cdef
  */
@@ -81,6 +83,65 @@ export function formatTokenAmount(
     .replace(/0+$/, "");
   if (!fracStr) return `${whole.toLocaleString()} ${symbol}`;
   return `${whole.toLocaleString()}.${fracStr} ${symbol}`;
+}
+
+/**
+ * Format a transaction's display value, detecting ERC-20 transfers.
+ * For ERC-20 transfers (value=0, method=transfer), parses token amount from calldata.
+ * Falls back to native IRL formatting.
+ */
+export function formatTxValue(tx: {
+  value: string;
+  to: string | null;
+  data: string;
+  methodDetails?: { name: string; label: string } | null;
+}): string {
+  if (
+    tx.methodDetails?.name === "transfer" &&
+    tx.value === "0" &&
+    tx.to &&
+    tx.data
+  ) {
+    const token = findKnownToken(tx.to);
+    if (token) {
+      const amount = parseErc20Amount(tx.data);
+      if (amount !== null) {
+        return formatTokenAmount(amount, token.decimals, token.symbol);
+      }
+    }
+  }
+  return formatIRL(tx.value);
+}
+
+/**
+ * Detect whether a transaction is an ERC-20 transfer.
+ */
+export function isErc20Transfer(tx: {
+  value: string;
+  to: string | null;
+  data: string;
+  methodDetails?: { name: string; label: string } | null;
+}): boolean {
+  if (
+    tx.methodDetails?.name === "transfer" &&
+    tx.value === "0" &&
+    tx.to &&
+    tx.data
+  ) {
+    return !!findKnownToken(tx.to);
+  }
+  return false;
+}
+
+/**
+ * Format a transaction fee, showing "Free" for zero-fee transactions.
+ */
+export function formatFee(gasUsed: string | null, gasPrice: string): string {
+  const used = gasUsed ? BigInt(gasUsed) : BigInt(0);
+  const price = BigInt(gasPrice || "0");
+  const fee = used * price;
+  if (fee === BigInt(0)) return "Free";
+  return formatIRL(fee.toString());
 }
 
 /**
