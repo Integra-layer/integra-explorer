@@ -1,5 +1,6 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import {
   Building2,
   Building,
@@ -13,22 +14,62 @@ import {
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { GlassCard, CopyButton } from "@/components/effects";
-import { AssetTab } from "./tabs/asset-tab";
-import { EntityTab } from "./tabs/entity-tab";
-import { PropertyTab } from "./tabs/property-tab";
-import { ValuationTab } from "./tabs/valuation-tab";
-import { StakeholderTab } from "./tabs/stakeholder-tab";
-import { TokenizationTab } from "./tabs/tokenization-tab";
-import { VerificationTab } from "./tabs/verification-tab";
-import { HistoryTab } from "./tabs/history-tab";
+import { Skeleton } from "@/components/ui/skeleton";
 import type { AssetPassport } from "@/lib/api/passport-types";
+
+// Lazy-load passport tabs for performance — only the active tab is rendered
+const TabLoading = () => <Skeleton className="h-48 w-full rounded-xl" />;
+
+const AssetTab = dynamic(
+  () => import("./tabs/asset-tab").then((m) => ({ default: m.AssetTab })),
+  { loading: TabLoading },
+);
+const EntityTab = dynamic(
+  () => import("./tabs/entity-tab").then((m) => ({ default: m.EntityTab })),
+  { loading: TabLoading },
+);
+const PropertyTab = dynamic(
+  () => import("./tabs/property-tab").then((m) => ({ default: m.PropertyTab })),
+  { loading: TabLoading },
+);
+const ValuationTab = dynamic(
+  () =>
+    import("./tabs/valuation-tab").then((m) => ({ default: m.ValuationTab })),
+  { loading: TabLoading },
+);
+const StakeholderTab = dynamic(
+  () =>
+    import("./tabs/stakeholder-tab").then((m) => ({
+      default: m.StakeholderTab,
+    })),
+  { loading: TabLoading },
+);
+const TokenizationTab = dynamic(
+  () =>
+    import("./tabs/tokenization-tab").then((m) => ({
+      default: m.TokenizationTab,
+    })),
+  { loading: TabLoading },
+);
+const VerificationTab = dynamic(
+  () =>
+    import("./tabs/verification-tab").then((m) => ({
+      default: m.VerificationTab,
+    })),
+  { loading: TabLoading },
+);
+const HistoryTab = dynamic(
+  () => import("./tabs/history-tab").then((m) => ({ default: m.HistoryTab })),
+  { loading: TabLoading },
+);
 
 interface PassportViewerProps {
   passport: AssetPassport;
 }
 
 const statusColors: Record<string, string> = {
-  active: "bg-integra-success/10 text-integra-success border-integra-success/30",
+  active:
+    "bg-integra-success/10 text-integra-success border-integra-success/30",
   pending: "bg-amber-500/10 text-amber-500 border-amber-500/30",
   archived: "bg-muted text-muted-foreground border-muted",
 };
@@ -42,20 +83,19 @@ export function PassportViewer({ passport }: PassportViewerProps) {
       <GlassCard className="p-6">
         <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="space-y-1">
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-3">
               <h1 className="text-2xl font-bold tracking-tight">
                 {passport.assetName}
               </h1>
-              <Badge variant="outline" className={statusColors[passport.status]}>
+              <Badge
+                variant="outline"
+                className={statusColors[passport.status]}
+              >
                 {passport.status.charAt(0).toUpperCase() +
                   passport.status.slice(1)}
               </Badge>
-              {passport.isMaster && (
-                <Badge variant="secondary">Master</Badge>
-              )}
-              {passport.isPrivate && (
-                <Badge variant="outline">Private</Badge>
-              )}
+              {passport.isMaster && <Badge variant="secondary">Master</Badge>}
+              {passport.isPrivate && <Badge variant="outline">Private</Badge>}
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>ID: {passport.id}</span>
@@ -64,14 +104,8 @@ export function PassportViewer({ passport }: PassportViewerProps) {
           </div>
 
           <div className="text-right text-sm text-muted-foreground">
-            <p>
-              Created:{" "}
-              {new Date(passport.createdAt).toLocaleDateString()}
-            </p>
-            <p>
-              Updated:{" "}
-              {new Date(passport.updatedAt).toLocaleDateString()}
-            </p>
+            <p>Created: {new Date(passport.createdAt).toLocaleDateString()}</p>
+            <p>Updated: {new Date(passport.updatedAt).toLocaleDateString()}</p>
           </div>
         </div>
 

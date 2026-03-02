@@ -438,7 +438,7 @@ function UnitConverterTab() {
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="max-w-[300px] truncate font-mono text-sm">
+                <span className="max-w-[140px] truncate font-mono text-sm sm:max-w-[300px]">
                   {value}
                 </span>
                 <CopyButton text={value} />
@@ -506,7 +506,7 @@ function RpcPlaygroundTab() {
     <GlassCard className="max-w-2xl space-y-5 p-6">
       <div className="space-y-2">
         <label className="text-sm font-medium">RPC Endpoint</label>
-        <div className="flex items-center gap-2 rounded-md border border-white/10 bg-black/20 px-3 py-2 font-mono text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 rounded-md border border-white/10 bg-black/20 px-3 py-2 font-mono text-sm text-muted-foreground break-all">
           {DEFAULT_RPC_URL}
         </div>
       </div>

@@ -335,7 +335,7 @@ export default function ProposalDetailPage({
 
                 {proposal.messages && proposal.messages.length > 0 && (
                   <DetailRow label="Message Type">
-                    <span className="font-mono text-xs">
+                    <span className="break-all font-mono text-xs">
                       {proposal.messages[0]["@type"]}
                     </span>
                   </DetailRow>
@@ -384,7 +384,10 @@ export default function ProposalDetailPage({
                           const primaryOption = vote.options[0];
                           const voteInfo = primaryOption
                             ? formatVoteOption(primaryOption.option)
-                            : { label: "Unknown", color: "text-muted-foreground" };
+                            : {
+                                label: "Unknown",
+                                color: "text-muted-foreground",
+                              };
                           return (
                             <tr
                               key={vote.voter}
@@ -405,7 +408,9 @@ export default function ProposalDetailPage({
                                 <CopyButton text={vote.voter} />
                               </td>
                               <td className="px-4 py-3">
-                                <span className={`font-medium ${voteInfo.color}`}>
+                                <span
+                                  className={`font-medium ${voteInfo.color}`}
+                                >
                                   {voteInfo.label}
                                 </span>
                               </td>

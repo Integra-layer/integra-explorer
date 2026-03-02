@@ -19,7 +19,8 @@ function OverviewTab({ transaction: tx }: { transaction: Transaction }) {
   const toAddr = tx.to ? truncateAddress(tx.to, 6) : null;
   const value = formatIRL(tx.value);
   const isContractCreation = !tx.to;
-  const hasMethod = tx.methodDetails?.label && tx.methodDetails.label !== "Transfer";
+  const hasMethod =
+    tx.methodDetails?.label && tx.methodDetails.label !== "Transfer";
 
   let description: string;
   if (isContractCreation) {
@@ -45,7 +46,11 @@ function OverviewTab({ transaction: tx }: { transaction: Transaction }) {
           <li>
             Transaction type:{" "}
             <span className="text-foreground">
-              {tx.type === 0 ? "Legacy" : tx.type === 2 ? "EIP-1559" : `Type ${tx.type}`}
+              {tx.type === 0
+                ? "Legacy"
+                : tx.type === 2
+                  ? "EIP-1559"
+                  : `Type ${tx.type}`}
             </span>
           </li>
           <li>
@@ -143,9 +148,7 @@ function LogsTab({ transaction: tx }: { transaction: Transaction }) {
             <Badge variant="secondary" className="text-[10px]">
               Log #{log.logIndex}
             </Badge>
-            {log.decoded && (
-              <Badge variant="outline">{log.decoded.name}</Badge>
-            )}
+            {log.decoded && <Badge variant="outline">{log.decoded.name}</Badge>}
           </div>
 
           {/* Emitting address */}
@@ -153,7 +156,7 @@ function LogsTab({ transaction: tx }: { transaction: Transaction }) {
             <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
               Address
             </span>
-            <p className="font-mono text-xs">{log.address}</p>
+            <p className="break-all font-mono text-xs">{log.address}</p>
           </div>
 
           {/* Topics */}
@@ -237,7 +240,7 @@ function StateChangesTab() {
 export function TxTabs({ transaction }: TxTabsProps) {
   return (
     <Tabs defaultValue="overview">
-      <TabsList>
+      <TabsList className="flex-wrap">
         <TabsTrigger value="overview">Overview</TabsTrigger>
         <TabsTrigger value="input">Input Data</TabsTrigger>
         <TabsTrigger value="logs">
@@ -248,7 +251,10 @@ export function TxTabs({ transaction }: TxTabsProps) {
             </Badge>
           )}
         </TabsTrigger>
-        <TabsTrigger value="state">State Changes</TabsTrigger>
+        <TabsTrigger value="state">
+          <span className="hidden sm:inline">State Changes</span>
+          <span className="sm:hidden">State</span>
+        </TabsTrigger>
       </TabsList>
 
       <TabsContent value="overview">

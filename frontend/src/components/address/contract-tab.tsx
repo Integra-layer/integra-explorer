@@ -172,7 +172,7 @@ export function ContractTab({ contract, isLoading }: ContractTabProps) {
                 <p className="mb-1 text-xs font-medium uppercase tracking-wider text-muted-foreground">
                   Proxy Implementation
                 </p>
-                <p className="font-mono text-sm text-integra-brand">
+                <p className="break-all font-mono text-sm text-integra-brand">
                   {contract.proxy}
                 </p>
               </div>
