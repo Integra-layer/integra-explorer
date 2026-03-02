@@ -112,6 +112,9 @@ services:
       FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
       FIREBASE_ROUNDS: "8"
       FIREBASE_MEM_COST: "14"
+      # PM2 process manager
+      PM2_HOST: http://pm2:9090
+      PM2_SECRET: ${PM2_SECRET}
       # Bull Board (background job dashboard)
       BULLBOARD_USERNAME: ${BULLBOARD_USERNAME:-ethernal}
       BULLBOARD_PASSWORD: ${BULLBOARD_PASSWORD}
@@ -152,6 +155,8 @@ services:
       FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
       FIREBASE_ROUNDS: "8"
       FIREBASE_MEM_COST: "14"
+      PM2_HOST: http://pm2:9090
+      PM2_SECRET: ${PM2_SECRET}
 
   medium_priority_worker:
     image: antoinedc44/ethernal-backend:latest
@@ -189,6 +194,8 @@ services:
       FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
       FIREBASE_ROUNDS: "8"
       FIREBASE_MEM_COST: "14"
+      PM2_HOST: http://pm2:9090
+      PM2_SECRET: ${PM2_SECRET}
 
   low_priority_worker:
     image: antoinedc44/ethernal-backend:latest
@@ -226,6 +233,24 @@ services:
       FIREBASE_SALT_SEPARATOR: ${FIREBASE_SALT_SEPARATOR}
       FIREBASE_ROUNDS: "8"
       FIREBASE_MEM_COST: "14"
+      PM2_HOST: http://pm2:9090
+      PM2_SECRET: ${PM2_SECRET}
+
+  pm2:
+    image: antoinedc44/ethernal-pm2:latest
+    container_name: integra-explorer-pm2
+    restart: unless-stopped
+    networks:
+      - explorer
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      SECRET: ${PM2_SECRET}
+      ETHERNAL_HOST: http://backend:8888
+      ETHERNAL_SECRET: ${SECRET}
+      PORT: "9090"
+      NODE_ENV: production
 
   frontend:
     image: antoinedc44/ethernal-frontend:latest
