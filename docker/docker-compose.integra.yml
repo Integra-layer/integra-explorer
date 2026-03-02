@@ -99,8 +99,9 @@ services:
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
       # App config
-      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      # Admin domain (must differ from public explorer domain)
+      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       PORT: "8888"
@@ -146,8 +147,9 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
-      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      # Admin domain (must differ from public explorer domain)
+      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       NODE_ENV: production
@@ -185,8 +187,9 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
-      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      # Admin domain (must differ from public explorer domain)
+      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       NODE_ENV: production
@@ -224,8 +227,9 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
-      APP_DOMAIN: ${APP_DOMAIN:-testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-testnet.explorer.integralayer.com}
+      # Admin domain (must differ from public explorer domain)
+      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       NODE_ENV: production
