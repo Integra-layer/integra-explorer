@@ -49,7 +49,7 @@ export interface Block {
   miner: string;
   nonce: string;
   parentHash: string;
-  transactionCount: number;
+  transactionsCount: number;
   transactions?: Transaction[];
   createdAt: string;
   updatedAt: string;
@@ -163,7 +163,7 @@ export interface SyncStatus {
 // --- Paginated Response ---
 
 export interface PaginatedResponse<T> {
-  data: T[];
+  items: T[];
   total: number;
   count: number;
 }

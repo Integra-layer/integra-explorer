@@ -50,7 +50,7 @@ export function LatestBlocks() {
           ))
         ) : (
           <AnimatePresence mode="popLayout" initial={false}>
-            {data?.data.map((block) => (
+            {data?.items.map((block) => (
               <motion.div
                 key={block.number}
                 layout
@@ -81,7 +81,7 @@ export function LatestBlocks() {
                 {/* Right side: tx count + gas */}
                 <div className="ml-auto flex items-center gap-3">
                   <Badge variant="secondary" className="text-[10px]">
-                    {block.transactionCount} txs
+                    {block.transactionsCount} txs
                   </Badge>
                   <span className="hidden text-xs text-muted-foreground sm:inline">
                     {formatGas(block.gasUsed)} gas

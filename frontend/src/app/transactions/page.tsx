@@ -41,7 +41,7 @@ function TransactionsPageContent() {
         </div>
 
         {/* Table */}
-        <TxTable transactions={data?.data ?? []} isLoading={isLoading} />
+        <TxTable transactions={data?.items ?? []} isLoading={isLoading} />
 
         {/* Pagination controls */}
         <div className="flex items-center justify-between">

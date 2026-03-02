@@ -53,7 +53,7 @@ export function LatestTransactions() {
           ))
         ) : (
           <AnimatePresence mode="popLayout" initial={false}>
-            {data?.data.map((tx) => (
+            {data?.items.map((tx) => (
               <motion.div
                 key={tx.hash}
                 layout

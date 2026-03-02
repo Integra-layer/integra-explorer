@@ -42,7 +42,7 @@ function BlocksPageContent() {
         </div>
 
         {/* Table */}
-        <BlocksTable blocks={data?.data ?? []} isLoading={isLoading} />
+        <BlocksTable blocks={data?.items ?? []} isLoading={isLoading} />
 
         {/* Pagination controls */}
         <div className="flex items-center justify-between">

@@ -94,7 +94,7 @@ export function BlocksTable({ blocks, isLoading }: BlocksTableProps) {
                   {/* Transaction Count */}
                   <td className="px-4 py-3">
                     <Badge variant="secondary" className="text-[10px]">
-                      {block.transactionCount}
+                      {block.transactionsCount}
                     </Badge>
                   </td>
 

@@ -306,7 +306,7 @@ export function ActivityFeed({ address }: ActivityFeedProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("feed");
   const { data, isLoading } = useAddressTransactions(address);
 
-  const transactions = data?.data ?? [];
+  const transactions = data?.items ?? [];
 
   return (
     <div className="space-y-4">
