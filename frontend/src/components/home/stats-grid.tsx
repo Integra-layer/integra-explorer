@@ -1,11 +1,12 @@
 "use client";
 
-import { Activity, Users, Fuel, Box } from "lucide-react";
+import { Activity, Users, Clock, Box } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
 import { NumberTicker } from "@/components/effects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStats } from "@/lib/hooks/use-stats";
 import { getBlocks } from "@/lib/api/blocks";
+import { useExplorerReady } from "@/lib/explorer-provider";
 import { cn } from "@/lib/utils";
 
 interface StatCardProps {
@@ -60,18 +61,17 @@ function StatCard({
 export function StatsGrid() {
   const { data, isLoading } = useStats();
 
+  const isReady = useExplorerReady();
+
   // Get latest block number from the blocks API (first block in DESC order)
   const { data: blocksData, isLoading: blocksLoading } = useQuery({
     queryKey: ["blocks", 1, 1],
     queryFn: () => getBlocks({ page: 1, itemsPerPage: 1 }),
     refetchInterval: 10_000,
+    enabled: isReady,
   });
 
   const latestBlock = blocksData?.items?.[0]?.number;
-
-  const gweiValue = data?.averageGasPrice
-    ? Number(data.averageGasPrice) / 1e9
-    : undefined;
 
   return (
     <div className="mx-auto mt-6 grid w-full max-w-3xl grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
@@ -94,11 +94,9 @@ export function StatsGrid() {
         isLoading={isLoading}
       />
       <StatCard
-        icon={<Fuel className="size-4" />}
-        label="Avg Gas Price"
-        value={gweiValue}
-        suffix="Gwei"
-        decimalPlaces={2}
+        icon={<Clock className="size-4" />}
+        label="24h Transactions"
+        value={data?.txCount24h}
         isLoading={isLoading}
       />
     </div>

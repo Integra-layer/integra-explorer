@@ -26,6 +26,7 @@ import {
 } from "@/lib/format";
 import { fetchApi } from "@/lib/api/client";
 import { findKnownToken } from "@/lib/api/tokens";
+import { useExplorerReady } from "@/lib/explorer-provider";
 import type { Transaction, PaginatedResponse } from "@/lib/api/types";
 
 function formatTxValue(tx: Transaction): string {
@@ -53,6 +54,7 @@ interface ActivityFeedProps {
 type ViewMode = "feed" | "table";
 
 function useAddressTransactions(address: string) {
+  const isReady = useExplorerReady();
   return useQuery({
     queryKey: ["address-transactions", address],
     queryFn: () =>
@@ -61,7 +63,7 @@ function useAddressTransactions(address: string) {
         itemsPerPage: "50",
         order: "DESC",
       }),
-    enabled: !!address,
+    enabled: isReady && !!address,
   });
 }
 

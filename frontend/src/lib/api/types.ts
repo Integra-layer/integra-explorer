@@ -147,9 +147,6 @@ export interface ChainStats {
   txCount24h: number;
   txCountTotal: number;
   activeWalletCount: number;
-  cumulativeWalletCount: number;
-  averageGasPrice: string;
-  averageTransactionFee: string;
 }
 
 // --- Sync Status ---

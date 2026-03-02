@@ -1,0 +1,18 @@
+{
+  "id": "ethernal-api-fields",
+  "name": "Ethernal API Field Name Mismatches",
+  "triggers": ["tx.input undefined", "tx.data", "transactionsCount", "methodDetails.name", "items vs data"],
+  "quality": "high",
+  "insight": "Ethernal backend uses different field names than standard Ethereum JSON-RPC. Always curl the live API before coding.",
+  "field_map": {
+    "Transaction calldata": "data (NOT input)",
+    "Method clean name": "methodDetails.name (NOT .label)",
+    "Paginated items": "items (NOT data)",
+    "Block tx count": "transactionsCount (NOT transactionCount)",
+    "Explorer config": "response.explorer (nested, NOT flat)"
+  },
+  "stats_endpoints": {
+    "working": ["/stats/txCountTotal", "/stats/txCount24h", "/stats/activeWalletCount"],
+    "broken": ["/stats/cumulativeWalletCount", "/stats/averageGasPrice", "/stats/averageTransactionFee"]
+  }
+}

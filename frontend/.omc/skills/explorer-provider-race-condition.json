@@ -1,0 +1,9 @@
+{
+  "id": "explorer-provider-race",
+  "name": "ExplorerProvider Must Be Inside QueryProvider",
+  "triggers": ["stats showing 0", "skeletons not loading", "firebaseUserId not set", "ExplorerProvider", "queryClient.invalidateQueries"],
+  "quality": "high",
+  "insight": "Auth-resolving provider must be INSIDE QueryProvider. Otherwise queries fire before auth resolves, fail silently (caught by safeFetch), and show zero values instead of loading states.",
+  "symptoms": ["Stats grid shows all zeros but no errors", "Blocks/transactions stuck in skeleton state", "Network tab shows 401 on data endpoints", "Explorer config succeeds but data fails"],
+  "fix": "Provider order: ThemeProvider > QueryProvider > ExplorerProvider > PusherProvider. ExplorerProvider calls useQueryClient() then queryClient.invalidateQueries() after auth resolves."
+}

@@ -8,13 +8,16 @@ import { GlassCard } from "@/components/effects";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getBlocks } from "@/lib/api/blocks";
+import { useExplorerReady } from "@/lib/explorer-provider";
 import { truncateAddress, timeAgo, formatGas } from "@/lib/format";
 
 export function LatestBlocks() {
+  const isReady = useExplorerReady();
   const { data, isLoading } = useQuery({
     queryKey: ["blocks", 1, 6],
     queryFn: () => getBlocks({ page: 1, itemsPerPage: 6 }),
     refetchInterval: 10_000,
+    enabled: isReady,
   });
 
   return (

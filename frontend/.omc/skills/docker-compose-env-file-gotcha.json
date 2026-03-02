@@ -1,0 +1,9 @@
+{
+  "id": "docker-compose-env-file",
+  "name": "Docker Compose --env-file Required on Every Command",
+  "triggers": ["SASL: SCRAM-SERVER-FIRST-MESSAGE", "docker compose up", "Missing parameter", "middleware.workspaceAuth", "DB_PASSWORD not set"],
+  "quality": "high",
+  "insight": "When docker-compose.yml uses ${VAR} syntax with --env-file, that flag must be on EVERY docker compose invocation. Docker defaults unset vars to empty strings WITHOUT error, so services start with blank secrets and fail at runtime.",
+  "symptoms": ["Skeleton loading states after deploy", "Backend SASL auth crash", "401 on all API calls", "compose output full of 'variable is not set' warnings"],
+  "fix": "Always use: docker compose -f docker/docker-compose.integra.yml --env-file docker/.env.integra up -d. Use --no-deps to restart only one service without cascading recreation."
+}

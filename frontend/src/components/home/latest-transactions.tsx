@@ -16,6 +16,7 @@ import {
   parseErc20Amount,
   formatTokenAmount,
 } from "@/lib/format";
+import { useExplorerReady } from "@/lib/explorer-provider";
 import type { Transaction } from "@/lib/api/types";
 
 function formatTxValue(tx: Transaction): string {
@@ -38,10 +39,12 @@ function formatTxValue(tx: Transaction): string {
 }
 
 export function LatestTransactions() {
+  const isReady = useExplorerReady();
   const { data, isLoading } = useQuery({
     queryKey: ["transactions", 1, 6],
     queryFn: () => getTransactions({ page: 1, itemsPerPage: 6 }),
     refetchInterval: 10_000,
+    enabled: isReady,
   });
 
   return (

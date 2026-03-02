@@ -1,17 +1,26 @@
 "use client";
 
-import { useEffect, useRef } from "react";
-import { useQueryClient } from "@tanstack/react-query";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { getExplorerConfig } from "@/lib/api/explorer";
 
 /**
+ * Context that signals when explorer auth (workspace + firebaseUserId) is resolved.
+ * All data hooks should gate on `isReady` to avoid firing before auth params are set.
+ */
+const ExplorerContext = createContext({ isReady: false });
+
+export function useExplorerReady(): boolean {
+  return useContext(ExplorerContext).isReady;
+}
+
+/**
  * Resolves explorer config (workspace name + firebaseUserId) once on mount.
- * After resolution, invalidates all queries so they refetch with proper auth.
- * Must be placed INSIDE QueryProvider to access the query client.
+ * Sets `isReady` to true after resolution, which unblocks all gated queries.
+ * Must be placed INSIDE QueryProvider so hooks can access the query client.
  */
 export function ExplorerProvider({ children }: { children: React.ReactNode }) {
   const initialized = useRef(false);
-  const queryClient = useQueryClient();
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     if (initialized.current) return;
@@ -20,13 +29,21 @@ export function ExplorerProvider({ children }: { children: React.ReactNode }) {
     const domain = window.location.hostname;
     getExplorerConfig(domain)
       .then(() => {
-        // Auth params now set — force all queries to refetch with them
-        queryClient.invalidateQueries();
+        setIsReady(true);
       })
       .catch((err) => {
-        console.error("[ExplorerProvider] Failed to resolve explorer config:", err);
+        console.error(
+          "[ExplorerProvider] Failed to resolve explorer config:",
+          err,
+        );
+        // Still mark ready so the app doesn't stay in permanent loading
+        setIsReady(true);
       });
-  }, [queryClient]);
+  }, []);
 
-  return <>{children}</>;
+  return (
+    <ExplorerContext.Provider value={{ isReady }}>
+      {children}
+    </ExplorerContext.Provider>
+  );
 }

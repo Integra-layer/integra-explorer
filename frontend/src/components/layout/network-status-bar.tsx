@@ -4,12 +4,15 @@ import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { PulseIndicator } from "@/components/effects";
 import { getBlocks } from "@/lib/api/blocks";
+import { useExplorerReady } from "@/lib/explorer-provider";
 
 export function NetworkStatusBar() {
+  const isReady = useExplorerReady();
   const { data, isError } = useQuery({
     queryKey: ["blocks", 1, 1],
     queryFn: () => getBlocks({ page: 1, itemsPerPage: 1 }),
     refetchInterval: 10_000,
+    enabled: isReady,
   });
 
   const latestBlock = data?.items?.[0]?.number;
@@ -31,9 +34,7 @@ export function NetworkStatusBar() {
         <div className="hidden items-center gap-1 md:flex">
           <span>Block</span>
           <span className="font-mono font-medium text-foreground">
-            {latestBlock != null
-              ? `#${latestBlock.toLocaleString()}`
-              : "..."}
+            {latestBlock != null ? `#${latestBlock.toLocaleString()}` : "..."}
           </span>
         </div>
 
@@ -41,7 +42,11 @@ export function NetworkStatusBar() {
         <span className="text-muted-foreground/50">|</span>
         <div className="flex items-center gap-1.5">
           <PulseIndicator status={isHealthy ? "online" : "offline"} size="sm" />
-          <span className={isHealthy ? "text-integra-success" : "text-integra-error"}>
+          <span
+            className={
+              isHealthy ? "text-integra-success" : "text-integra-error"
+            }
+          >
             {isHealthy ? "Healthy" : "Connecting"}
           </span>
         </div>

@@ -2,15 +2,18 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getTransactions, getTransaction } from "@/lib/api/transactions";
+import { useExplorerReady } from "@/lib/explorer-provider";
 
 /**
  * Fetch a paginated list of transactions.
- * Refetches when page or itemsPerPage change.
+ * Gated on explorer auth being resolved.
  */
 export function useTransactions(page = 1, itemsPerPage = 25) {
+  const isReady = useExplorerReady();
   return useQuery({
     queryKey: ["transactions", page, itemsPerPage],
     queryFn: () => getTransactions({ page, itemsPerPage }),
+    enabled: isReady,
   });
 }
 
@@ -19,9 +22,10 @@ export function useTransactions(page = 1, itemsPerPage = 25) {
  * Disabled when hash is falsy.
  */
 export function useTransaction(hash: string | undefined) {
+  const isReady = useExplorerReady();
   return useQuery({
     queryKey: ["transaction", hash],
     queryFn: () => getTransaction(hash!),
-    enabled: !!hash,
+    enabled: isReady && !!hash,
   });
 }
