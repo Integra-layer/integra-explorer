@@ -190,3 +190,63 @@ export interface SearchParams {
   type?: SearchResultType;
   query: string;
 }
+
+// =============================================================================
+// Cosmos REST API Type Definitions
+// Used for validators, staking, and governance data
+// =============================================================================
+
+// --- Cosmos Validator ---
+
+export type ValidatorBondStatus =
+  | "BOND_STATUS_BONDED"
+  | "BOND_STATUS_UNBONDING"
+  | "BOND_STATUS_UNBONDED";
+
+export interface CosmosValidator {
+  operator_address: string;
+  consensus_pubkey: { "@type": string; key: string };
+  jailed: boolean;
+  status: ValidatorBondStatus;
+  tokens: string;
+  delegator_shares: string;
+  description: {
+    moniker: string;
+    identity: string;
+    website: string;
+    security_contact: string;
+    details: string;
+  };
+  unbonding_height: string;
+  unbonding_time: string;
+  commission: {
+    commission_rates: {
+      rate: string;
+      max_rate: string;
+      max_change_rate: string;
+    };
+    update_time: string;
+  };
+  min_self_delegation: string;
+}
+
+// --- Cosmos Delegation ---
+
+export interface CosmosDelegation {
+  delegation: {
+    delegator_address: string;
+    validator_address: string;
+    shares: string;
+  };
+  balance: {
+    denom: string;
+    amount: string;
+  };
+}
+
+// --- Staking Pool ---
+
+export interface StakingPool {
+  bonded_tokens: string;
+  not_bonded_tokens: string;
+}

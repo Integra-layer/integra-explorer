@@ -67,3 +67,21 @@ export function formatGwei(weiValue: string): string {
   if (gwei < 0.01) return "<0.01";
   return gwei.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }
+
+/**
+ * Convert airl (18 decimals) to IRL with no decimal places.
+ * E.g. "100000000000000000000" → "100"
+ */
+export function formatStakedIRL(airlAmount: string): string {
+  const num = Number(airlAmount) / 1e18;
+  if (num === 0) return "0";
+  return num.toLocaleString(undefined, { maximumFractionDigits: 0 });
+}
+
+/**
+ * Format commission rate from a decimal string to percentage.
+ * E.g. "0.050000000000000000" → "5.0%"
+ */
+export function formatCommission(rate: string): string {
+  return `${(Number(rate) * 100).toFixed(1)}%`;
+}
