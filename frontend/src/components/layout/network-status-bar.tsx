@@ -2,8 +2,14 @@
 
 import { Badge } from "@/components/ui/badge";
 import { PulseIndicator } from "@/components/effects";
+import { useSyncStatus } from "@/lib/hooks/use-stats";
 
 export function NetworkStatusBar() {
+  const { data: syncStatus } = useSyncStatus();
+
+  const isHealthy = syncStatus?.isLive !== false;
+  const latestBlock = syncStatus?.latestBlock;
+
   return (
     <div className="w-full border-b bg-muted/50 py-1.5">
       <div className="container mx-auto flex items-center justify-center gap-3 px-4 text-xs text-muted-foreground md:justify-start">
@@ -19,18 +25,20 @@ export function NetworkStatusBar() {
         <span className="hidden text-muted-foreground/50 md:inline">|</span>
         <div className="hidden items-center gap-1 md:flex">
           <span>Block</span>
-          <span className="font-mono font-medium text-foreground">#59,700</span>
+          <span className="font-mono font-medium text-foreground">
+            {latestBlock != null
+              ? `#${latestBlock.toLocaleString()}`
+              : "..."}
+          </span>
         </div>
-
-        {/* Avg Block Time — hidden on mobile */}
-        <span className="hidden text-muted-foreground/50 md:inline">|</span>
-        <span className="hidden md:inline">~6s avg</span>
 
         {/* Health */}
         <span className="text-muted-foreground/50">|</span>
         <div className="flex items-center gap-1.5">
-          <PulseIndicator status="online" size="sm" />
-          <span className="text-integra-success">Healthy</span>
+          <PulseIndicator status={isHealthy ? "online" : "offline"} size="sm" />
+          <span className={isHealthy ? "text-integra-success" : "text-integra-error"}>
+            {isHealthy ? "Healthy" : "Syncing"}
+          </span>
         </div>
       </div>
     </div>

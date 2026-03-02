@@ -1,9 +1,10 @@
-import { fetchApi, setWorkspaceId } from "./client";
+import { fetchApi, setWorkspaceName, setFirebaseUserId } from "./client";
 import type { ExplorerConfig, SyncStatus } from "./types";
 
 /**
  * Search for an explorer by domain and return its config.
- * This is typically called once at app startup to resolve the workspace ID.
+ * This is typically called once at app startup to resolve the workspace name
+ * and firebaseUserId needed for all subsequent API calls.
  */
 export async function getExplorerConfig(
   domain: string,
@@ -12,9 +13,12 @@ export async function getExplorerConfig(
     domain,
   });
 
-  // Cache the workspace ID for all future API calls
-  if (config.workspaceId) {
-    setWorkspaceId(config.workspaceId);
+  // Cache workspace name and firebaseUserId for all future API calls
+  if (config.workspace?.name) {
+    setWorkspaceName(config.workspace.name);
+  }
+  if (config.admin?.firebaseUserId) {
+    setFirebaseUserId(config.admin.firebaseUserId);
   }
 
   return config;

@@ -7,7 +7,12 @@ import { ArrowRight, ArrowRightLeft } from "lucide-react";
 import { GlassCard } from "@/components/effects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTransactions } from "@/lib/api/transactions";
-import { truncateHash, truncateAddress, timeAgo, formatIRL } from "@/lib/format";
+import {
+  truncateHash,
+  truncateAddress,
+  timeAgo,
+  formatIRL,
+} from "@/lib/format";
 
 export function LatestTransactions() {
   const { data, isLoading } = useQuery({
@@ -48,7 +53,7 @@ export function LatestTransactions() {
           ))
         ) : (
           <AnimatePresence mode="popLayout" initial={false}>
-            {data?.items.map((tx) => (
+            {data?.data.map((tx) => (
               <motion.div
                 key={tx.hash}
                 layout
@@ -77,7 +82,9 @@ export function LatestTransactions() {
                 <div className="hidden items-center gap-1 font-mono text-xs text-muted-foreground sm:flex">
                   <span>{truncateAddress(tx.from)}</span>
                   <ArrowRight className="size-3 shrink-0" />
-                  <span>{tx.to ? truncateAddress(tx.to) : "Contract Create"}</span>
+                  <span>
+                    {tx.to ? truncateAddress(tx.to) : "Contract Create"}
+                  </span>
                 </div>
 
                 {/* Right side: value + time */}

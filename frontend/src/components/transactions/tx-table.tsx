@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { CheckCircle, XCircle } from "lucide-react";
+import { CheckCircle, XCircle, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { SkeletonShimmer } from "@/components/effects";
 import {
@@ -78,7 +78,11 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                     ? (Number(tx.gasUsed) * Number(tx.gasPrice)).toString()
                     : "0";
 
-                const isSuccess = tx.receipt?.status !== false;
+                const status = !tx.receipt
+                  ? "pending"
+                  : tx.receipt.status
+                    ? "success"
+                    : "fail";
 
                 return (
                   <motion.tr
@@ -90,10 +94,12 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                   >
                     {/* Status */}
                     <td className="px-4 py-3">
-                      {isSuccess ? (
+                      {status === "success" ? (
                         <CheckCircle className="size-4 text-integra-success" />
-                      ) : (
+                      ) : status === "fail" ? (
                         <XCircle className="size-4 text-integra-error" />
+                      ) : (
+                        <Clock className="size-4 text-yellow-500" />
                       )}
                     </td>
 

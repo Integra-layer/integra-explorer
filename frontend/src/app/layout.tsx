@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { ExplorerProvider } from "@/lib/explorer-provider";
 import { QueryProvider } from "@/lib/query-provider";
 import { PusherProvider } from "@/lib/pusher-provider";
 import { Navbar } from "@/components/layout/navbar";
@@ -35,17 +36,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased overflow-x-hidden`}
       >
         <ThemeProvider>
-          <QueryProvider>
-            <PusherProvider>
-              <div className="flex min-h-screen flex-col">
-                <Navbar />
-                <NetworkStatusBar />
-                <main className="flex-1">{children}</main>
-                <Footer />
-              </div>
-              <CommandPalette />
-            </PusherProvider>
-          </QueryProvider>
+          <ExplorerProvider>
+            <QueryProvider>
+              <PusherProvider>
+                <div className="flex min-h-screen flex-col">
+                  <Navbar />
+                  <NetworkStatusBar />
+                  <main className="flex-1">{children}</main>
+                  <Footer />
+                </div>
+                <CommandPalette />
+              </PusherProvider>
+            </QueryProvider>
+          </ExplorerProvider>
         </ThemeProvider>
       </body>
     </html>

@@ -16,16 +16,21 @@ export interface ExplorerThemes {
 
 export interface ExplorerConfig {
   id: number;
-  name: string;
   slug: string;
   domain: string;
-  workspaceId: number;
   themes: ExplorerThemes;
   token: string;
   nativeToken: string;
   totalSupply: string;
-  rpcServer: string;
-  chainId: number;
+  workspace: {
+    id: number;
+    name: string;
+    rpcServer: string;
+    chainId: number;
+  };
+  admin: {
+    firebaseUserId: string;
+  };
 }
 
 // --- Block ---
@@ -44,7 +49,7 @@ export interface Block {
   miner: string;
   nonce: string;
   parentHash: string;
-  transactionsCount: number;
+  transactionCount: number;
   transactions?: Transaction[];
   createdAt: string;
   updatedAt: string;
@@ -141,8 +146,6 @@ export interface Contract {
 export interface ChainStats {
   txCount24h: number;
   txCountTotal: number;
-  blockCount24h: number;
-  blockCountTotal: number;
   activeWalletCount: number;
   cumulativeWalletCount: number;
   averageGasPrice: string;
@@ -160,8 +163,9 @@ export interface SyncStatus {
 // --- Paginated Response ---
 
 export interface PaginatedResponse<T> {
-  items: T[];
+  data: T[];
   total: number;
+  count: number;
 }
 
 // --- Search ---

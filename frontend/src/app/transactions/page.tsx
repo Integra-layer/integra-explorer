@@ -17,7 +17,7 @@ function TransactionsPageContent() {
   const page = Number(searchParams.get("page")) || 1;
 
   const { data, isLoading } = useTransactions(page, ITEMS_PER_PAGE);
-  const total = data?.total ?? 0;
+  const total = data?.count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
   function goToPage(newPage: number) {
@@ -41,7 +41,7 @@ function TransactionsPageContent() {
         </div>
 
         {/* Table */}
-        <TxTable transactions={data?.items ?? []} isLoading={isLoading} />
+        <TxTable transactions={data?.data ?? []} isLoading={isLoading} />
 
         {/* Pagination controls */}
         <div className="flex items-center justify-between">
@@ -56,8 +56,7 @@ function TransactionsPageContent() {
           </Button>
 
           <span className="text-sm text-muted-foreground">
-            Page{" "}
-            <span className="font-medium text-foreground">{page}</span> of{" "}
+            Page <span className="font-medium text-foreground">{page}</span> of{" "}
             <span className="font-medium text-foreground">{totalPages}</span>
           </span>
 

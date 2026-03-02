@@ -11,10 +11,14 @@ const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 const SERVER_ORIGIN =
   process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 
-// The workspace ID is resolved once from /api/explorers/search and cached.
+// The workspace name is resolved once from /api/explorers/search and cached.
 // Can also be set via environment variable for static builds.
-let resolvedWorkspaceId: string | null =
+let resolvedWorkspaceName: string | null =
   process.env.NEXT_PUBLIC_WORKSPACE_ID || null;
+
+// The firebaseUserId is required by every Ethernal data endpoint.
+// Resolved from the explorer config's admin.firebaseUserId field.
+let resolvedFirebaseUserId: string | null = null;
 
 export class ApiError extends Error {
   constructor(
@@ -41,9 +45,14 @@ function buildUrl(
 
   const url = new URL(`${API_BASE}${endpoint}`, origin);
 
-  // Inject workspace if we have one and it is not already provided
-  if (resolvedWorkspaceId && !params?.workspace) {
-    url.searchParams.set("workspace", resolvedWorkspaceId);
+  // Inject workspace name if we have one and it is not already provided
+  if (resolvedWorkspaceName && !params?.workspace) {
+    url.searchParams.set("workspace", resolvedWorkspaceName);
+  }
+
+  // Inject firebaseUserId if we have one and it is not already provided
+  if (resolvedFirebaseUserId && !params?.firebaseUserId) {
+    url.searchParams.set("firebaseUserId", resolvedFirebaseUserId);
   }
 
   if (params) {
@@ -94,16 +103,24 @@ export async function fetchApi<T>(
 // ---------------------------------------------------------------------------
 
 /**
- * Set the workspace ID used for all subsequent API calls.
+ * Set the workspace name used for all subsequent API calls.
  * Typically called once during app initialization after fetching explorer config.
  */
-export function setWorkspaceId(id: string | number): void {
-  resolvedWorkspaceId = String(id);
+export function setWorkspaceName(name: string): void {
+  resolvedWorkspaceName = name;
 }
 
 /**
- * Get the currently configured workspace ID.
+ * Get the currently configured workspace name.
  */
-export function getWorkspaceId(): string | null {
-  return resolvedWorkspaceId;
+export function getWorkspaceName(): string | null {
+  return resolvedWorkspaceName;
+}
+
+/**
+ * Set the firebaseUserId used for all subsequent API calls.
+ * Required by Ethernal backend on every data endpoint.
+ */
+export function setFirebaseUserId(id: string): void {
+  resolvedFirebaseUserId = id;
 }

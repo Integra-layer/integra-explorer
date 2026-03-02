@@ -1,9 +1,10 @@
 "use client";
 
-import { Box, Activity, Users, Fuel } from "lucide-react";
+import { Activity, Users, Fuel, Box } from "lucide-react";
 import { NumberTicker } from "@/components/effects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useStats } from "@/lib/hooks/use-stats";
+import { useSyncStatus } from "@/lib/hooks/use-stats";
 import { cn } from "@/lib/utils";
 
 interface StatCardProps {
@@ -57,6 +58,7 @@ function StatCard({
 
 export function StatsGrid() {
   const { data, isLoading } = useStats();
+  const { data: syncStatus, isLoading: syncLoading } = useSyncStatus();
 
   const gweiValue = data?.averageGasPrice
     ? Number(data.averageGasPrice) / 1e9
@@ -66,9 +68,9 @@ export function StatsGrid() {
     <div className="mx-auto mt-6 grid w-full max-w-3xl grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
       <StatCard
         icon={<Box className="size-4" />}
-        label="Total Blocks"
-        value={data?.blockCountTotal}
-        isLoading={isLoading}
+        label="Latest Block"
+        value={syncStatus?.latestBlock}
+        isLoading={syncLoading}
       />
       <StatCard
         icon={<Activity className="size-4" />}

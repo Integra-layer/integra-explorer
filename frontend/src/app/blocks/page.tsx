@@ -18,7 +18,7 @@ function BlocksPageContent() {
   const page = Number(searchParams.get("page")) || 1;
 
   const { data, isLoading } = useBlocks(page, ITEMS_PER_PAGE);
-  const total = data?.total ?? 0;
+  const total = data?.count ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
   function goToPage(newPage: number) {
@@ -42,7 +42,7 @@ function BlocksPageContent() {
         </div>
 
         {/* Table */}
-        <BlocksTable blocks={data?.items ?? []} isLoading={isLoading} />
+        <BlocksTable blocks={data?.data ?? []} isLoading={isLoading} />
 
         {/* Pagination controls */}
         <div className="flex items-center justify-between">
@@ -57,8 +57,7 @@ function BlocksPageContent() {
           </Button>
 
           <span className="text-sm text-muted-foreground">
-            Page{" "}
-            <span className="font-medium text-foreground">{page}</span> of{" "}
+            Page <span className="font-medium text-foreground">{page}</span> of{" "}
             <span className="font-medium text-foreground">{totalPages}</span>
           </span>
 

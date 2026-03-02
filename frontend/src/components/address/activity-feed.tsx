@@ -60,8 +60,7 @@ function ActivityCard({
   const lowerAddr = address.toLowerCase();
   const isReceived = tx.to?.toLowerCase() === lowerAddr;
   const isSent = tx.from.toLowerCase() === lowerAddr;
-  const isContractCall =
-    tx.input && tx.input !== "0x" && tx.input.length > 2;
+  const isContractCall = tx.input && tx.input !== "0x" && tx.input.length > 2;
 
   const isSuccess = tx.receipt?.status !== false;
 
@@ -118,10 +117,7 @@ function ActivityCard({
                 {label}
               </span>
               {!isSuccess && (
-                <Badge
-                  variant="destructive"
-                  className="text-[10px]"
-                >
+                <Badge variant="destructive" className="text-[10px]">
                   Failed
                 </Badge>
               )}
@@ -150,9 +146,7 @@ function ActivityCard({
                 {truncateHash(tx.hash)}
               </Link>
               {tx.value !== "0" && (
-                <span className="font-medium">
-                  {formatIRL(tx.value)}
-                </span>
+                <span className="font-medium">{formatIRL(tx.value)}</span>
               )}
             </div>
           </div>
@@ -312,7 +306,7 @@ export function ActivityFeed({ address }: ActivityFeedProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("feed");
   const { data, isLoading } = useAddressTransactions(address);
 
-  const transactions = data?.items ?? [];
+  const transactions = data?.data ?? [];
 
   return (
     <div className="space-y-4">
@@ -358,12 +352,7 @@ export function ActivityFeed({ address }: ActivityFeedProps) {
       ) : viewMode === "feed" ? (
         <div className="space-y-3">
           {transactions.map((tx, i) => (
-            <ActivityCard
-              key={tx.hash}
-              tx={tx}
-              address={address}
-              index={i}
-            />
+            <ActivityCard key={tx.hash} tx={tx} address={address} index={i} />
           ))}
         </div>
       ) : (

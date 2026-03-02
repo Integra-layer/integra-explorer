@@ -202,8 +202,8 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
           {/* Transactions */}
           <DetailRow label="Transactions" icon={ArrowRightLeft}>
             <span className="font-medium">
-              {block.transactionsCount} transaction
-              {block.transactionsCount !== 1 ? "s" : ""}
+              {block.transactionCount} transaction
+              {block.transactionCount !== 1 ? "s" : ""}
             </span>
           </DetailRow>
 
@@ -282,7 +282,7 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
         <div className="flex items-center gap-2 border-b border-border/50 px-6 py-4">
           <ArrowRightLeft className="size-4 text-integra-brand" />
           <h2 className="text-base font-semibold">
-            Transactions ({block.transactionsCount})
+            Transactions ({block.transactionCount})
           </h2>
         </div>
 
