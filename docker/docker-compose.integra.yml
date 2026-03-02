@@ -249,6 +249,7 @@ services:
       SECRET: ${PM2_SECRET}
       ETHERNAL_HOST: http://backend:8888
       ETHERNAL_SECRET: ${SECRET}
+      ETHERNAL_REDIS_URL: redis://redis:6379
       PORT: "9090"
       NODE_ENV: production
 
