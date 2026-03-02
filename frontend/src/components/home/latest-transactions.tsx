@@ -7,12 +7,35 @@ import { ArrowRight, ArrowRightLeft } from "lucide-react";
 import { GlassCard } from "@/components/effects";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getTransactions } from "@/lib/api/transactions";
+import { findKnownToken } from "@/lib/api/tokens";
 import {
   truncateHash,
   truncateAddress,
   timeAgo,
   formatIRL,
+  parseErc20Amount,
+  formatTokenAmount,
 } from "@/lib/format";
+import type { Transaction } from "@/lib/api/types";
+
+function formatTxValue(tx: Transaction): string {
+  // ERC-20 transfer: native value is 0, but token amount is in the input data
+  if (
+    tx.methodDetails?.name === "transfer" &&
+    tx.value === "0" &&
+    tx.to &&
+    tx.data
+  ) {
+    const token = findKnownToken(tx.to);
+    if (token) {
+      const amount = parseErc20Amount(tx.data);
+      if (amount !== null) {
+        return formatTokenAmount(amount, token.decimals, token.symbol);
+      }
+    }
+  }
+  return formatIRL(tx.value);
+}
 
 export function LatestTransactions() {
   const { data, isLoading } = useQuery({
@@ -90,7 +113,7 @@ export function LatestTransactions() {
                 {/* Right side: value + time */}
                 <div className="ml-auto flex items-center gap-3">
                   <span className="text-xs font-medium">
-                    {formatIRL(tx.value)}
+                    {formatTxValue(tx)}
                   </span>
                   <span className="text-xs text-muted-foreground">
                     {timeAgo(tx.timestamp)}

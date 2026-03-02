@@ -88,7 +88,7 @@ export interface Transaction {
   gas: string;
   gasPrice: string;
   gasUsed: string | null;
-  input: string;
+  data: string;
   nonce: number;
   timestamp: string;
   transactionIndex: number;

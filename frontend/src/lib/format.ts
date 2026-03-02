@@ -45,6 +45,45 @@ export function formatIRL(weiValue: string): string {
 }
 
 /**
+ * Parse ERC-20 transfer amount from calldata.
+ * transfer(address,uint256) selector = 0xa9059cbb
+ * Amount is the second parameter (bytes 36-68).
+ */
+export function parseErc20Amount(input: string): bigint | null {
+  if (!input || input.length < 138) return null; // 0x + 8 selector + 64 addr + 64 amount
+  const selector = input.slice(0, 10).toLowerCase();
+  if (selector !== "0xa9059cbb") return null;
+  try {
+    return BigInt("0x" + input.slice(74, 138));
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Format a token amount given raw value and decimals.
+ */
+export function formatTokenAmount(
+  raw: bigint,
+  decimals: number,
+  symbol: string,
+): string {
+  const divisor = BigInt(10 ** decimals);
+  const whole = raw / divisor;
+  const frac = raw % divisor;
+  if (frac === BigInt(0)) {
+    return `${whole.toLocaleString()} ${symbol}`;
+  }
+  const fracStr = frac
+    .toString()
+    .padStart(decimals, "0")
+    .slice(0, 4)
+    .replace(/0+$/, "");
+  if (!fracStr) return `${whole.toLocaleString()} ${symbol}`;
+  return `${whole.toLocaleString()}.${fracStr} ${symbol}`;
+}
+
+/**
  * Format gas value with locale separators.
  */
 export function formatGas(gas: string | number): string {

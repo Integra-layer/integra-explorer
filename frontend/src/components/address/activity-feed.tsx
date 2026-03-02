@@ -21,9 +21,30 @@ import {
   truncateHash,
   formatIRL,
   timeAgo,
+  parseErc20Amount,
+  formatTokenAmount,
 } from "@/lib/format";
 import { fetchApi } from "@/lib/api/client";
+import { findKnownToken } from "@/lib/api/tokens";
 import type { Transaction, PaginatedResponse } from "@/lib/api/types";
+
+function formatTxValue(tx: Transaction): string {
+  if (
+    tx.methodDetails?.name === "transfer" &&
+    tx.value === "0" &&
+    tx.to &&
+    tx.data
+  ) {
+    const token = findKnownToken(tx.to);
+    if (token) {
+      const amount = parseErc20Amount(tx.data);
+      if (amount !== null) {
+        return formatTokenAmount(amount, token.decimals, token.symbol);
+      }
+    }
+  }
+  return formatIRL(tx.value);
+}
 
 interface ActivityFeedProps {
   address: string;
@@ -60,7 +81,7 @@ function ActivityCard({
   const lowerAddr = address.toLowerCase();
   const isReceived = tx.to?.toLowerCase() === lowerAddr;
   const isSent = tx.from.toLowerCase() === lowerAddr;
-  const isContractCall = tx.input && tx.input !== "0x" && tx.input.length > 2;
+  const isContractCall = tx.data && tx.data !== "0x" && tx.data.length > 2;
 
   const isSuccess = tx.receipt?.status !== false;
 
@@ -72,21 +93,21 @@ function ActivityCard({
   if (isReceived && !isSent) {
     icon = <ArrowDownLeft className="size-5" />;
     label = "Received";
-    description = `Received ${formatIRL(tx.value)} from`;
+    description = `Received ${formatTxValue(tx)} from`;
     accentClass = "text-integra-success";
   } else if (isSent && !isReceived) {
     if (isContractCall) {
       icon = <FileCode className="size-5" />;
-      label = tx.methodDetails?.label ?? "Contract Call";
-      description = `Called ${tx.methodDetails?.label ?? "function"} on`;
+      label = tx.methodDetails?.name ?? "Contract Call";
+      description = `Called ${tx.methodDetails?.name ?? "function"} on`;
     } else {
       label = "Sent";
-      description = `Sent ${formatIRL(tx.value)} to`;
+      description = `Sent ${formatTxValue(tx)} to`;
     }
   } else {
     // Self-transfer
     label = "Self";
-    description = `Self-transfer of ${formatIRL(tx.value)}`;
+    description = `Self-transfer of ${formatTxValue(tx)}`;
   }
 
   const counterparty = isReceived ? tx.from : tx.to;
@@ -145,9 +166,7 @@ function ActivityCard({
               >
                 {truncateHash(tx.hash)}
               </Link>
-              {tx.value !== "0" && (
-                <span className="font-medium">{formatIRL(tx.value)}</span>
-              )}
+              <span className="font-medium">{formatTxValue(tx)}</span>
             </div>
           </div>
         </div>
@@ -220,7 +239,7 @@ function ActivityTable({
 
                 <td className="hidden px-4 py-3 md:table-cell">
                   <Badge variant="outline" className="text-[10px]">
-                    {tx.methodDetails?.label ?? "Transfer"}
+                    {tx.methodDetails?.name ?? "Transfer"}
                   </Badge>
                 </td>
 
@@ -254,7 +273,7 @@ function ActivityTable({
                 </td>
 
                 <td className="px-4 py-3 text-muted-foreground">
-                  {formatIRL(tx.value)}
+                  {formatTxValue(tx)}
                 </td>
 
                 <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">

@@ -85,7 +85,7 @@ function OverviewTab({ transaction: tx }: { transaction: Transaction }) {
 // ---------------------------------------------------------------------------
 
 function InputDataTab({ transaction: tx }: { transaction: Transaction }) {
-  const hasInput = tx.input && tx.input !== "0x" && tx.input !== "";
+  const hasInput = tx.data && tx.data !== "0x" && tx.data !== "";
 
   if (!hasInput) {
     return (
@@ -117,7 +117,7 @@ function InputDataTab({ transaction: tx }: { transaction: Transaction }) {
         </h4>
         <div className="max-h-64 overflow-auto rounded-lg bg-muted/50 p-4">
           <code className="break-all font-mono text-xs leading-relaxed">
-            {tx.input}
+            {tx.data}
           </code>
         </div>
       </div>
