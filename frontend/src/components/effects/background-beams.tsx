@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -18,10 +18,6 @@ const beamPaths = [
 
 export function BackgroundBeams({ className }: BackgroundBeamsProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    // Component mounted — beams are purely decorative, no cleanup needed
-  }, []);
 
   return (
     <div
@@ -69,9 +65,21 @@ export function BackgroundBeams({ className }: BackgroundBeamsProps) {
         ))}
         <defs>
           <linearGradient id="beam-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-            <stop offset="0%" stopColor="var(--integra-brand-pink)" stopOpacity="0" />
-            <stop offset="50%" stopColor="var(--integra-brand)" stopOpacity="0.6" />
-            <stop offset="100%" stopColor="var(--integra-brand-pink)" stopOpacity="0" />
+            <stop
+              offset="0%"
+              stopColor="var(--integra-brand-pink)"
+              stopOpacity="0"
+            />
+            <stop
+              offset="50%"
+              stopColor="var(--integra-brand)"
+              stopOpacity="0.6"
+            />
+            <stop
+              offset="100%"
+              stopColor="var(--integra-brand-pink)"
+              stopOpacity="0"
+            />
           </linearGradient>
         </defs>
       </svg>

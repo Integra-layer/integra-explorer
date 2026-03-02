@@ -1,11 +1,9 @@
 export { GlassCard } from "./glass-card";
-export { AnimatedCounter } from "./animated-counter";
-export { GradientButton, GradientButtonWithShimmer } from "./gradient-button";
+export { GradientButton } from "./gradient-button";
 export { PulseIndicator } from "./pulse-indicator";
 export { SkeletonShimmer } from "./skeleton-shimmer";
 export { PageTransition } from "./page-transition";
 export { HoverLift } from "./hover-lift";
 export { CopyButton } from "./copy-button";
 export { BackgroundBeams } from "./background-beams";
-export { DotPattern } from "./dot-pattern";
 export { NumberTicker } from "./number-ticker";

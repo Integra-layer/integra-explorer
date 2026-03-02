@@ -38,7 +38,7 @@ export function DotPattern({
                 attributeName="opacity"
                 values="0.3;1;0.3"
                 dur="4s"
-                begin={`${Math.random() * 4}s`}
+                begin={`${(0 * 0.7) % 4}s`}
                 repeatCount="indefinite"
               />
             </circle>

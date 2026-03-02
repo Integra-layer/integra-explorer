@@ -1,5 +1,5 @@
 import { fetchApi, setWorkspaceName, setFirebaseUserId } from "./client";
-import type { ExplorerConfig, SyncStatus } from "./types";
+import type { ExplorerConfig } from "./types";
 
 /**
  * Search for an explorer by domain and return its config.
@@ -24,12 +24,4 @@ export async function getExplorerConfig(
   }
 
   return config;
-}
-
-/**
- * Get the current sync status of the explorer backend.
- * This endpoint does not require a workspace parameter.
- */
-export async function getSyncStatus(): Promise<SyncStatus> {
-  return fetchApi<SyncStatus>("/status");
 }
