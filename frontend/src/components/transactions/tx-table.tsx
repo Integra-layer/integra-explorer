@@ -103,7 +103,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                   ? "pending"
                   : tx.receipt.status
                     ? "success"
-                    : "fail";
+                    : "failed";
 
                 return (
                   <motion.tr
@@ -117,7 +117,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                     <td className="px-4 py-3">
                       {status === "success" ? (
                         <CheckCircle className="size-4 text-integra-success" />
-                      ) : status === "fail" ? (
+                      ) : status === "failed" ? (
                         <XCircle className="size-4 text-integra-error" />
                       ) : (
                         <Clock className="size-4 text-yellow-500" />

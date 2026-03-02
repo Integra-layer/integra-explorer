@@ -171,7 +171,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
             className="flex size-10 items-center justify-center rounded-full font-bold text-white"
             style={{
               background: knownToken?.featured
-                ? "linear-gradient(135deg, hsl(var(--integra-brand)), hsl(var(--integra-accent)))"
+                ? "linear-gradient(135deg, var(--integra-brand-pink), var(--integra-brand))"
                 : `hsl(${tokenSymbol.split("").reduce((a, c) => a + c.charCodeAt(0), 0) % 360}, 60%, 45%)`,
             }}
           >

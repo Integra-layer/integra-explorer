@@ -58,7 +58,7 @@ function TokenIcon({
       className="flex size-10 items-center justify-center rounded-full font-bold text-white"
       style={{
         background: featured
-          ? "linear-gradient(135deg, hsl(var(--integra-brand)), hsl(var(--integra-accent)))"
+          ? "linear-gradient(135deg, var(--integra-brand-pink), var(--integra-brand))"
           : `hsl(${hue}, 60%, 45%)`,
       }}
     >
