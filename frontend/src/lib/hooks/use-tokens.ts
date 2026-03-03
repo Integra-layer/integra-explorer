@@ -10,14 +10,10 @@ import type { Contract } from "@/lib/api/types";
 
 /**
  * Return the static list of known tokens.
- * Wrapped in useQuery for consistency but effectively instant.
+ * Direct return — no async overhead for synchronous static data.
  */
 export function useKnownTokens() {
-  return useQuery<KnownToken[]>({
-    queryKey: ["known-tokens"],
-    queryFn: () => getKnownTokens(),
-    staleTime: Infinity,
-  });
+  return { data: getKnownTokens(), isLoading: false };
 }
 
 /**

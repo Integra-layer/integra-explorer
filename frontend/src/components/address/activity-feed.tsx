@@ -3,7 +3,6 @@
 import { useState } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useQuery } from "@tanstack/react-query";
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -19,34 +18,18 @@ import { GlassCard, SkeletonShimmer } from "@/components/effects";
 import {
   truncateAddress,
   truncateHash,
-  formatIRL,
   timeAgo,
   formatTxValue,
   formatFee,
 } from "@/lib/format";
-import { fetchApi } from "@/lib/api/client";
-import { useExplorerReady } from "@/lib/explorer-provider";
-import type { Transaction, PaginatedResponse } from "@/lib/api/types";
+import { useAddressTransactions } from "@/lib/hooks/use-transactions";
+import type { Transaction } from "@/lib/api/types";
 
 interface ActivityFeedProps {
   address: string;
 }
 
 type ViewMode = "feed" | "table";
-
-function useAddressTransactions(address: string) {
-  const isReady = useExplorerReady();
-  return useQuery({
-    queryKey: ["address-transactions", address],
-    queryFn: () =>
-      fetchApi<PaginatedResponse<Transaction>>("/transactions", {
-        address,
-        itemsPerPage: "50",
-        order: "DESC",
-      }),
-    enabled: isReady && !!address,
-  });
-}
 
 // ---------------------------------------------------------------------------
 // Feed card

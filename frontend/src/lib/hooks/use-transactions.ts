@@ -2,7 +2,9 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { getTransactions, getTransaction } from "@/lib/api/transactions";
+import { fetchApi } from "@/lib/api/client";
 import { useExplorerReady } from "@/lib/explorer-provider";
+import type { Transaction, PaginatedResponse } from "@/lib/api/types";
 
 /**
  * Fetch a paginated list of transactions.
@@ -27,5 +29,23 @@ export function useTransaction(hash: string | undefined) {
     queryKey: ["transaction", hash],
     queryFn: () => getTransaction(hash!),
     enabled: isReady && !!hash,
+  });
+}
+
+/**
+ * Fetch transactions for a specific address.
+ * Gated on explorer auth being resolved and address being truthy.
+ */
+export function useAddressTransactions(address: string) {
+  const isReady = useExplorerReady();
+  return useQuery({
+    queryKey: ["address-transactions", address],
+    queryFn: () =>
+      fetchApi<PaginatedResponse<Transaction>>("/transactions", {
+        address,
+        itemsPerPage: "50",
+        order: "DESC",
+      }),
+    enabled: isReady && !!address,
   });
 }

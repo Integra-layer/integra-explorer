@@ -3,10 +3,14 @@
 import { useMemo } from "react";
 import { Shield, Coins, Users, TrendingUp } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { GlassCard, NumberTicker, PageTransition, SkeletonShimmer } from "@/components/effects";
+import {
+  GlassCard,
+  NumberTicker,
+  PageTransition,
+  SkeletonShimmer,
+} from "@/components/effects";
 import { ValidatorCard } from "@/components/validators/validator-card";
-import { useValidators } from "@/lib/hooks/use-validators";
-import { useStakingPool } from "@/lib/hooks/use-validators";
+import { useValidators, useStakingPool } from "@/lib/hooks/use-validators";
 
 export default function ValidatorsPage() {
   const { data: validators, isLoading: loadingValidators } = useValidators();
@@ -15,9 +19,7 @@ export default function ValidatorsPage() {
   // Sort validators by tokens (highest first)
   const sortedValidators = useMemo(() => {
     if (!validators) return [];
-    return [...validators].sort(
-      (a, b) => Number(b.tokens) - Number(a.tokens),
-    );
+    return [...validators].sort((a, b) => Number(b.tokens) - Number(a.tokens));
   }, [validators]);
 
   const totalBonded = pool?.bonded_tokens || "0";
@@ -26,8 +28,9 @@ export default function ValidatorsPage() {
   const bondedRatio =
     totalSupply > 0 ? (Number(totalBonded) / totalSupply) * 100 : 0;
   const totalStakedIRL = Number(totalBonded) / 1e18;
-  const activeCount =
-    sortedValidators.filter((v) => v.status === "BOND_STATUS_BONDED").length;
+  const activeCount = sortedValidators.filter(
+    (v) => v.status === "BOND_STATUS_BONDED",
+  ).length;
 
   return (
     <PageTransition>
