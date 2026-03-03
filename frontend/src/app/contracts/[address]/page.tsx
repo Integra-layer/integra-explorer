@@ -68,7 +68,8 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
 
   const isVerified =
     contract?.verificationStatus === "verified" ||
-    contract?.verificationStatus === "success";
+    contract?.verificationStatus === "success" ||
+    contract?.verification != null;
   const allFunctions = parseAbiFunctions(contract?.abi ?? null);
   const allEvents = parseAbiEvents(contract?.abi ?? null);
   const abiString = contract?.abi

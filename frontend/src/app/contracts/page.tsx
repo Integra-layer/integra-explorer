@@ -140,7 +140,8 @@ function ContractsPageContent() {
                   {contracts.map((contract) => {
                     const isVerified =
                       contract.verificationStatus === "verified" ||
-                      contract.verificationStatus === "success";
+                      contract.verificationStatus === "success" ||
+                      contract.verification != null;
                     return (
                       <tr
                         key={contract.id}

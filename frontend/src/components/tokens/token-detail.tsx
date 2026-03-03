@@ -128,8 +128,9 @@ export function TokenDetail({ address }: TokenDetailProps) {
     contract.tokenTotalSupply || knownToken?.totalSupply || null;
   const standard = detectStandard(contract.patterns ?? []);
   const isVerified =
-    contract.verificationStatus === "perfect" ||
-    contract.verificationStatus === "partial";
+    contract.verificationStatus === "verified" ||
+    contract.verificationStatus === "success" ||
+    contract.verification != null;
 
   return (
     <motion.div
@@ -269,7 +270,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
         </div>
 
         <div className="px-6 py-4">
-          <ActivityFeed address={address} />
+          <ActivityFeed address={address} contractFilter />
         </div>
       </GlassCard>
     </motion.div>

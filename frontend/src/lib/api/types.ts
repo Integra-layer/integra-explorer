@@ -136,6 +136,8 @@ export interface Contract {
   tokenDecimals: number | null;
   tokenTotalSupply: string | null;
   verificationStatus: string | null;
+  /** List endpoint returns verification as object|null instead of verificationStatus */
+  verification: { createdAt: string } | null;
   has721Metadata: boolean;
   has721Enumerable: boolean;
   proxy: string | null;
