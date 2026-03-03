@@ -11,7 +11,7 @@ export function NetworkStatusBar() {
   const { data, isError } = useQuery({
     queryKey: ["blocks", 1, 1],
     queryFn: () => getBlocks({ page: 1, itemsPerPage: 1 }),
-    refetchInterval: 10_000,
+    refetchInterval: 5_000,
     enabled: isReady,
   });
 

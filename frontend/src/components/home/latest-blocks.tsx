@@ -17,7 +17,7 @@ export function LatestBlocks() {
   const { data, isLoading } = useQuery({
     queryKey: ["blocks", 1, 6],
     queryFn: () => getBlocks({ page: 1, itemsPerPage: 6 }),
-    refetchInterval: 10_000,
+    refetchInterval: 5_000,
     enabled: isReady,
   });
 

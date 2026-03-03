@@ -256,6 +256,12 @@ services:
       ETHERNAL_REDIS_URL: redis://redis:6379
       PORT: "9090"
       NODE_ENV: production
+    healthcheck:
+      test: ["CMD-SHELL", "pm2 pid integra-testnet 2>/dev/null | tail -1 | grep -qE '^[1-9][0-9]*$'"]
+      interval: 60s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
 
   frontend:
     build:

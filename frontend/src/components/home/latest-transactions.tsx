@@ -7,11 +7,7 @@ import { ArrowRight, ArrowRightLeft, MoveRight } from "lucide-react";
 import { GlassCard, SkeletonShimmer } from "@/components/effects";
 import { Badge } from "@/components/ui/badge";
 import { getTransactions } from "@/lib/api/transactions";
-import {
-  truncateHash,
-  truncateAddress,
-  timeAgo,
-} from "@/lib/format";
+import { truncateHash, truncateAddress, timeAgo } from "@/lib/format";
 import { classifyTransaction } from "@/lib/tx-classifier";
 import { useExplorerReady } from "@/lib/explorer-provider";
 
@@ -20,7 +16,7 @@ export function LatestTransactions() {
   const { data, isLoading } = useQuery({
     queryKey: ["transactions", 1, 6],
     queryFn: () => getTransactions({ page: 1, itemsPerPage: 6 }),
-    refetchInterval: 10_000,
+    refetchInterval: 5_000,
     enabled: isReady,
   });
 
