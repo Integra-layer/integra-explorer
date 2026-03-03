@@ -244,7 +244,7 @@ export function TokenList({ tokens, isLoading }: TokenListProps) {
                     {/* Standard */}
                     <td className="hidden px-4 py-4 md:table-cell">
                       <Badge variant="outline" className="text-[10px]">
-                        {token.standard ?? "ERC-20"}
+                        {token.standard ?? "Unknown"}
                       </Badge>
                     </td>
 

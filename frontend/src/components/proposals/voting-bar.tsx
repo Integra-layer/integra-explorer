@@ -24,36 +24,7 @@ function parseTally(tally: TallyResult): VoteSection[] {
   const total = yes + no + abstain + veto;
 
   if (total === 0) {
-    return [
-      {
-        label: "Yes",
-        count: 0,
-        percentage: 0,
-        color: "bg-integra-success",
-        textColor: "text-integra-success",
-      },
-      {
-        label: "No",
-        count: 0,
-        percentage: 0,
-        color: "bg-integra-danger",
-        textColor: "text-integra-danger",
-      },
-      {
-        label: "Abstain",
-        count: 0,
-        percentage: 0,
-        color: "bg-muted-foreground/50",
-        textColor: "text-muted-foreground",
-      },
-      {
-        label: "Veto",
-        count: 0,
-        percentage: 0,
-        color: "bg-integra-warning",
-        textColor: "text-integra-warning",
-      },
-    ];
+    return [];
   }
 
   return [
@@ -89,8 +60,9 @@ function parseTally(tally: TallyResult): VoteSection[] {
 }
 
 function formatVoteCount(count: number): string {
-  if (count === 0) return "0";
-  // If raw counts are in airl (18 decimals), convert to IRL
+  if (!count || count === 0) return "0";
+  // Cosmos SDK governance module returns vote tallies in the base denomination
+  // (airl with 18 decimals). Values >= 1e15 are converted to IRL for display.
   if (count >= 1e15) {
     const irl = count / 1e18;
     return irl.toLocaleString(undefined, { maximumFractionDigits: 0 });

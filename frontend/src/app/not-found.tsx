@@ -7,10 +7,13 @@ export default function NotFound() {
     const query = (formData.get("q") as string)?.trim();
     if (!query) return;
 
-    // Route by input type: 64-char hex = tx hash, 40-char hex = address,
+    // Route by input type: 0x + 64 hex = tx hash with prefix,
+    // 64 hex = tx hash without prefix, integra1/0x + 40 hex = address,
     // pure digits = block height, otherwise validators list
-    if (/^[0-9A-Fa-f]{64}$/.test(query)) {
+    if (/^0x[0-9A-Fa-f]{64}$/.test(query)) {
       redirect(`/transactions/${query}`);
+    } else if (/^[0-9A-Fa-f]{64}$/.test(query)) {
+      redirect(`/transactions/0x${query}`);
     } else if (/^(integra1|0x)[0-9A-Za-z]{38,}$/.test(query)) {
       redirect(`/address/${query}`);
     } else if (/^\d+$/.test(query)) {

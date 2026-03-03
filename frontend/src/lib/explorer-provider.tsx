@@ -7,7 +7,10 @@ import { getExplorerConfig } from "@/lib/api/explorer";
  * Context that signals when explorer auth (workspace + firebaseUserId) is resolved.
  * All data hooks should gate on `isReady` to avoid firing before auth params are set.
  */
-const ExplorerContext = createContext({ isReady: false });
+const ExplorerContext = createContext({
+  isReady: false,
+  error: null as string | null,
+});
 
 export function useExplorerReady(): boolean {
   return useContext(ExplorerContext).isReady;
@@ -20,7 +23,11 @@ export function useExplorerReady(): boolean {
  */
 export function ExplorerProvider({ children }: { children: React.ReactNode }) {
   const initialized = useRef(false);
-  const [isReady, setIsReady] = useState(false);
+  // If NEXT_PUBLIC_WORKSPACE_ID is already set via env, the app is usable immediately
+  // without waiting for remote config resolution.
+  const hasEnvWorkspace = !!process.env.NEXT_PUBLIC_WORKSPACE_ID;
+  const [isReady, setIsReady] = useState(hasEnvWorkspace);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialized.current) return;
@@ -36,13 +43,22 @@ export function ExplorerProvider({ children }: { children: React.ReactNode }) {
           "[ExplorerProvider] Failed to resolve explorer config:",
           err,
         );
-        // Still mark ready so the app doesn't stay in permanent loading
-        setIsReady(true);
+        // If we already have a workspace from env, keep the app usable
+        if (!hasEnvWorkspace) {
+          setError(
+            "Failed to load explorer configuration. Please try refreshing the page.",
+          );
+        }
       });
-  }, []);
+  }, [hasEnvWorkspace]);
 
   return (
-    <ExplorerContext.Provider value={{ isReady }}>
+    <ExplorerContext.Provider value={{ isReady, error }}>
+      {error && (
+        <div className="fixed top-0 left-0 right-0 z-50 bg-destructive px-4 py-3 text-center text-sm text-destructive-foreground">
+          {error}
+        </div>
+      )}
       {children}
     </ExplorerContext.Provider>
   );

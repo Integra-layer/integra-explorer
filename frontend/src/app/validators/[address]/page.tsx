@@ -1,29 +1,19 @@
-"use client";
-
-import { use } from "react";
-import { PageTransition } from "@/components/effects";
-import { ValidatorDetail } from "@/components/validators/validator-detail";
-import { useValidator, useValidatorDelegations } from "@/lib/hooks/use-validators";
+import type { Metadata } from "next";
+import ValidatorPageClient from "./_client";
 
 interface ValidatorPageProps {
   params: Promise<{ address: string }>;
 }
 
-export default function ValidatorPage({ params }: ValidatorPageProps) {
-  const { address } = use(params);
-  const { data: validator, isLoading: loadingValidator } = useValidator(address);
-  const { data: delegations, isLoading: loadingDelegations } =
-    useValidatorDelegations(address);
+export async function generateMetadata({ params }: ValidatorPageProps): Promise<Metadata> {
+  const { address } = await params;
+  const truncated = address.length > 16 ? `${address.slice(0, 10)}...${address.slice(-6)}` : address;
+  return {
+    title: `Validator ${truncated}`,
+    description: `Validator details, delegations, and performance for ${address} on Integra Layer.`,
+  };
+}
 
-  return (
-    <PageTransition>
-      <section className="container mx-auto px-4 py-8">
-        <ValidatorDetail
-          validator={validator}
-          delegations={delegations}
-          isLoading={loadingValidator || loadingDelegations}
-        />
-      </section>
-    </PageTransition>
-  );
+export default function ValidatorPage({ params }: ValidatorPageProps) {
+  return <ValidatorPageClient params={params} />;
 }

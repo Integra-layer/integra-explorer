@@ -270,7 +270,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
         </div>
 
         <div className="px-6 py-4">
-          <ActivityFeed address={address} contractFilter />
+          <ActivityFeed address={address} />
         </div>
       </GlassCard>
     </motion.div>

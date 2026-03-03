@@ -4,10 +4,15 @@ import type { AppKitNetwork } from "@reown/appkit/networks";
 import { createAppKit } from "@reown/appkit/react";
 import { WagmiAdapter } from "@reown/appkit-adapter-wagmi";
 import { WagmiProvider } from "wagmi";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { integraTestnet, integraMainnet } from "./chains";
 
 const projectId = process.env.NEXT_PUBLIC_REOWN_PROJECT_ID || "";
+
+if (!projectId) {
+  console.warn(
+    "[AppKit] NEXT_PUBLIC_REOWN_PROJECT_ID is empty — wallet features will not work.",
+  );
+}
 
 const networks: [AppKitNetwork, ...AppKitNetwork[]] = [
   integraTestnet,
@@ -39,14 +44,8 @@ createAppKit({
   },
 });
 
-const wagmiQueryClient = new QueryClient();
-
 export function AppKitProvider({ children }: { children: React.ReactNode }) {
   return (
-    <WagmiProvider config={wagmiAdapter.wagmiConfig}>
-      <QueryClientProvider client={wagmiQueryClient}>
-        {children}
-      </QueryClientProvider>
-    </WagmiProvider>
+    <WagmiProvider config={wagmiAdapter.wagmiConfig}>{children}</WagmiProvider>
   );
 }

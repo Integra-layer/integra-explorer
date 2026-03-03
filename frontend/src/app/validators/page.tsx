@@ -75,6 +75,8 @@ function StakingGovernanceContent() {
             {(["validators", "proposals"] as Tab[]).map((tab) => (
               <button
                 key={tab}
+                role="tab"
+                aria-selected={activeTab === tab}
                 onClick={() => handleTabChange(tab)}
                 className={[
                   "relative px-4 pb-3 pt-1 text-sm font-medium capitalize transition-colors",
@@ -104,7 +106,9 @@ function StakingGovernanceContent() {
                     <Coins className="size-5 text-integra-brand" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Staked</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total Staked
+                    </p>
                     {loadingPool ? (
                       <SkeletonShimmer width={120} height={24} />
                     ) : (
@@ -123,13 +127,16 @@ function StakingGovernanceContent() {
                     <TrendingUp className="size-5 text-integra-success" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-sm text-muted-foreground">Bonded Ratio</p>
+                    <p className="text-sm text-muted-foreground">
+                      Bonded Ratio
+                    </p>
                     {loadingPool ? (
                       <SkeletonShimmer width={80} height={24} />
                     ) : (
                       <div className="space-y-1">
                         <p className="text-xl font-bold">
-                          <NumberTicker value={bondedRatio} decimalPlaces={1} />%
+                          <NumberTicker value={bondedRatio} decimalPlaces={1} />
+                          %
                         </p>
                         <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
                           <div

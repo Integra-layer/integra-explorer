@@ -95,12 +95,16 @@ export function ProposalCard({ proposal }: ProposalCardProps) {
     proposal.status !== "PROPOSAL_STATUS_DEPOSIT_PERIOD";
   const countdown = isVoting ? getCountdown(proposal.voting_end_time) : null;
 
-  // Fetch live tally for proposals in voting period (final_tally_result is zeros until voting ends)
+  // Fetch tally for active voting (live) and concluded proposals (final results)
+  const tallyEnabled =
+    proposal.status === "PROPOSAL_STATUS_VOTING_PERIOD" ||
+    proposal.status === "PROPOSAL_STATUS_PASSED" ||
+    proposal.status === "PROPOSAL_STATUS_REJECTED";
   const { data: liveTally } = useQuery({
     queryKey: ["proposal-tally", proposal.id],
     queryFn: () => getProposalTally(proposal.id),
-    enabled: isVoting,
-    refetchInterval: 30_000,
+    enabled: tallyEnabled,
+    refetchInterval: isVoting ? 30_000 : false,
   });
 
   const tally = liveTally ?? proposal.final_tally_result;

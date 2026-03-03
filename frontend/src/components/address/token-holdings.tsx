@@ -10,6 +10,7 @@ import type { TokenBalance } from "@/lib/api/types";
 interface TokenHoldingsProps {
   tokenBalances: TokenBalance[] | undefined;
   isLoading: boolean;
+  error?: Error | null;
 }
 
 function formatTokenBalance(balance: string, decimals: number): string {
@@ -19,13 +20,7 @@ function formatTokenBalance(balance: string, decimals: number): string {
   return num.toLocaleString(undefined, { maximumFractionDigits: 4 });
 }
 
-function TokenRow({
-  token,
-  index,
-}: {
-  token: TokenBalance;
-  index: number;
-}) {
+function TokenRow({ token, index }: { token: TokenBalance; index: number }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 8 }}
@@ -62,9 +57,7 @@ function TokenRow({
           <p className="text-sm font-medium">
             {formatTokenBalance(token.balance, token.tokenDecimals)}
           </p>
-          <p className="text-xs text-muted-foreground">
-            {token.tokenSymbol}
-          </p>
+          <p className="text-xs text-muted-foreground">{token.tokenSymbol}</p>
         </div>
       </div>
     </motion.div>
@@ -91,11 +84,25 @@ function TokenHoldingsSkeleton() {
   );
 }
 
-export function TokenHoldings({ tokenBalances, isLoading }: TokenHoldingsProps) {
+export function TokenHoldings({
+  tokenBalances,
+  isLoading,
+  error,
+}: TokenHoldingsProps) {
   if (isLoading) {
     return (
       <GlassCard className="p-4">
         <TokenHoldingsSkeleton />
+      </GlassCard>
+    );
+  }
+
+  if (error) {
+    return (
+      <GlassCard className="flex items-center justify-center py-16">
+        <p className="text-destructive">
+          Failed to load token holdings. Please try again later.
+        </p>
       </GlassCard>
     );
   }

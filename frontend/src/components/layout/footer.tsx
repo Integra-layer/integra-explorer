@@ -17,11 +17,7 @@ const footerSections = [
     title: "Tools",
     links: [
       { label: "Developers", href: "/developers" },
-      {
-        label: "Faucet",
-        href: "https://testnet.integralayer.com",
-        external: true,
-      },
+      { label: "Faucet", href: "/faucet" },
       { label: "Resources", href: "/developers#resources" },
       { label: "Proposals", href: "/proposals" },
     ],
@@ -71,7 +67,10 @@ const footerSections = [
       },
       {
         label: "Portal",
-        href: "https://testnet.integralayer.com",
+        href:
+          process.env.NEXT_PUBLIC_NETWORK_MODE === "mainnet"
+            ? "https://integralayer.com"
+            : "https://testnet.integralayer.com",
         external: true,
       },
     ],

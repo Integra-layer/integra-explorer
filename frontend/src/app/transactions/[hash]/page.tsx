@@ -1,38 +1,19 @@
-"use client";
-
-import { use } from "react";
-import { PageTransition } from "@/components/effects";
-import { TxDetail } from "@/components/transactions/tx-detail";
-import { useTransaction } from "@/lib/hooks/use-transactions";
+import type { Metadata } from "next";
+import TransactionPageClient from "./_client";
 
 interface TransactionPageProps {
   params: Promise<{ hash: string }>;
 }
 
+export async function generateMetadata({ params }: TransactionPageProps): Promise<Metadata> {
+  const { hash } = await params;
+  const truncated = hash.length > 16 ? `${hash.slice(0, 10)}...${hash.slice(-6)}` : hash;
+  return {
+    title: `Transaction ${truncated}`,
+    description: `Details for transaction ${hash} on the Integra Layer blockchain.`,
+  };
+}
+
 export default function TransactionPage({ params }: TransactionPageProps) {
-  const { hash } = use(params);
-  const { data: transaction, isLoading, error } = useTransaction(hash);
-
-  if (error) {
-    return (
-      <PageTransition>
-        <section className="container mx-auto px-4 py-8">
-          <div className="flex flex-col items-center justify-center gap-4 py-20 text-center">
-            <h1 className="text-2xl font-bold">Transaction Not Found</h1>
-            <p className="text-muted-foreground">
-              Transaction {hash} could not be loaded.
-            </p>
-          </div>
-        </section>
-      </PageTransition>
-    );
-  }
-
-  return (
-    <PageTransition>
-      <section className="container mx-auto px-4 py-8">
-        <TxDetail transaction={transaction} isLoading={isLoading} />
-      </section>
-    </PageTransition>
-  );
+  return <TransactionPageClient params={params} />;
 }

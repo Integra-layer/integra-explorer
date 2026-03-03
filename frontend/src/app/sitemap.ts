@@ -1,8 +1,16 @@
 import type { MetadataRoute } from "next";
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://scan.integralayer.com";
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  "https://testnet.explorer.integralayer.com";
 
+/**
+ * Static sitemap for crawlable pages.
+ * Dynamic detail pages (/blocks/[height], /transactions/[hash], /address/[address],
+ * /validators/[address], /contracts/[address], /tokens/[address], /passport/[id])
+ * are discovered via internal links and crawling — they cannot be enumerated at
+ * build time due to the continuously growing dataset.
+ */
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
     {
@@ -30,16 +38,22 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/proposals`,
+      url: `${BASE_URL}/tokens`,
       lastModified: new Date(),
       changeFrequency: "hourly",
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/tokens`,
+      url: `${BASE_URL}/contracts`,
       lastModified: new Date(),
       changeFrequency: "hourly",
-      priority: 0.7,
+      priority: 0.6,
+    },
+    {
+      url: `${BASE_URL}/passport`,
+      lastModified: new Date(),
+      changeFrequency: "daily",
+      priority: 0.6,
     },
     {
       url: `${BASE_URL}/faucet`,

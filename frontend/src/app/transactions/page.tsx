@@ -16,7 +16,7 @@ function TransactionsPageContent() {
   const router = useRouter();
   const page = Number(searchParams.get("page")) || 1;
 
-  const { data, isLoading } = useTransactions(page, ITEMS_PER_PAGE);
+  const { data, isLoading, error } = useTransactions(page, ITEMS_PER_PAGE);
   const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
@@ -39,6 +39,13 @@ function TransactionsPageContent() {
             </Badge>
           )}
         </div>
+
+        {/* Error state */}
+        {error && (
+          <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            Failed to load transactions. Please try again.
+          </div>
+        )}
 
         {/* Table */}
         <TxTable transactions={data?.items ?? []} isLoading={isLoading} />

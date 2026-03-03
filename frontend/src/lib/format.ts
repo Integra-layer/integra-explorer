@@ -175,15 +175,18 @@ export function formatGas(gas: string | number): string {
  * Format a large number with locale separators.
  */
 export function formatNumber(value: number | string): string {
-  return Number(value).toLocaleString();
+  const num = Number(value);
+  if (value == null || isNaN(num)) return "0";
+  return num.toLocaleString();
 }
 
 /**
  * Format gas price from wei to Gwei.
  */
 export function formatGwei(weiValue: string): string {
+  if (weiValue == null) return "0";
   const gwei = Number(weiValue) / 1e9;
-  if (gwei === 0) return "0";
+  if (isNaN(gwei) || gwei === 0) return "0";
   if (gwei < 0.01) return "<0.01";
   return gwei.toLocaleString(undefined, { maximumFractionDigits: 2 });
 }

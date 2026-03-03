@@ -30,8 +30,6 @@ import type { Transaction } from "@/lib/api/types";
 
 interface ActivityFeedProps {
   address: string;
-  /** When set, only show transactions where tx.to matches this contract address */
-  contractFilter?: boolean;
 }
 
 type ViewMode = "feed" | "table";
@@ -364,7 +362,7 @@ function FeedSkeleton() {
 
 const ITEMS_PER_PAGE = 25;
 
-export function ActivityFeed({ address, contractFilter }: ActivityFeedProps) {
+export function ActivityFeed({ address }: ActivityFeedProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("feed");
   const [page, setPage] = useState(1);
   const { data, isLoading } = useAddressTransactions(
@@ -373,20 +371,12 @@ export function ActivityFeed({ address, contractFilter }: ActivityFeedProps) {
     ITEMS_PER_PAGE,
   );
 
-  const rawTransactions = data?.items ?? [];
-  // When contractFilter is set, only show txs that interact with this contract address
-  const transactions = contractFilter
-    ? rawTransactions.filter((tx) => {
-        const addr = address.toLowerCase();
-        return (
-          tx.to?.toLowerCase() === addr ||
-          tx.from?.toLowerCase() === addr ||
-          tx.receipt?.contractAddress?.toLowerCase() === addr
-        );
-      })
-    : rawTransactions;
-  const total = contractFilter ? transactions.length : (data?.total ?? 0);
-  const hasMore = rawTransactions.length === ITEMS_PER_PAGE;
+  // The API already filters by address (returns txs where address is from or to),
+  // so no client-side filtering is needed.
+  const transactions = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const totalPages = total > 0 ? Math.ceil(total / ITEMS_PER_PAGE) : 1;
+  const hasMore = page < totalPages;
 
   return (
     <div className="space-y-4">

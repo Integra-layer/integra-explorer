@@ -26,6 +26,7 @@ import {
   formatFee,
 } from "@/lib/format";
 import { useBlockTransactions } from "@/lib/hooks/use-transactions";
+import { useLatestBlock } from "@/lib/hooks/use-latest-block";
 import type { Block } from "@/lib/api/types";
 
 interface BlockDetailProps {
@@ -111,12 +112,16 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
   const { data: txData, isLoading: txLoading } = useBlockTransactions(
     block?.number,
   );
+  const { data: latestBlockData } = useLatestBlock();
 
   if (isLoading || !block) {
     return <BlockDetailSkeleton />;
   }
 
   const blockNum = block.number;
+  const latestBlockNum = latestBlockData?.items?.[0]?.number;
+  const isLatestBlock =
+    latestBlockNum !== undefined && blockNum >= latestBlockNum;
   const fullDate = new Date(block.timestamp).toLocaleString();
   const txs = txData?.items ?? [];
 
@@ -150,12 +155,19 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
               Prev
             </Button>
           )}
-          <Button variant="outline" size="sm" asChild>
-            <Link href={`/blocks/${blockNum + 1}`}>
-              Block #{(blockNum + 1).toLocaleString()}
+          {isLatestBlock ? (
+            <Button variant="outline" size="sm" disabled>
+              Next
               <ChevronRight className="ml-1 size-4" />
-            </Link>
-          </Button>
+            </Button>
+          ) : (
+            <Button variant="outline" size="sm" asChild>
+              <Link href={`/blocks/${blockNum + 1}`}>
+                Block #{(blockNum + 1).toLocaleString()}
+                <ChevronRight className="ml-1 size-4" />
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
 

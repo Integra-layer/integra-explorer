@@ -6,6 +6,7 @@ import {
   getKnownTokens,
   type KnownToken,
 } from "@/lib/api/tokens";
+import { useExplorerReady } from "@/lib/explorer-provider";
 import type { Contract } from "@/lib/api/types";
 
 /**
@@ -18,12 +19,13 @@ export function useKnownTokens() {
 
 /**
  * Fetch on-chain contract data for a token address.
- * Disabled when address is falsy.
+ * Disabled when address is falsy. Gated on explorer auth.
  */
 export function useTokenContract(address: string | undefined) {
+  const isReady = useExplorerReady();
   return useQuery<Contract>({
     queryKey: ["token-contract", address],
     queryFn: () => getTokenContract(address!),
-    enabled: !!address,
+    enabled: isReady && !!address,
   });
 }

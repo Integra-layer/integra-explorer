@@ -25,7 +25,10 @@ export function BalanceCard({
     );
   }
 
-  const irlBalance = Number(balance) / 1e18;
+  const wei = BigInt(balance || "0");
+  const whole = Number(wei / BigInt(1e18));
+  const frac = Number(wei % BigInt(1e18)) / 1e18;
+  const irlBalance = whole + frac;
 
   return (
     <GlassCard className="p-6">
@@ -36,7 +39,7 @@ export function BalanceCard({
       <div className="mb-1">
         <NumberTicker
           value={irlBalance}
-          decimalPlaces={irlBalance < 1 ? 6 : irlBalance < 1000 ? 4 : 2}
+          decimalPlaces={4}
           className="text-4xl font-bold tracking-tight"
         />
       </div>

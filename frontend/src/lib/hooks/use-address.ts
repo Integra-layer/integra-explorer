@@ -44,10 +44,8 @@ export function useAddress(address: string | undefined) {
           address: address! as `0x${string}`,
         });
         const balanceStr = onChainBalance.toString();
-        // Use RPC balance if it's higher (more accurate) than Ethernal's reported value.
-        if (BigInt(balanceStr) > BigInt(data.balance || "0")) {
-          data = { ...data, balance: balanceStr };
-        }
+        // Always prefer the RPC balance since it's authoritative.
+        data = { ...data, balance: balanceStr };
       } catch {
         // RPC failed — keep whatever Ethernal returned.
       }
@@ -55,5 +53,6 @@ export function useAddress(address: string | undefined) {
       return data;
     },
     enabled: isReady && !!address,
+    refetchInterval: 30_000,
   });
 }

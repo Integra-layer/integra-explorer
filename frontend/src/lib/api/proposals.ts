@@ -57,58 +57,107 @@ const COSMOS_API =
   process.env.NEXT_PUBLIC_COSMOS_API_URL ||
   "https://testnet.integralayer.com/api";
 
+const COSMOS_TIMEOUT_MS = 15_000;
+
+function cosmosAbort(): { signal: AbortSignal; clear: () => void } {
+  const controller = new AbortController();
+  const id = setTimeout(() => controller.abort(), COSMOS_TIMEOUT_MS);
+  return { signal: controller.signal, clear: () => clearTimeout(id) };
+}
+
+async function parseJson<T>(res: Response, label: string): Promise<T> {
+  try {
+    return await res.json();
+  } catch {
+    throw new Error(`Failed to parse ${label} response`);
+  }
+}
+
 /**
  * Fetch all proposals (newest first, up to 100).
  */
 export async function getProposals(): Promise<CosmosProposal[]> {
-  const res = await fetch(
-    `${COSMOS_API}/cosmos/gov/v1/proposals?pagination.reverse=true&pagination.limit=100`,
-  );
-  if (!res.ok) {
-    throw new Error(`Failed to fetch proposals: ${res.status}`);
+  const { signal, clear } = cosmosAbort();
+  try {
+    const res = await fetch(
+      `${COSMOS_API}/cosmos/gov/v1/proposals?pagination.reverse=true&pagination.limit=100`,
+      { signal },
+    );
+    if (!res.ok) {
+      throw new Error(`Failed to fetch proposals: HTTP ${res.status}`);
+    }
+    const data = await parseJson<{ proposals?: CosmosProposal[] }>(
+      res,
+      "proposals",
+    );
+    return data.proposals || [];
+  } finally {
+    clear();
   }
-  const data = await res.json();
-  return data.proposals || [];
 }
 
 /**
  * Fetch a single proposal by ID.
  */
 export async function getProposal(id: string): Promise<CosmosProposal> {
-  const res = await fetch(
-    `${COSMOS_API}/cosmos/gov/v1/proposals/${id}`,
-  );
-  if (!res.ok) {
-    throw new Error(`Failed to fetch proposal ${id}: ${res.status}`);
+  const { signal, clear } = cosmosAbort();
+  try {
+    const res = await fetch(`${COSMOS_API}/cosmos/gov/v1/proposals/${id}`, {
+      signal,
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to fetch proposal ${id}: HTTP ${res.status}`);
+    }
+    const data = await parseJson<{ proposal: CosmosProposal }>(res, "proposal");
+    return data.proposal;
+  } finally {
+    clear();
   }
-  const data = await res.json();
-  return data.proposal;
 }
 
 /**
  * Fetch the live tally for a proposal.
  */
 export async function getProposalTally(id: string): Promise<TallyResult> {
-  const res = await fetch(
-    `${COSMOS_API}/cosmos/gov/v1/proposals/${id}/tally`,
-  );
-  if (!res.ok) {
-    throw new Error(`Failed to fetch tally for proposal ${id}: ${res.status}`);
+  const { signal, clear } = cosmosAbort();
+  try {
+    const res = await fetch(
+      `${COSMOS_API}/cosmos/gov/v1/proposals/${id}/tally`,
+      { signal },
+    );
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch tally for proposal ${id}: HTTP ${res.status}`,
+      );
+    }
+    const data = await parseJson<{ tally: TallyResult }>(res, "proposal tally");
+    return data.tally;
+  } finally {
+    clear();
   }
-  const data = await res.json();
-  return data.tally;
 }
 
 /**
  * Fetch votes for a proposal (up to 100).
  */
 export async function getProposalVotes(id: string): Promise<CosmosVote[]> {
-  const res = await fetch(
-    `${COSMOS_API}/cosmos/gov/v1/proposals/${id}/votes?pagination.limit=100`,
-  );
-  if (!res.ok) {
-    throw new Error(`Failed to fetch votes for proposal ${id}: ${res.status}`);
+  const { signal, clear } = cosmosAbort();
+  try {
+    const res = await fetch(
+      `${COSMOS_API}/cosmos/gov/v1/proposals/${id}/votes?pagination.limit=100`,
+      { signal },
+    );
+    if (!res.ok) {
+      throw new Error(
+        `Failed to fetch votes for proposal ${id}: HTTP ${res.status}`,
+      );
+    }
+    const data = await parseJson<{ votes?: CosmosVote[] }>(
+      res,
+      "proposal votes",
+    );
+    return data.votes || [];
+  } finally {
+    clear();
   }
-  const data = await res.json();
-  return data.votes || [];
 }

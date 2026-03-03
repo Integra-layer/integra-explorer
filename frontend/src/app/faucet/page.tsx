@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import {
   Droplets,
   CheckCircle2,
@@ -24,7 +24,10 @@ import {
 
 type FaucetState = "idle" | "loading" | "success" | "error" | "cooldown";
 
-const FAUCET_API = "https://testnet.integralayer.com/api/faucet";
+const FAUCET_API = process.env.NEXT_PUBLIC_FAUCET_API_URL || "/api/faucet";
+const BLOCKSCOUT_URL =
+  process.env.NEXT_PUBLIC_BLOCKSCOUT_URL ||
+  "https://testnet.blockscout.integralayer.com";
 const ADDRESS_REGEX = /^0x[0-9a-fA-F]{40}$/;
 const COOLDOWN_MINUTES = 60;
 
@@ -267,7 +270,7 @@ function SuccessCard({
 
         {txHash && (
           <a
-            href={`https://testnet.blockscout.integralayer.com/tx/${txHash}`}
+            href={`${BLOCKSCOUT_URL}/tx/${txHash}`}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-integra-brand underline underline-offset-4 hover:opacity-80"
@@ -300,9 +303,21 @@ function CooldownCard({
   cooldownEnd: number | null;
   onReset: () => void;
 }) {
-  const remaining = cooldownEnd
-    ? Math.max(0, Math.ceil((cooldownEnd - Date.now()) / 60000))
-    : COOLDOWN_MINUTES;
+  const [remaining, setRemaining] = useState(() =>
+    cooldownEnd
+      ? Math.max(0, Math.ceil((cooldownEnd - Date.now()) / 60000))
+      : COOLDOWN_MINUTES,
+  );
+
+  useEffect(() => {
+    if (!cooldownEnd) return;
+    const timer = setInterval(() => {
+      const r = Math.max(0, Math.ceil((cooldownEnd - Date.now()) / 60000));
+      setRemaining(r);
+      if (r <= 0) clearInterval(timer);
+    }, 60000);
+    return () => clearInterval(timer);
+  }, [cooldownEnd]);
 
   return (
     <motion.div

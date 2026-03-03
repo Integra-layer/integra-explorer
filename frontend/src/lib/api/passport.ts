@@ -386,18 +386,24 @@ export async function verifyPassportPassword(
   id: string,
   password: string,
 ): Promise<boolean> {
+  let res: Response;
   try {
-    const res = await fetch(
-      `${PASSPORT_API}/assets/verify-private-link-password`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, password }),
-      },
-    );
-    return res.ok;
+    res = await fetch(`${PASSPORT_API}/assets/verify-private-link-password`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ id, password }),
+    });
   } catch {
-    // Fail closed — deny access on any API error
-    return false;
+    throw new Error("Network error while verifying passport password");
   }
+
+  if (res.ok) return true;
+
+  // Wrong password / unauthorized — return false
+  if (res.status === 401 || res.status === 403) return false;
+
+  // Server error — throw so callers can distinguish from wrong password
+  throw new Error(
+    `Server error (${res.status}) while verifying passport password`,
+  );
 }

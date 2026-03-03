@@ -2,11 +2,9 @@
 
 import { motion } from "framer-motion";
 import { Activity, Users, Clock, Box } from "lucide-react";
-import { useQuery } from "@tanstack/react-query";
 import { NumberTicker, SkeletonShimmer } from "@/components/effects";
 import { useStats } from "@/lib/hooks/use-stats";
-import { getBlocks } from "@/lib/api/blocks";
-import { useExplorerReady } from "@/lib/explorer-provider";
+import { useLatestBlock } from "@/lib/hooks/use-latest-block";
 import { cn } from "@/lib/utils";
 
 interface StatCardProps {
@@ -70,15 +68,8 @@ function StatCard({
 export function StatsGrid() {
   const { data, isLoading } = useStats();
 
-  const isReady = useExplorerReady();
-
-  // Get latest block number from the blocks API (first block in DESC order)
-  const { data: blocksData, isLoading: blocksLoading } = useQuery({
-    queryKey: ["blocks", 1, 1],
-    queryFn: () => getBlocks({ page: 1, itemsPerPage: 1 }),
-    refetchInterval: 10_000,
-    enabled: isReady,
-  });
+  // Use shared hook — single 5s-interval query for ["blocks", 1, 1] across all components
+  const { data: blocksData, isLoading: blocksLoading } = useLatestBlock();
 
   const latestBlock = blocksData?.items?.[0]?.number;
 

@@ -17,6 +17,10 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   output: "standalone",
   reactCompiler: true,
+  // turbopack.root must be set to ".." because the frontend/ directory is nested
+  // inside the monorepo root. Without this, Turbopack fails to resolve modules
+  // that reference paths relative to the monorepo root (e.g. shared configs).
+  // Removing this will cause build failures when using `next dev --turbopack`.
   turbopack: {
     root: "..",
   },

@@ -46,6 +46,7 @@ export function useBlockTransactions(blockNumber: number | undefined) {
     queryKey: ["block-transactions", blockNumber],
     queryFn: () => getBlockTransactions(blockNumber!),
     enabled: isReady && blockNumber !== undefined,
+    staleTime: 60_000,
   });
 }
 

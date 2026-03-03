@@ -4,12 +4,16 @@
 // Works in both client components (browser) and server components (Node.js).
 // =============================================================================
 
+import { DEFAULT_SITE_URL } from "@/lib/constants";
+
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || "/api";
 
 // Server-side base URL for when window is not available (SSR / server components).
-// In production, set NEXT_PUBLIC_SITE_URL to the full origin, e.g. "https://scan.integralayer.com"
-const SERVER_ORIGIN =
-  process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+// In production, set NEXT_PUBLIC_SITE_URL to the full origin.
+const SERVER_ORIGIN = DEFAULT_SITE_URL;
+
+/** Default fetch timeout in milliseconds. */
+const FETCH_TIMEOUT_MS = 15_000;
 
 // The workspace name is resolved once from /api/explorers/search and cached.
 // Can also be set via environment variable for static builds.
@@ -75,11 +79,22 @@ export async function fetchApi<T>(
 ): Promise<T> {
   const url = buildUrl(endpoint, params);
 
-  const res = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-    },
-  });
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
+
+  let res: Response;
+  try {
+    res = await fetch(url, {
+      headers: {
+        Accept: "application/json",
+      },
+      signal: controller.signal,
+    });
+  } catch (err) {
+    clearTimeout(timeout);
+    throw err;
+  }
+  clearTimeout(timeout);
 
   if (!res.ok) {
     let body: unknown;
@@ -107,6 +122,12 @@ export async function fetchApi<T>(
  * Typically called once during app initialization after fetching explorer config.
  */
 export function setWorkspaceName(name: string): void {
+  if (!name || name.trim() === "") {
+    console.warn(
+      "[ApiClient] setWorkspaceName called with empty value — ignoring.",
+    );
+    return;
+  }
   resolvedWorkspaceName = name;
 }
 
@@ -122,5 +143,11 @@ export function getWorkspaceName(): string | null {
  * Required by Ethernal backend on every data endpoint.
  */
 export function setFirebaseUserId(id: string): void {
+  if (!id || id.trim() === "") {
+    console.warn(
+      "[ApiClient] setFirebaseUserId called with empty value — ignoring.",
+    );
+    return;
+  }
   resolvedFirebaseUserId = id;
 }

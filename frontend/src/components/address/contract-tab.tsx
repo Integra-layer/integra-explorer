@@ -14,10 +14,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { GlassCard, SkeletonShimmer } from "@/components/effects";
 import type { Contract } from "@/lib/api/types";
+import { formatTokenAmount } from "@/lib/format";
 
 interface ContractTabProps {
   contract: Contract | undefined;
   isLoading: boolean;
+  error?: Error | null;
 }
 
 function ContractSkeleton() {
@@ -32,12 +34,22 @@ function ContractSkeleton() {
   );
 }
 
-export function ContractTab({ contract, isLoading }: ContractTabProps) {
+export function ContractTab({ contract, isLoading, error }: ContractTabProps) {
   const [abiExpanded, setAbiExpanded] = useState(false);
   const [abiCopied, setAbiCopied] = useState(false);
 
   if (isLoading) {
     return <ContractSkeleton />;
+  }
+
+  if (error) {
+    return (
+      <GlassCard className="flex items-center justify-center py-16">
+        <p className="text-destructive">
+          Failed to load contract data. Please try again later.
+        </p>
+      </GlassCard>
+    );
   }
 
   if (!contract) {
@@ -140,7 +152,11 @@ export function ContractTab({ contract, isLoading }: ContractTabProps) {
                       Total Supply
                     </p>
                     <p className="mt-1 text-sm font-medium">
-                      {Number(contract.tokenTotalSupply).toLocaleString()}
+                      {formatTokenAmount(
+                        BigInt(contract.tokenTotalSupply),
+                        contract.tokenDecimals ?? 18,
+                        contract.tokenSymbol ?? "",
+                      )}
                     </p>
                   </div>
                 )}

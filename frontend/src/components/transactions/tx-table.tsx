@@ -58,7 +58,13 @@ function SkeletonRow() {
  * Color-coded badge based on transaction category.
  * green = transfers, blue = approvals, purple = NFT, gray = contract-call
  */
-function CategoryBadge({ label, category }: { label: string; category: TxCategory }) {
+function CategoryBadge({
+  label,
+  category,
+}: {
+  label: string;
+  category: TxCategory;
+}) {
   let colorClass: string;
 
   switch (category) {
@@ -119,9 +125,11 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
 
                 const status = !tx.receipt
                   ? "pending"
-                  : tx.receipt.status
+                  : tx.receipt.status === true
                     ? "success"
-                    : "failed";
+                    : tx.receipt.status === false
+                      ? "failed"
+                      : "pending";
 
                 return (
                   <motion.tr

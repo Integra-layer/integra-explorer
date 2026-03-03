@@ -22,8 +22,9 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://scan.integralayer.com";
+import { DEFAULT_SITE_URL } from "@/lib/constants";
+
+const BASE_URL = DEFAULT_SITE_URL;
 
 export const metadata: Metadata = {
   title: {
@@ -40,12 +41,14 @@ export const metadata: Metadata = {
     description:
       "Explore blocks, transactions, validators, and governance on the Integra Layer blockchain.",
     url: BASE_URL,
+    images: [],
   },
   twitter: {
     card: "summary_large_image",
     title: "Integra Explorer",
     description:
       "Explore blocks, transactions, validators, and governance on the Integra Layer blockchain.",
+    images: [],
   },
   robots: {
     index: true,
