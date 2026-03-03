@@ -17,10 +17,10 @@ export function GlassCard({
   return (
     <div
       className={cn(
-        "rounded-xl border border-white/20 bg-white/70 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
+        "rounded-xl border border-white/20 bg-white/70 backdrop-blur-xl dark:border-white/[0.08] dark:bg-white/[0.03]",
         "transition-all duration-300",
         glowOnHover && [
-          "hover:border-integra-brand/20 hover:shadow-[0_0_24px_rgba(255,109,73,0.08)]",
+          "hover:shadow-[0_0_30px_rgba(255,109,73,0.06)] hover:border-integra-brand/20",
           "dark:hover:border-integra-brand/30 dark:hover:shadow-[0_0_30px_rgba(255,109,73,0.15)]",
         ],
         className,

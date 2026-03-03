@@ -243,6 +243,11 @@ a, button, [role="button"] {
   animation: shimmer-gradient 2s ease-in-out infinite;
 }
 
+/* Surface elevation utilities */
+.surface-0 { background: var(--background); }
+.surface-1 { background: var(--card); backdrop-filter: blur(20px); }
+.surface-2 { background: color-mix(in srgb, var(--card) 90%, var(--integra-brand) 2%); }
+
 /* Animated gradient text */
 @keyframes gradient-shift {
   0%, 100% { background-position: 0% 50%; }
