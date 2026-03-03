@@ -6,7 +6,6 @@ import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { CommandPalette } from "./command-palette";
 import {
   detectSearchType,
   getSearchRoute,
@@ -22,29 +21,22 @@ export interface SearchBarProps {
   className?: string;
 }
 
-export function SearchBar({ variant = "nav", className }: SearchBarProps) {
-  const [commandOpen, setCommandOpen] = useState(false);
+// Trigger the layout-level CommandPalette via synthetic Cmd+K
+function triggerCommandPalette() {
+  document.dispatchEvent(
+    new KeyboardEvent("keydown", { key: "k", metaKey: true, bubbles: true }),
+  );
+}
 
+export function SearchBar({ variant = "nav", className }: SearchBarProps) {
   if (variant === "hero") {
     return (
-      <>
-        <HeroSearch
-          className={className}
-          onOpenCommand={() => setCommandOpen(true)}
-        />
-        <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
-      </>
+      <HeroSearch className={className} onOpenCommand={triggerCommandPalette} />
     );
   }
 
   return (
-    <>
-      <NavSearch
-        className={className}
-        onOpenCommand={() => setCommandOpen(true)}
-      />
-      <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
-    </>
+    <NavSearch className={className} onOpenCommand={triggerCommandPalette} />
   );
 }
 
@@ -142,7 +134,10 @@ function NavSearch({ className, onOpenCommand }: InternalSearchProps) {
       className={cn("relative active:scale-95 transition-transform", className)}
     >
       <Search className="size-4" />
-      <span className="absolute -bottom-0.5 right-0 text-[8px] font-medium text-muted-foreground">
+      <span
+        className="absolute -bottom-0.5 right-0 text-[8px] font-medium text-muted-foreground"
+        aria-hidden="true"
+      >
         &#8984;K
       </span>
     </Button>

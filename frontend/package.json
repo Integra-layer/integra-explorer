@@ -1,6 +1,10 @@
 {
-  "name": "frontend",
+  "name": "integra-explorer-frontend",
   "version": "0.1.0",
+  "description": "Blockchain explorer for Integra Layer Ethermint chain. Built with Next.js 16, React 19, Tailwind CSS, and shadcn/ui.",
+  "keywords": ["blockchain", "explorer", "cosmos", "ethermint", "integra-layer", "next.js"],
+  "author": "Integra Layer",
+  "license": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev",

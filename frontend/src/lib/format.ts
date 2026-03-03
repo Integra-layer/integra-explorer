@@ -40,10 +40,18 @@ export function timeAgo(timestamp: string): string {
  * Format a wei value to IRL (18 decimals).
  */
 export function formatIRL(weiValue: string): string {
-  const num = Number(weiValue) / 1e18;
-  if (num === 0) return "0 IRL";
-  if (num < 0.001) return "<0.001 IRL";
-  return `${num.toLocaleString(undefined, { maximumFractionDigits: 4 })} IRL`;
+  if (!weiValue || weiValue === "0") return "0 IRL";
+  try {
+    const wei = BigInt(weiValue);
+    const whole = wei / BigInt(1e18);
+    const remainder = wei % BigInt(1e18);
+    const decimal = Number(remainder) / 1e18;
+    const num = Number(whole) + decimal;
+    if (num < 0.001) return "<0.001 IRL";
+    return `${num.toLocaleString(undefined, { maximumFractionDigits: 4 })} IRL`;
+  } catch {
+    return "0 IRL";
+  }
 }
 
 /**
@@ -185,9 +193,16 @@ export function formatGwei(weiValue: string): string {
  * E.g. "100000000000000000000" → "100"
  */
 export function formatStakedIRL(airlAmount: string): string {
-  const num = Number(airlAmount) / 1e18;
-  if (num === 0) return "0";
-  return num.toLocaleString(undefined, { maximumFractionDigits: 0 });
+  if (!airlAmount || airlAmount === "0") return "0";
+  try {
+    const wei = BigInt(airlAmount);
+    const whole = wei / BigInt(1e18);
+    return Number(whole).toLocaleString(undefined, {
+      maximumFractionDigits: 0,
+    });
+  } catch {
+    return "0";
+  }
 }
 
 /**

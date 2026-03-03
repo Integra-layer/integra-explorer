@@ -159,8 +159,7 @@ export default function PassportDetailPage({
                 </form>
 
                 <p className="mt-4 text-xs text-muted-foreground">
-                  Hint: In development mode, use &quot;demo&quot; as the
-                  password.
+                  Contact the passport owner for access credentials.
                 </p>
               </div>
             </GlassCard>

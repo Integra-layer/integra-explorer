@@ -155,19 +155,29 @@ export function ValidatorDetail({
             {validator.min_self_delegation}
           </DetailRow>
 
-          {validator.description.website && (
-            <DetailRow variant="inline" label="Website">
-              <a
-                href={validator.description.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-integra-brand hover:underline"
-              >
-                {validator.description.website}
-                <ExternalLink className="size-3" />
-              </a>
-            </DetailRow>
-          )}
+          {validator.description.website &&
+            (() => {
+              try {
+                const parsed = new URL(validator.description.website);
+                if (parsed.protocol !== "https:" && parsed.protocol !== "http:")
+                  return null;
+                return (
+                  <DetailRow variant="inline" label="Website">
+                    <a
+                      href={validator.description.website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 text-integra-brand hover:underline"
+                    >
+                      {validator.description.website}
+                      <ExternalLink className="size-3" />
+                    </a>
+                  </DetailRow>
+                );
+              } catch {
+                return null;
+              }
+            })()}
 
           {validator.unbonding_height !== "0" && (
             <DetailRow variant="inline" label="Unbonding Height">

@@ -37,12 +37,16 @@ WORKDIR /app
 ENV NODE_ENV=production
 ENV PORT=3000
 
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs
+
 # Copy standalone output
 # turbopack.root: ".." nests output under the WORKDIR name (app/ in Docker)
-COPY --from=builder /app/.next/standalone ./
-COPY --from=builder /app/.next/static ./app/.next/static
-COPY --from=builder /app/public ./app/public
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./app/.next/static
+COPY --from=builder --chown=nextjs:nodejs /app/public ./app/public
 
+USER nextjs
 EXPOSE 3000
 
 CMD ["node", "app/server.js"]

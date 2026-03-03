@@ -2,7 +2,6 @@
 
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
-import { motion } from "framer-motion";
 import { Box } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { PaginationControls } from "@/components/ui/pagination-controls";
@@ -18,7 +17,7 @@ function BlocksPageContent() {
   const page = Number(searchParams.get("page")) || 1;
 
   const { data, isLoading } = useBlocks(page, ITEMS_PER_PAGE);
-  const total = data?.count ?? 0;
+  const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
   function goToPage(newPage: number) {

@@ -53,7 +53,8 @@ export const MOCK_PASSPORT: AssetPassport = {
     governance: {
       rules:
         "Token holders with 1%+ ownership may propose and vote on building management decisions. Quorum requires 25% of total token supply. Voting period: 14 days.",
-      votingMechanism: "Token-weighted quadratic voting via on-chain governance",
+      votingMechanism:
+        "Token-weighted quadratic voting via on-chain governance",
     },
   },
 
@@ -396,7 +397,7 @@ export async function verifyPassportPassword(
     );
     return res.ok;
   } catch {
-    // In dev/mock mode, accept "demo" as the password
-    return password === "demo";
+    // Fail closed — deny access on any API error
+    return false;
   }
 }

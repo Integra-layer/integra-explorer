@@ -21,9 +21,35 @@ const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
 });
 
+const BASE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "https://scan.integralayer.com";
+
 export const metadata: Metadata = {
-  title: "Integra Explorer",
-  description: "Block explorer for Integra Layer blockchain",
+  title: {
+    default: "Integra Explorer",
+    template: "%s | Integra Explorer",
+  },
+  description:
+    "Explore blocks, transactions, validators, and governance on the Integra Layer blockchain.",
+  metadataBase: new URL(BASE_URL),
+  openGraph: {
+    type: "website",
+    siteName: "Integra Explorer",
+    title: "Integra Explorer",
+    description:
+      "Explore blocks, transactions, validators, and governance on the Integra Layer blockchain.",
+    url: BASE_URL,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Integra Explorer",
+    description:
+      "Explore blocks, transactions, validators, and governance on the Integra Layer blockchain.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export default function RootLayout({

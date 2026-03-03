@@ -36,7 +36,7 @@ function StatCard({
     >
       <div
         className={cn(
-          "gradient-brand-border rounded-xl border border-white/20 bg-white/70 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
+          "gradient-brand-border rounded-xl border border-border/50 bg-white/80 p-4 backdrop-blur-xl dark:border-white/10 dark:bg-white/5",
           "transition-all duration-300",
           "hover:border-integra-brand/30 hover:shadow-[0_0_30px_rgba(255,109,73,0.12)]",
           "dark:hover:border-integra-brand/30 dark:hover:shadow-[0_0_20px_rgba(255,109,73,0.15)]",

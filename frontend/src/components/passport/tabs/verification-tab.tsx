@@ -156,15 +156,30 @@ export function VerificationTab({ data }: VerificationTabProps) {
                       <ExternalLink className="size-3" />
                       View on IPFS
                     </a>
-                    {attestation.downloadUrl && (
-                      <a
-                        href={attestation.downloadUrl}
-                        className="inline-flex items-center gap-1 rounded-md bg-integra-brand/10 px-3 py-1.5 text-xs font-medium text-integra-brand transition-colors hover:bg-integra-brand/20"
-                      >
-                        <Download className="size-3" />
-                        Download
-                      </a>
-                    )}
+                    {attestation.downloadUrl &&
+                      (() => {
+                        try {
+                          const parsed = new URL(attestation.downloadUrl);
+                          if (
+                            parsed.protocol !== "https:" &&
+                            parsed.protocol !== "http:"
+                          )
+                            return null;
+                          return (
+                            <a
+                              href={attestation.downloadUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="inline-flex items-center gap-1 rounded-md bg-integra-brand/10 px-3 py-1.5 text-xs font-medium text-integra-brand transition-colors hover:bg-integra-brand/20"
+                            >
+                              <Download className="size-3" />
+                              Download
+                            </a>
+                          );
+                        } catch {
+                          return null;
+                        }
+                      })()}
                   </div>
                 </div>
               </GlassCard>

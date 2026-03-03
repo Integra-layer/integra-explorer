@@ -17,7 +17,7 @@ function TransactionsPageContent() {
   const page = Number(searchParams.get("page")) || 1;
 
   const { data, isLoading } = useTransactions(page, ITEMS_PER_PAGE);
-  const total = data?.count ?? 0;
+  const total = data?.total ?? 0;
   const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
 
   function goToPage(newPage: number) {
