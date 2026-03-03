@@ -12,7 +12,9 @@ import {
   formatTxValue,
   formatFee,
 } from "@/lib/format";
+import { classifyTransaction } from "@/lib/tx-classifier";
 import type { Transaction } from "@/lib/api/types";
+import type { TxCategory } from "@/lib/tx-classifier";
 
 interface TxTableProps {
   transactions: Transaction[];
@@ -52,6 +54,43 @@ function SkeletonRow() {
   );
 }
 
+/**
+ * Color-coded badge based on transaction category.
+ * green = transfers, blue = approvals, purple = NFT, gray = contract-call
+ */
+function CategoryBadge({ label, category }: { label: string; category: TxCategory }) {
+  let colorClass: string;
+
+  switch (category) {
+    case "native-transfer":
+    case "erc20-transfer":
+    case "erc20-transferFrom":
+      colorClass = "border-integra-success/30 text-integra-success";
+      break;
+    case "erc20-approve":
+    case "approval-for-all":
+      colorClass = "border-integra-info/30 text-integra-info";
+      break;
+    case "nft-transfer":
+    case "nft-safeTransfer":
+      colorClass = "border-purple-500/30 text-purple-400";
+      break;
+    case "contract-creation":
+      colorClass = "border-integra-warning/30 text-integra-warning";
+      break;
+    case "contract-call":
+    default:
+      colorClass = "border-border text-muted-foreground";
+      break;
+  }
+
+  return (
+    <Badge variant="outline" className={`text-[10px] ${colorClass}`}>
+      {label}
+    </Badge>
+  );
+}
+
 export function TxTable({ transactions, isLoading }: TxTableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm">
@@ -76,6 +115,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
               ))
             : transactions.map((tx, i) => {
                 const fee = formatFee(tx.gasUsed, tx.gasPrice);
+                const classified = classifyTransaction(tx);
 
                 const status = !tx.receipt
                   ? "pending"
@@ -123,9 +163,10 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
 
                     {/* Method */}
                     <td className="hidden px-4 py-3 md:table-cell">
-                      <Badge variant="outline" className="text-[10px]">
-                        {tx.methodDetails?.name ?? "Transfer"}
-                      </Badge>
+                      <CategoryBadge
+                        label={classified.label}
+                        category={classified.category}
+                      />
                     </td>
 
                     {/* Block */}
@@ -150,12 +191,12 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
 
                     {/* To */}
                     <td className="px-4 py-3">
-                      {tx.to ? (
+                      {classified.to ? (
                         <Link
-                          href={`/address/${tx.to}`}
+                          href={`/address/${classified.to}`}
                           className="font-mono text-xs text-muted-foreground hover:text-integra-brand hover:underline"
                         >
-                          {truncateAddress(tx.to)}
+                          {truncateAddress(classified.to)}
                         </Link>
                       ) : (
                         <Badge variant="secondary" className="text-[10px]">
@@ -166,7 +207,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
 
                     {/* Value */}
                     <td className="px-4 py-3 text-muted-foreground">
-                      {formatTxValue(tx)}
+                      {classified.value}
                     </td>
 
                     {/* Fee */}

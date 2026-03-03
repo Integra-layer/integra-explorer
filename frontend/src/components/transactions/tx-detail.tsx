@@ -10,6 +10,9 @@ import {
   ArrowRightLeft,
   Fuel,
   User,
+  FileCode,
+  Shield,
+  Tag,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
@@ -22,9 +25,9 @@ import {
   formatNumber,
   formatTxValue,
   formatFee,
-  isErc20Transfer,
   timeAgo,
 } from "@/lib/format";
+import { classifyTransaction } from "@/lib/tx-classifier";
 import { TxFlow } from "./tx-flow";
 import { TxTabs } from "./tx-tabs";
 import type { Transaction } from "@/lib/api/types";
@@ -105,6 +108,29 @@ function StatusBadge({ status }: { status: "success" | "failed" | "pending" }) {
 }
 
 // ---------------------------------------------------------------------------
+// Transaction type badge
+// ---------------------------------------------------------------------------
+
+function TxTypeBadge({ label, category }: { label: string; category: string }) {
+  const colorClass = category.startsWith("erc20")
+    ? "bg-integra-success/10 text-integra-success"
+    : category.startsWith("nft") || category === "nft-safeTransfer"
+      ? "bg-purple-500/10 text-purple-400"
+      : category === "erc20-approve" || category === "approval-for-all"
+        ? "bg-integra-info/10 text-integra-info"
+        : category === "contract-creation"
+          ? "bg-integra-warning/10 text-integra-warning"
+          : "bg-muted text-muted-foreground";
+
+  return (
+    <Badge className={`gap-1 text-[10px] ${colorClass}`}>
+      <Tag className="size-2.5" />
+      {label}
+    </Badge>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Main component
 // ---------------------------------------------------------------------------
 
@@ -112,6 +138,8 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
   if (isLoading || !tx) {
     return <TxDetailSkeleton />;
   }
+
+  const classified = classifyTransaction(tx);
 
   const receiptStatus = tx.receipt
     ? tx.receipt.status
@@ -139,6 +167,9 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
         ? "EIP-1559 (2)"
         : `Type ${tx.type}`;
 
+  // Resolve display address for "To" row
+  const toAddress = classified.to;
+
   return (
     <motion.div
       className="space-y-6"
@@ -158,10 +189,12 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 0.3, delay: 0.1 }}
+          className="flex items-center gap-2"
         >
           <StatusBadge
             status={receiptStatus as "success" | "failed" | "pending"}
           />
+          <TxTypeBadge label={classified.label} category={classified.category} />
         </motion.div>
       </div>
 
@@ -231,16 +264,16 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
 
           {/* To */}
           <DetailRow label="To" icon={User}>
-            {tx.to ? (
+            {toAddress ? (
               <div className="flex items-center gap-1.5">
                 <Link
-                  href={`/address/${tx.to}`}
+                  href={`/address/${toAddress}`}
                   className="font-mono text-xs text-integra-brand hover:underline"
                 >
-                  <span className="hidden md:inline">{tx.to}</span>
-                  <span className="md:hidden">{truncateAddress(tx.to, 8)}</span>
+                  <span className="hidden md:inline">{toAddress}</span>
+                  <span className="md:hidden">{truncateAddress(toAddress, 8)}</span>
                 </Link>
-                <CopyButton text={tx.to} />
+                <CopyButton text={toAddress} />
               </div>
             ) : (
               <div className="flex items-center gap-2">
@@ -260,12 +293,62 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
             )}
           </DetailRow>
 
+          {/* Interacted With / Contract */}
+          {classified.contractAddress && classified.to !== classified.contractAddress && (
+            <DetailRow label="Interacted With" icon={FileCode}>
+              <div className="flex items-center gap-1.5">
+                <Link
+                  href={`/address/${classified.contractAddress}`}
+                  className="font-mono text-xs text-integra-brand hover:underline"
+                >
+                  <span className="hidden md:inline">
+                    {classified.contractAddress}
+                  </span>
+                  <span className="md:hidden">
+                    {truncateAddress(classified.contractAddress, 8)}
+                  </span>
+                </Link>
+                <CopyButton text={classified.contractAddress} />
+                {classified.tokenInfo && (
+                  <Badge className="ml-1 bg-integra-info/10 text-integra-info text-[10px]">
+                    {classified.tokenInfo.symbol}
+                  </Badge>
+                )}
+              </div>
+            </DetailRow>
+          )}
+
+          {/* Spender (for approve txs) */}
+          {classified.spender && (
+            <DetailRow label="Spender" icon={Shield}>
+              <div className="flex items-center gap-1.5">
+                <Link
+                  href={`/address/${classified.spender}`}
+                  className="font-mono text-xs text-integra-brand hover:underline"
+                >
+                  <span className="hidden md:inline">{classified.spender}</span>
+                  <span className="md:hidden">
+                    {truncateAddress(classified.spender, 8)}
+                  </span>
+                </Link>
+                <CopyButton text={classified.spender} />
+              </div>
+            </DetailRow>
+          )}
+
+          {/* Token ID (for NFTs) */}
+          {classified.tokenId && (
+            <DetailRow label="Token ID" icon={Tag}>
+              <span className="font-mono">{classified.tokenId}</span>
+            </DetailRow>
+          )}
+
           {/* Value */}
           <DetailRow label="Value">
-            <span className="font-medium">{formatTxValue(tx)}</span>
-            {isErc20Transfer(tx) && (
+            <span className="font-medium">{classified.value}</span>
+            {classified.tokenInfo && (
               <Badge className="ml-2 bg-integra-info/10 text-integra-info text-[10px]">
-                ERC-20
+                {classified.tokenInfo.standard}
               </Badge>
             )}
           </DetailRow>

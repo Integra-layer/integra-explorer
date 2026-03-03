@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
 import { ThemeProvider } from "@/lib/theme-provider";
+import { AppKitProvider } from "@/lib/appkit/provider";
 import { ExplorerProvider } from "@/lib/explorer-provider";
 import { QueryProvider } from "@/lib/query-provider";
 import { PusherProvider } from "@/lib/pusher-provider";
@@ -69,21 +70,23 @@ export default function RootLayout({
           <div className="absolute top-[30%] right-[15%] size-[600px] rounded-full bg-integra-brand/[0.10] dark:bg-integra-brand/[0.05] blur-[100px] animate-ambient-3" />
         </div>
         <ThemeProvider>
-          <QueryProvider>
-            <ExplorerProvider>
-              <PusherProvider>
-                <TooltipProvider>
-                  <div className="flex min-h-screen flex-col">
-                    <Navbar />
-                    <NetworkStatusBar />
-                    <main className="flex-1">{children}</main>
-                    <Footer />
-                  </div>
-                  <CommandPalette />
-                </TooltipProvider>
-              </PusherProvider>
-            </ExplorerProvider>
-          </QueryProvider>
+          <AppKitProvider>
+            <QueryProvider>
+              <ExplorerProvider>
+                <PusherProvider>
+                  <TooltipProvider>
+                    <div className="flex min-h-screen flex-col">
+                      <Navbar />
+                      <NetworkStatusBar />
+                      <main className="flex-1">{children}</main>
+                      <Footer />
+                    </div>
+                    <CommandPalette />
+                  </TooltipProvider>
+                </PusherProvider>
+              </ExplorerProvider>
+            </QueryProvider>
+          </AppKitProvider>
         </ThemeProvider>
       </body>
     </html>

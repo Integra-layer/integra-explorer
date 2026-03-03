@@ -4,7 +4,8 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight, ArrowDown, FileCode } from "lucide-react";
 import { GlassCard, CopyButton } from "@/components/effects";
-import { truncateAddress, formatTxValue } from "@/lib/format";
+import { truncateAddress } from "@/lib/format";
+import { classifyTransaction } from "@/lib/tx-classifier";
 import type { Transaction } from "@/lib/api/types";
 
 interface TxFlowProps {
@@ -51,12 +52,21 @@ function AddressCard({
 }
 
 export function TxFlow({ transaction }: TxFlowProps) {
-  const formattedValue = formatTxValue(transaction);
+  const classified = classifyTransaction(transaction);
+
+  const isApproval =
+    classified.category === "erc20-approve" ||
+    classified.category === "approval-for-all";
+
+  const showViaContract =
+    classified.contractAddress &&
+    classified.to !== classified.contractAddress &&
+    !isApproval;
 
   return (
     <div className="flex flex-col items-center gap-3 sm:flex-row sm:gap-4">
       {/* From Card */}
-      <AddressCard label="From" address={transaction.from} />
+      <AddressCard label="From" address={classified.from} />
 
       {/* Animated Arrow + Value */}
       <div className="flex flex-col items-center gap-1">
@@ -91,18 +101,30 @@ export function TxFlow({ transaction }: TxFlowProps) {
             damping: 20,
             delay: 0.2,
           }}
+          className="flex flex-col items-center gap-0.5"
         >
           <span className="rounded-full bg-integra-brand/10 px-3 py-1 text-xs font-medium text-integra-brand">
-            {formattedValue}
+            {isApproval ? "Approved" : classified.value}
           </span>
+          {showViaContract && (
+            <span className="text-[10px] text-muted-foreground">
+              via{" "}
+              <Link
+                href={`/address/${classified.contractAddress}`}
+                className="text-integra-brand hover:underline"
+              >
+                {truncateAddress(classified.contractAddress!, 4)}
+              </Link>
+            </span>
+          )}
         </motion.div>
       </div>
 
       {/* To Card */}
       <AddressCard
         label="To"
-        address={transaction.to}
-        isContract={transaction.to === null}
+        address={classified.to}
+        isContract={classified.category === "contract-creation"}
       />
     </div>
   );

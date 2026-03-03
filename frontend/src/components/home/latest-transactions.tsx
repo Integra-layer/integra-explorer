@@ -11,9 +11,8 @@ import {
   truncateHash,
   truncateAddress,
   timeAgo,
-  formatTxValue,
-  isErc20Transfer,
 } from "@/lib/format";
+import { classifyTransaction } from "@/lib/tx-classifier";
 import { useExplorerReady } from "@/lib/explorer-provider";
 
 export function LatestTransactions() {
@@ -69,8 +68,8 @@ export function LatestTransactions() {
         ) : (
           <AnimatePresence mode="popLayout" initial={false}>
             {data?.items.map((tx) => {
-              const value = formatTxValue(tx);
-              const isToken = isErc20Transfer(tx);
+              const classified = classifyTransaction(tx);
+              const isToken = !!classified.tokenInfo;
 
               return (
                 <motion.div
@@ -90,19 +89,17 @@ export function LatestTransactions() {
                     >
                       {truncateHash(tx.hash)}
                     </Link>
-                    {tx.methodDetails?.name && (
-                      <Badge
-                        variant="secondary"
-                        className="text-[10px] font-medium"
-                      >
-                        {tx.methodDetails.name}
-                      </Badge>
-                    )}
+                    <Badge
+                      variant="secondary"
+                      className="text-[10px] font-medium"
+                    >
+                      {classified.label}
+                    </Badge>
                     <div className="ml-auto flex items-center gap-2">
                       <span
                         className={`text-sm font-semibold ${isToken ? "text-integra-brand" : ""}`}
                       >
-                        {value}
+                        {classified.value}
                       </span>
                     </div>
                   </div>
@@ -114,7 +111,9 @@ export function LatestTransactions() {
                     </span>
                     <MoveRight className="size-3 shrink-0" />
                     <span className="font-mono">
-                      {tx.to ? truncateAddress(tx.to) : "Contract Create"}
+                      {classified.to
+                        ? truncateAddress(classified.to)
+                        : "Contract Create"}
                     </span>
                     <span className="ml-auto shrink-0">
                       {timeAgo(tx.timestamp)}

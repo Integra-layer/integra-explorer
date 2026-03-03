@@ -18,6 +18,7 @@ import { SearchBar } from "@/components/search/search-bar";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
+import { AppKitButton } from "@reown/appkit/react";
 
 const isTestnet = process.env.NEXT_PUBLIC_NETWORK_MODE === "testnet";
 
@@ -27,7 +28,9 @@ const navLinks = [
   { label: "Transactions", href: "/transactions" },
   { label: "Validators", href: "/validators" },
   { label: "Tokens", href: "/tokens" },
+  { label: "Contracts", href: "/contracts" },
   { label: "Proposals", href: "/proposals" },
+  { label: "Passports", href: "/passport" },
   { label: "Developers", href: "/developers" },
 ];
 
@@ -117,12 +120,9 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:gap-3">
           <ThemeToggle />
           <SearchBar variant="nav" className="hidden sm:flex" />
-          <Button
-            className="hidden bg-gradient-to-r from-integra-pink to-integra-brand text-white hover:opacity-90 sm:flex"
-            size="sm"
-          >
-            Connect Wallet
-          </Button>
+          <div className="hidden sm:flex">
+            <AppKitButton />
+          </div>
 
           {/* Mobile: Hamburger */}
           <Sheet>
@@ -179,12 +179,7 @@ export function Navbar() {
                 })}
               </nav>
               <div className="mt-4 px-4">
-                <Button
-                  className="w-full bg-gradient-to-r from-integra-pink to-integra-brand text-white hover:opacity-90"
-                  size="sm"
-                >
-                  Connect Wallet
-                </Button>
+                <AppKitButton />
               </div>
             </SheetContent>
           </Sheet>
