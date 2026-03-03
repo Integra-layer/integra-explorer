@@ -25,6 +25,7 @@ import {
   formatNumber,
   formatFee,
 } from "@/lib/format";
+import { useBlockTransactions } from "@/lib/hooks/use-transactions";
 import type { Block } from "@/lib/api/types";
 
 interface BlockDetailProps {
@@ -107,13 +108,17 @@ function GasBar({ used, limit }: { used: string; limit: string }) {
 // ---------------------------------------------------------------------------
 
 export function BlockDetail({ block, isLoading }: BlockDetailProps) {
+  const { data: txData, isLoading: txLoading } = useBlockTransactions(
+    block?.number,
+  );
+
   if (isLoading || !block) {
     return <BlockDetailSkeleton />;
   }
 
   const blockNum = block.number;
   const fullDate = new Date(block.timestamp).toLocaleString();
-  const txs = block.transactions ?? [];
+  const txs = txData?.items ?? [];
 
   return (
     <motion.div
@@ -263,7 +268,13 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
           </h2>
         </div>
 
-        {txs.length === 0 ? (
+        {txLoading ? (
+          <div className="space-y-3 p-6">
+            {Array.from({ length: 2 }).map((_, i) => (
+              <SkeletonShimmer key={i} className="h-12 w-full" />
+            ))}
+          </div>
+        ) : txs.length === 0 ? (
           <div className="flex items-center justify-center py-12 text-sm text-muted-foreground">
             No transactions in this block
           </div>

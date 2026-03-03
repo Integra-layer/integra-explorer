@@ -17,7 +17,11 @@ const footerSections = [
     title: "Tools",
     links: [
       { label: "Developers", href: "/developers" },
-      { label: "Faucet", href: "/developers#faucet" },
+      {
+        label: "Faucet",
+        href: "https://testnet.integralayer.com",
+        external: true,
+      },
       { label: "Resources", href: "/developers#resources" },
       { label: "Proposals", href: "/proposals" },
     ],
@@ -32,7 +36,7 @@ const footerSections = [
       },
       {
         label: "Twitter / X",
-        href: "https://lnk.integralayer.com/x",
+        href: "https://x.com/integaborat",
         external: true,
       },
       {
@@ -62,7 +66,7 @@ const footerSections = [
       },
       {
         label: "Brand Kit",
-        href: "https://integralayer.com/brandkit",
+        href: "https://github.com/Integra-layer/integra-brand",
         external: true,
       },
       {

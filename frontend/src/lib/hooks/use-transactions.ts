@@ -1,7 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { getTransactions, getTransaction } from "@/lib/api/transactions";
+import {
+  getTransactions,
+  getTransaction,
+  getBlockTransactions,
+} from "@/lib/api/transactions";
 import { fetchApi } from "@/lib/api/client";
 import { useExplorerReady } from "@/lib/explorer-provider";
 import type { Transaction, PaginatedResponse } from "@/lib/api/types";
@@ -29,6 +33,19 @@ export function useTransaction(hash: string | undefined) {
     queryKey: ["transaction", hash],
     queryFn: () => getTransaction(hash!),
     enabled: isReady && !!hash,
+  });
+}
+
+/**
+ * Fetch transactions for a specific block number.
+ * Gated on explorer auth being resolved.
+ */
+export function useBlockTransactions(blockNumber: number | undefined) {
+  const isReady = useExplorerReady();
+  return useQuery({
+    queryKey: ["block-transactions", blockNumber],
+    queryFn: () => getBlockTransactions(blockNumber!),
+    enabled: isReady && blockNumber !== undefined,
   });
 }
 
