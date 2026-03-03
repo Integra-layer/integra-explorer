@@ -13,6 +13,7 @@ import {
   Coins,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { DetailRow } from "@/components/ui/detail-row";
 import {
   GlassCard,
   PageTransition,
@@ -138,21 +139,6 @@ function LoadingSkeleton() {
       <SkeletonShimmer className="h-20 rounded-xl" />
       <SkeletonShimmer className="h-64 rounded-xl" />
       <SkeletonShimmer className="h-48 rounded-xl" />
-    </div>
-  );
-}
-
-function DetailRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="break-all text-sm font-medium">{children}</span>
     </div>
   );
 }
@@ -294,7 +280,7 @@ export default function ProposalDetailPage({
             <GlassCard className="p-6">
               <h3 className="mb-4 text-lg font-semibold">Details</h3>
               <div className="space-y-3">
-                <DetailRow label="Proposer">
+                <DetailRow variant="inline" label="Proposer">
                   <Link
                     href={`/address/${proposal.proposer}`}
                     className="inline-flex items-center gap-1 text-integra-brand hover:underline"
@@ -310,31 +296,31 @@ export default function ProposalDetailPage({
                   <CopyButton text={proposal.proposer} />
                 </DetailRow>
 
-                <DetailRow label="Deposit">
+                <DetailRow variant="inline" label="Deposit">
                   <span className="inline-flex items-center gap-1">
                     <Coins className="size-3" />
                     {formatDeposit(proposal.total_deposit)}
                   </span>
                 </DetailRow>
 
-                <DetailRow label="Submit Time">
+                <DetailRow variant="inline" label="Submit Time">
                   {formatDateTime(proposal.submit_time)}
                 </DetailRow>
 
-                <DetailRow label="Deposit End Time">
+                <DetailRow variant="inline" label="Deposit End Time">
                   {formatDateTime(proposal.deposit_end_time)}
                 </DetailRow>
 
-                <DetailRow label="Voting Start">
+                <DetailRow variant="inline" label="Voting Start">
                   {formatDateTime(proposal.voting_start_time)}
                 </DetailRow>
 
-                <DetailRow label="Voting End">
+                <DetailRow variant="inline" label="Voting End">
                   {formatDateTime(proposal.voting_end_time)}
                 </DetailRow>
 
                 {proposal.messages && proposal.messages.length > 0 && (
-                  <DetailRow label="Message Type">
+                  <DetailRow variant="inline" label="Message Type">
                     <span className="break-all font-mono text-xs">
                       {proposal.messages[0]["@type"]}
                     </span>

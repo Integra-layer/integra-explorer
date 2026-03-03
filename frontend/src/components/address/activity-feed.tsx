@@ -22,6 +22,7 @@ import {
   formatIRL,
   timeAgo,
   formatTxValue,
+  formatFee,
 } from "@/lib/format";
 import { fetchApi } from "@/lib/api/client";
 import { useExplorerReady } from "@/lib/explorer-provider";
@@ -189,10 +190,7 @@ function ActivityTable({
             const isReceived = tx.to?.toLowerCase() === lowerAddr;
             const isSuccess = tx.receipt?.status !== false;
             const counterparty = isReceived ? tx.from : tx.to;
-            const fee =
-              tx.gasUsed && tx.gasPrice
-                ? (Number(tx.gasUsed) * Number(tx.gasPrice)).toString()
-                : "0";
+            const fee = formatFee(tx.gasUsed, tx.gasPrice);
 
             return (
               <motion.tr
@@ -259,7 +257,7 @@ function ActivityTable({
                 </td>
 
                 <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
-                  {formatIRL(fee)}
+                  {fee}
                 </td>
               </motion.tr>
             );

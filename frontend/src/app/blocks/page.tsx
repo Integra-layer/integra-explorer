@@ -3,9 +3,9 @@
 import { useSearchParams, useRouter } from "next/navigation";
 import { Suspense } from "react";
 import { motion } from "framer-motion";
-import { Box, ChevronLeft, ChevronRight } from "lucide-react";
+import { Box } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
+import { PaginationControls } from "@/components/ui/pagination-controls";
 import { PageTransition } from "@/components/effects";
 import { BlocksTable } from "@/components/blocks/blocks-table";
 import { useBlocks } from "@/lib/hooks/use-blocks";
@@ -45,32 +45,11 @@ function BlocksPageContent() {
         <BlocksTable blocks={data?.items ?? []} isLoading={isLoading} />
 
         {/* Pagination controls */}
-        <div className="flex items-center justify-between">
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page <= 1}
-            onClick={() => goToPage(page - 1)}
-          >
-            <ChevronLeft className="mr-1 size-4" />
-            Previous
-          </Button>
-
-          <span className="text-sm text-muted-foreground">
-            Page <span className="font-medium text-foreground">{page}</span> of{" "}
-            <span className="font-medium text-foreground">{totalPages}</span>
-          </span>
-
-          <Button
-            variant="outline"
-            size="sm"
-            disabled={page >= totalPages}
-            onClick={() => goToPage(page + 1)}
-          >
-            Next
-            <ChevronRight className="ml-1 size-4" />
-          </Button>
-        </div>
+        <PaginationControls
+          page={page}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+        />
       </section>
     </PageTransition>
   );

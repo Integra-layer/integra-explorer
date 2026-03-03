@@ -14,8 +14,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import { GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
+import { DetailRow } from "@/components/ui/detail-row";
 import {
   truncateAddress,
   truncateHash,
@@ -23,6 +23,7 @@ import {
   formatGas,
   formatIRL,
   formatNumber,
+  formatFee,
 } from "@/lib/format";
 import type { Block } from "@/lib/api/types";
 
@@ -68,30 +69,6 @@ function BlockDetailSkeleton() {
           ))}
         </div>
       </GlassCard>
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Detail row helper
-// ---------------------------------------------------------------------------
-
-function DetailRow({
-  label,
-  icon: Icon,
-  children,
-}: {
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        {Icon && <Icon className="size-3.5" />}
-        {label}
-      </span>
-      <div className="text-sm">{children}</div>
     </div>
   );
 }
@@ -305,10 +282,7 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
               </thead>
               <tbody className="divide-y divide-border/30">
                 {txs.map((tx, i) => {
-                  const fee =
-                    tx.gasUsed && tx.gasPrice
-                      ? (Number(tx.gasUsed) * Number(tx.gasPrice)).toString()
-                      : "0";
+                  const fee = formatFee(tx.gasUsed, tx.gasPrice);
 
                   return (
                     <motion.tr
@@ -368,7 +342,7 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
 
                       {/* Fee */}
                       <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
-                        {formatIRL(fee)}
+                        {fee}
                       </td>
                     </motion.tr>
                   );

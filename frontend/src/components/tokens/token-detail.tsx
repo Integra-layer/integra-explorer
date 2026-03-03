@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { DetailRow } from "@/components/ui/detail-row";
 import { GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
 import { truncateAddress } from "@/lib/format";
 import { useTokenContract } from "@/lib/hooks/use-tokens";
@@ -45,30 +46,6 @@ function detectStandard(patterns: string[]): string {
   if (patterns.includes("erc20")) return "ERC-20";
   // Default if contract has tokenName
   return "ERC-20";
-}
-
-// ---------------------------------------------------------------------------
-// Detail row helper (matching block-detail pattern)
-// ---------------------------------------------------------------------------
-
-function DetailRow({
-  label,
-  icon: Icon,
-  children,
-}: {
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1">
-      <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-        {Icon && <Icon className="size-3.5" />}
-        {label}
-      </span>
-      <div className="text-sm">{children}</div>
-    </div>
-  );
 }
 
 // ---------------------------------------------------------------------------

@@ -9,30 +9,10 @@ import {
   truncateAddress,
   truncateHash,
   timeAgo,
-  formatIRL,
-  parseErc20Amount,
-  formatTokenAmount,
+  formatTxValue,
+  formatFee,
 } from "@/lib/format";
-import { findKnownToken } from "@/lib/api/tokens";
 import type { Transaction } from "@/lib/api/types";
-
-function formatTxValue(tx: Transaction): string {
-  if (
-    tx.methodDetails?.name === "transfer" &&
-    tx.value === "0" &&
-    tx.to &&
-    tx.data
-  ) {
-    const token = findKnownToken(tx.to);
-    if (token) {
-      const amount = parseErc20Amount(tx.data);
-      if (amount !== null) {
-        return formatTokenAmount(amount, token.decimals, token.symbol);
-      }
-    }
-  }
-  return formatIRL(tx.value);
-}
 
 interface TxTableProps {
   transactions: Transaction[];
@@ -94,10 +74,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                 <SkeletonRow key={i} />
               ))
             : transactions.map((tx, i) => {
-                const fee =
-                  tx.gasUsed && tx.gasPrice
-                    ? (Number(tx.gasUsed) * Number(tx.gasPrice)).toString()
-                    : "0";
+                const fee = formatFee(tx.gasUsed, tx.gasPrice);
 
                 const status = !tx.receipt
                   ? "pending"
@@ -184,7 +161,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
 
                     {/* Fee */}
                     <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
-                      {formatIRL(fee)}
+                      {fee}
                     </td>
                   </motion.tr>
                 );

@@ -12,12 +12,8 @@ import {
   User,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import {
-  Tooltip,
-  TooltipTrigger,
-  TooltipContent,
-} from "@/components/ui/tooltip";
 import { GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
+import { DetailRow } from "@/components/ui/detail-row";
 import {
   truncateAddress,
   formatIRL,
@@ -73,52 +69,6 @@ function TxDetailSkeleton() {
       {/* Tabs skeleton */}
       <SkeletonShimmer className="h-10 w-80" />
       <SkeletonShimmer className="h-40 w-full" />
-    </div>
-  );
-}
-
-// ---------------------------------------------------------------------------
-// Detail row helper
-// ---------------------------------------------------------------------------
-
-function DetailRow({
-  label,
-  icon: Icon,
-  hint,
-  children,
-}: {
-  label: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  hint?: string;
-  children: React.ReactNode;
-}) {
-  const labelContent = (
-    <span className="flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
-      {Icon && <Icon className="size-3.5" />}
-      {label}
-      {hint && (
-        <span className="inline-flex size-3.5 items-center justify-center rounded-full bg-muted text-[9px] font-bold text-muted-foreground">
-          ?
-        </span>
-      )}
-    </span>
-  );
-
-  return (
-    <div className="flex flex-col gap-1">
-      {hint ? (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <span className="w-fit cursor-help">{labelContent}</span>
-          </TooltipTrigger>
-          <TooltipContent side="top" className="max-w-[240px]">
-            {hint}
-          </TooltipContent>
-        </Tooltip>
-      ) : (
-        labelContent
-      )}
-      <div className="text-sm">{children}</div>
     </div>
   );
 }

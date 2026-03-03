@@ -2,8 +2,13 @@
 
 import { ExternalLink, Shield, ShieldAlert, ShieldOff } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { DetailRow } from "@/components/ui/detail-row";
 import { GlassCard, CopyButton, SkeletonShimmer } from "@/components/effects";
-import { truncateAddress, formatStakedIRL, formatCommission } from "@/lib/format";
+import {
+  truncateAddress,
+  formatStakedIRL,
+  formatCommission,
+} from "@/lib/format";
 import type { CosmosValidator, CosmosDelegation } from "@/lib/api/types";
 
 interface ValidatorDetailProps {
@@ -34,21 +39,6 @@ function getStatusBadge(validator: CosmosValidator) {
       <ShieldAlert className="size-3" />
       Inactive
     </Badge>
-  );
-}
-
-function DetailRow({
-  label,
-  children,
-}: {
-  label: string;
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
-      <span className="text-sm text-muted-foreground">{label}</span>
-      <span className="break-all text-sm font-medium">{children}</span>
-    </div>
   );
 }
 
@@ -104,7 +94,7 @@ export function ValidatorDetail({
         <div className="grid gap-4 sm:grid-cols-2">
           {/* Operator Address */}
           <div className="sm:col-span-2">
-            <DetailRow label="Operator Address">
+            <DetailRow variant="inline" label="Operator Address">
               <span className="inline-flex items-center gap-1">
                 <span className="hidden md:inline font-mono">
                   {validator.operator_address}
@@ -117,7 +107,7 @@ export function ValidatorDetail({
             </DetailRow>
           </div>
 
-          <DetailRow label="Status">
+          <DetailRow variant="inline" label="Status">
             {validator.jailed
               ? "Jailed"
               : validator.status === "BOND_STATUS_BONDED"
@@ -127,28 +117,28 @@ export function ValidatorDetail({
                   : "Unbonded"}
           </DetailRow>
 
-          <DetailRow label="Tokens Staked">
+          <DetailRow variant="inline" label="Tokens Staked">
             {formatStakedIRL(validator.tokens)} IRL
           </DetailRow>
 
-          <DetailRow label="Commission Rate">
+          <DetailRow variant="inline" label="Commission Rate">
             {formatCommission(commission_rates.rate)}
           </DetailRow>
 
-          <DetailRow label="Max Commission">
+          <DetailRow variant="inline" label="Max Commission">
             {formatCommission(commission_rates.max_rate)}
           </DetailRow>
 
-          <DetailRow label="Max Commission Change">
+          <DetailRow variant="inline" label="Max Commission Change">
             {formatCommission(commission_rates.max_change_rate)}
           </DetailRow>
 
-          <DetailRow label="Min Self Delegation">
+          <DetailRow variant="inline" label="Min Self Delegation">
             {validator.min_self_delegation}
           </DetailRow>
 
           {validator.description.website && (
-            <DetailRow label="Website">
+            <DetailRow variant="inline" label="Website">
               <a
                 href={validator.description.website}
                 target="_blank"
@@ -162,14 +152,14 @@ export function ValidatorDetail({
           )}
 
           {validator.unbonding_height !== "0" && (
-            <DetailRow label="Unbonding Height">
+            <DetailRow variant="inline" label="Unbonding Height">
               {validator.unbonding_height}
             </DetailRow>
           )}
 
           {validator.description.details && (
             <div className="sm:col-span-2">
-              <DetailRow label="Details">
+              <DetailRow variant="inline" label="Details">
                 {validator.description.details}
               </DetailRow>
             </div>
