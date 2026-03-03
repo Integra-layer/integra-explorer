@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getValidators,
@@ -7,6 +8,7 @@ import {
   getStakingPool,
   getValidatorDelegations,
 } from "@/lib/api/validators";
+import { bech32ToEvmAddress } from "@/lib/bech32";
 
 /**
  * Fetch all validators. Refetches every 60 seconds.
@@ -53,4 +55,24 @@ export function useValidatorDelegations(operatorAddress: string) {
     queryFn: () => getValidatorDelegations(operatorAddress),
     enabled: !!operatorAddress,
   });
+}
+
+/**
+ * Build a lookup map: lowercase EVM address -> validator moniker.
+ * Used to resolve block miner addresses to human-readable names.
+ */
+export function useValidatorMap() {
+  const { data: validators } = useValidators();
+
+  return useMemo(() => {
+    const map = new Map<string, string>();
+    if (!validators) return map;
+    for (const v of validators) {
+      const evmAddr = bech32ToEvmAddress(v.operator_address);
+      if (evmAddr) {
+        map.set(evmAddr.toLowerCase(), v.description.moniker || "Unknown");
+      }
+    }
+    return map;
+  }, [validators]);
 }

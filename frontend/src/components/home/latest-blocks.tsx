@@ -8,10 +8,12 @@ import { GlassCard, SkeletonShimmer } from "@/components/effects";
 import { Badge } from "@/components/ui/badge";
 import { getBlocks } from "@/lib/api/blocks";
 import { useExplorerReady } from "@/lib/explorer-provider";
+import { useValidatorMap } from "@/lib/hooks/use-validators";
 import { truncateAddress, timeAgo, formatGas } from "@/lib/format";
 
 export function LatestBlocks() {
   const isReady = useExplorerReady();
+  const validatorMap = useValidatorMap();
   const { data, isLoading } = useQuery({
     queryKey: ["blocks", 1, 6],
     queryFn: () => getBlocks({ page: 1, itemsPerPage: 6 }),
@@ -82,9 +84,13 @@ export function LatestBlocks() {
                   {timeAgo(block.timestamp)}
                 </span>
 
-                {/* Miner address (hidden on small screens) */}
-                <span className="hidden font-mono text-xs text-muted-foreground sm:inline">
-                  {truncateAddress(block.miner)}
+                {/* Validator name or truncated address */}
+                <span className="hidden text-xs text-muted-foreground sm:inline">
+                  {validatorMap.get(block.miner?.toLowerCase()) || (
+                    <span className="font-mono">
+                      {truncateAddress(block.miner)}
+                    </span>
+                  )}
                 </span>
 
                 {/* Right side: tx count + gas */}

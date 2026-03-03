@@ -9,6 +9,7 @@ import {
   formatStakedIRL,
   formatCommission,
 } from "@/lib/format";
+import { bech32ToEvmAddress } from "@/lib/bech32";
 import type { CosmosValidator, CosmosDelegation } from "@/lib/api/types";
 
 interface ValidatorDetailProps {
@@ -77,6 +78,7 @@ export function ValidatorDetail({
   }
 
   const { commission_rates } = validator.commission;
+  const evmAddress = bech32ToEvmAddress(validator.operator_address);
 
   return (
     <div className="space-y-6">
@@ -106,6 +108,22 @@ export function ValidatorDetail({
               </span>
             </DetailRow>
           </div>
+
+          {evmAddress && (
+            <div className="sm:col-span-2">
+              <DetailRow variant="inline" label="EVM Address">
+                <span className="inline-flex items-center gap-1">
+                  <span className="hidden md:inline font-mono">
+                    {evmAddress}
+                  </span>
+                  <span className="md:hidden font-mono">
+                    {truncateAddress(evmAddress, 10)}
+                  </span>
+                  <CopyButton text={evmAddress} />
+                </span>
+              </DetailRow>
+            </div>
+          )}
 
           <DetailRow variant="inline" label="Status">
             {validator.jailed

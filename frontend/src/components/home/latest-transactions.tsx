@@ -3,14 +3,16 @@
 import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowRightLeft } from "lucide-react";
+import { ArrowRight, ArrowRightLeft, MoveRight } from "lucide-react";
 import { GlassCard, SkeletonShimmer } from "@/components/effects";
+import { Badge } from "@/components/ui/badge";
 import { getTransactions } from "@/lib/api/transactions";
 import {
   truncateHash,
   truncateAddress,
   timeAgo,
   formatTxValue,
+  isErc20Transfer,
 } from "@/lib/format";
 import { useExplorerReady } from "@/lib/explorer-provider";
 
@@ -51,62 +53,76 @@ export function LatestTransactions() {
       <div className="divide-y divide-border/30">
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-4 px-5 py-3">
-              <SkeletonShimmer className="h-5 w-24" />
-              <SkeletonShimmer className="hidden h-4 w-48 sm:block" />
-              <div className="ml-auto flex gap-3">
+            <div key={i} className="space-y-2 px-5 py-3">
+              <div className="flex items-center gap-3">
+                <SkeletonShimmer className="h-5 w-28" />
                 <SkeletonShimmer className="h-4 w-16" />
-                <SkeletonShimmer className="h-4 w-12" />
+                <div className="ml-auto">
+                  <SkeletonShimmer className="h-5 w-20" />
+                </div>
+              </div>
+              <div className="flex items-center gap-2">
+                <SkeletonShimmer className="h-3 w-40" />
               </div>
             </div>
           ))
         ) : (
           <AnimatePresence mode="popLayout" initial={false}>
-            {data?.items.map((tx) => (
-              <motion.div
-                key={tx.hash}
-                layout
-                initial={{ opacity: 0, y: -20 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.25 }}
-                className="flex flex-wrap items-center gap-x-4 gap-y-1 border-l-2 border-transparent px-5 py-3 transition-all duration-150 hover:border-l-integra-brand hover:bg-muted/30"
-              >
-                {/* Tx hash + method */}
-                <div className="flex items-center gap-2">
-                  <Link
-                    href={`/transactions/${tx.hash}`}
-                    className="font-mono text-sm font-medium text-integra-brand hover:underline"
-                  >
-                    {truncateHash(tx.hash)}
-                  </Link>
-                  {tx.methodDetails?.name && (
-                    <span className="hidden rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground sm:inline">
-                      {tx.methodDetails.name}
+            {data?.items.map((tx) => {
+              const value = formatTxValue(tx);
+              const isToken = isErc20Transfer(tx);
+
+              return (
+                <motion.div
+                  key={tx.hash}
+                  layout
+                  initial={{ opacity: 0, y: -20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.25 }}
+                  className="border-l-2 border-transparent px-5 py-3 transition-all duration-150 hover:border-l-integra-brand hover:bg-muted/30"
+                >
+                  {/* Row 1: Hash + method + amount */}
+                  <div className="flex items-center gap-2">
+                    <Link
+                      href={`/transactions/${tx.hash}`}
+                      className="font-mono text-sm font-medium text-integra-brand hover:underline"
+                    >
+                      {truncateHash(tx.hash)}
+                    </Link>
+                    {tx.methodDetails?.name && (
+                      <Badge
+                        variant="secondary"
+                        className="text-[10px] font-medium"
+                      >
+                        {tx.methodDetails.name}
+                      </Badge>
+                    )}
+                    <div className="ml-auto flex items-center gap-2">
+                      <span
+                        className={`text-sm font-semibold ${isToken ? "text-integra-brand" : ""}`}
+                      >
+                        {value}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Row 2: From -> To + time */}
+                  <div className="mt-1 flex items-center gap-1.5 text-xs text-muted-foreground">
+                    <span className="font-mono">
+                      {truncateAddress(tx.from)}
                     </span>
-                  )}
-                </div>
-
-                {/* From -> To (hidden on small screens) */}
-                <div className="hidden items-center gap-1 font-mono text-xs text-muted-foreground sm:flex">
-                  <span>{truncateAddress(tx.from)}</span>
-                  <ArrowRight className="size-3 shrink-0" />
-                  <span>
-                    {tx.to ? truncateAddress(tx.to) : "Contract Create"}
-                  </span>
-                </div>
-
-                {/* Right side: value + time */}
-                <div className="ml-auto flex items-center gap-3">
-                  <span className="text-xs font-medium">
-                    {formatTxValue(tx)}
-                  </span>
-                  <span className="text-xs text-muted-foreground">
-                    {timeAgo(tx.timestamp)}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
+                    <MoveRight className="size-3 shrink-0" />
+                    <span className="font-mono">
+                      {tx.to ? truncateAddress(tx.to) : "Contract Create"}
+                    </span>
+                    <span className="ml-auto shrink-0">
+                      {timeAgo(tx.timestamp)}
+                    </span>
+                  </div>
+                </motion.div>
+              );
+            })}
           </AnimatePresence>
         )}
       </div>
