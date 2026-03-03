@@ -143,10 +143,14 @@ export default function FaucetPage() {
 
                   {/* Address input */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">
+                    <label
+                      htmlFor="wallet-address"
+                      className="text-sm font-medium"
+                    >
                       Wallet Address
                     </label>
                     <Input
+                      id="wallet-address"
                       placeholder="0x..."
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
@@ -274,6 +278,7 @@ function SuccessCard({
         )}
 
         <button
+          type="button"
           onClick={onReset}
           className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
         >
@@ -320,6 +325,7 @@ function CooldownCard({
           </p>
         </div>
         <button
+          type="button"
           onClick={onReset}
           className="text-sm text-muted-foreground underline underline-offset-4 hover:text-foreground"
         >

@@ -56,6 +56,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm">
       <table className="w-full text-sm">
+        <caption className="sr-only">List of transactions</caption>
         <thead className="sticky top-0 z-10 border-b border-border/50 bg-muted/80 backdrop-blur-sm">
           <tr className="text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-3">Status</th>
@@ -93,11 +94,20 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                     {/* Status */}
                     <td className="px-4 py-3">
                       {status === "success" ? (
-                        <CheckCircle className="size-4 text-integra-success" />
+                        <CheckCircle
+                          className="size-4 text-integra-success"
+                          aria-label="Success"
+                        />
                       ) : status === "failed" ? (
-                        <XCircle className="size-4 text-integra-error" />
+                        <XCircle
+                          className="size-4 text-integra-error"
+                          aria-label="Failed"
+                        />
                       ) : (
-                        <Clock className="size-4 text-integra-warning" />
+                        <Clock
+                          className="size-4 text-integra-warning"
+                          aria-label="Pending"
+                        />
                       )}
                     </td>
 

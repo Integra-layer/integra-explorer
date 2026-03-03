@@ -194,6 +194,7 @@ function ContractVerifierTab() {
             Your submission has been recorded for review.
           </p>
           <button
+            type="button"
             onClick={() => setSubmitted(false)}
             className="text-sm text-integra-brand underline underline-offset-4 hover:opacity-80"
           >
@@ -203,8 +204,11 @@ function ContractVerifierTab() {
       ) : (
         <form onSubmit={handleSubmit} className="space-y-5">
           <div className="space-y-2">
-            <label className="text-sm font-medium">Contract Address</label>
+            <label htmlFor="contract-address" className="text-sm font-medium">
+              Contract Address
+            </label>
             <Input
+              id="contract-address"
               placeholder="0x..."
               value={address}
               onChange={(e) => setAddress(e.target.value)}
@@ -215,8 +219,11 @@ function ContractVerifierTab() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm font-medium">Compiler Version</label>
+              <label htmlFor="compiler-version" className="text-sm font-medium">
+                Compiler Version
+              </label>
               <select
+                id="compiler-version"
                 value={compiler}
                 onChange={(e) => setCompiler(e.target.value)}
                 className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -243,10 +250,11 @@ function ContractVerifierTab() {
           </div>
 
           <div className="space-y-2">
-            <label className="text-sm font-medium">
+            <label htmlFor="source-code" className="text-sm font-medium">
               Source Code (Solidity)
             </label>
             <textarea
+              id="source-code"
               value={source}
               onChange={(e) => setSource(e.target.value)}
               rows={12}
@@ -317,8 +325,11 @@ function AbiDecoderTab() {
   return (
     <GlassCard className="max-w-2xl space-y-5 p-6">
       <div className="space-y-2">
-        <label className="text-sm font-medium">ABI (JSON)</label>
+        <label htmlFor="abi-json" className="text-sm font-medium">
+          ABI (JSON)
+        </label>
         <textarea
+          id="abi-json"
           value={abiInput}
           onChange={(e) => setAbiInput(e.target.value)}
           rows={8}
@@ -328,10 +339,11 @@ function AbiDecoderTab() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">
+        <label htmlFor="hex-data" className="text-sm font-medium">
           Encoded Data (hex, optional)
         </label>
         <textarea
+          id="hex-data"
           value={hexData}
           onChange={(e) => setHexData(e.target.value)}
           rows={3}
@@ -389,8 +401,11 @@ function UnitConverterTab() {
     <GlassCard className="max-w-2xl space-y-5 p-6">
       <div className="grid gap-4 sm:grid-cols-[1fr_auto]">
         <div className="space-y-2">
-          <label className="text-sm font-medium">Amount</label>
+          <label htmlFor="unit-amount" className="text-sm font-medium">
+            Amount
+          </label>
           <Input
+            id="unit-amount"
             type="text"
             inputMode="decimal"
             value={amount}
@@ -400,8 +415,11 @@ function UnitConverterTab() {
           />
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-medium">From</label>
+          <label htmlFor="from-unit" className="text-sm font-medium">
+            From
+          </label>
           <select
+            id="from-unit"
             value={fromUnit}
             onChange={(e) => setFromUnit(e.target.value)}
             className="flex h-9 w-full min-w-[100px] rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
@@ -512,8 +530,11 @@ function RpcPlaygroundTab() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">Method</label>
+        <label htmlFor="rpc-method" className="text-sm font-medium">
+          Method
+        </label>
         <select
+          id="rpc-method"
           value={selectedIdx}
           onChange={(e) => {
             setSelectedIdx(Number(e.target.value));
@@ -531,8 +552,11 @@ function RpcPlaygroundTab() {
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-medium">Params (JSON, optional)</label>
+        <label htmlFor="rpc-params" className="text-sm font-medium">
+          Params (JSON, optional)
+        </label>
         <textarea
+          id="rpc-params"
           value={customParams}
           onChange={(e) => setCustomParams(e.target.value)}
           rows={3}

@@ -174,6 +174,9 @@ function ActivityTable({
   return (
     <div className="overflow-x-auto rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm">
       <table className="w-full text-sm">
+        <caption className="sr-only">
+          Transaction history for this address
+        </caption>
         <thead className="sticky top-0 z-10 border-b border-border/50 bg-muted/80 backdrop-blur-sm">
           <tr className="text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-3">Status</th>
@@ -202,9 +205,15 @@ function ActivityTable({
               >
                 <td className="px-4 py-3">
                   {isSuccess ? (
-                    <CheckCircle className="size-4 text-integra-success" />
+                    <CheckCircle
+                      className="size-4 text-integra-success"
+                      aria-label="Success"
+                    />
                   ) : (
-                    <XCircle className="size-4 text-integra-error" />
+                    <XCircle
+                      className="size-4 text-integra-error"
+                      aria-label="Failed"
+                    />
                   )}
                 </td>
 

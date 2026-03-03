@@ -43,6 +43,7 @@ export function BlocksTable({ blocks, isLoading }: BlocksTableProps) {
   return (
     <div className="overflow-x-auto rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm">
       <table className="w-full text-sm">
+        <caption className="sr-only">List of recent blocks</caption>
         <thead className="sticky top-0 z-10 border-b border-border/50 bg-muted/80 backdrop-blur-sm">
           <tr className="text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
             <th className="px-4 py-3">Block</th>
