@@ -211,7 +211,7 @@ export function TokenDetail({ address }: TokenDetailProps) {
             icon={isVerified ? ShieldCheck : ShieldX}
           >
             {isVerified ? (
-              <Badge className="bg-emerald-500/20 text-emerald-400">
+              <Badge className="bg-integra-success/20 text-integra-success">
                 <ShieldCheck className="mr-1 size-3" />
                 Verified
               </Badge>

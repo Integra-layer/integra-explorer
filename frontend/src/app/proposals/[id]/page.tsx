@@ -99,7 +99,7 @@ function formatVoteOption(option: VoteOption): {
     case "VOTE_OPTION_ABSTAIN":
       return { label: "Abstain", color: "text-muted-foreground" };
     case "VOTE_OPTION_NO_WITH_VETO":
-      return { label: "No With Veto", color: "text-orange-600" };
+      return { label: "No With Veto", color: "text-integra-warning" };
     default:
       return { label: "Unknown", color: "text-muted-foreground" };
   }
@@ -270,8 +270,8 @@ export default function ProposalDetailPage({
                   label="No With Veto"
                   count={tallyData.no_with_veto_count}
                   percentage={vetoPercent}
-                  color="text-orange-600"
-                  bgColor="bg-orange-600"
+                  color="text-integra-warning"
+                  bgColor="bg-integra-warning"
                 />
               </div>
             )}

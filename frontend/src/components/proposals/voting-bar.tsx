@@ -25,18 +25,66 @@ function parseTally(tally: TallyResult): VoteSection[] {
 
   if (total === 0) {
     return [
-      { label: "Yes", count: 0, percentage: 0, color: "bg-integra-success", textColor: "text-integra-success" },
-      { label: "No", count: 0, percentage: 0, color: "bg-integra-danger", textColor: "text-integra-danger" },
-      { label: "Abstain", count: 0, percentage: 0, color: "bg-muted-foreground/50", textColor: "text-muted-foreground" },
-      { label: "Veto", count: 0, percentage: 0, color: "bg-orange-600", textColor: "text-orange-600" },
+      {
+        label: "Yes",
+        count: 0,
+        percentage: 0,
+        color: "bg-integra-success",
+        textColor: "text-integra-success",
+      },
+      {
+        label: "No",
+        count: 0,
+        percentage: 0,
+        color: "bg-integra-danger",
+        textColor: "text-integra-danger",
+      },
+      {
+        label: "Abstain",
+        count: 0,
+        percentage: 0,
+        color: "bg-muted-foreground/50",
+        textColor: "text-muted-foreground",
+      },
+      {
+        label: "Veto",
+        count: 0,
+        percentage: 0,
+        color: "bg-integra-warning",
+        textColor: "text-integra-warning",
+      },
     ];
   }
 
   return [
-    { label: "Yes", count: yes, percentage: (yes / total) * 100, color: "bg-integra-success", textColor: "text-integra-success" },
-    { label: "No", count: no, percentage: (no / total) * 100, color: "bg-integra-danger", textColor: "text-integra-danger" },
-    { label: "Abstain", count: abstain, percentage: (abstain / total) * 100, color: "bg-muted-foreground/50", textColor: "text-muted-foreground" },
-    { label: "Veto", count: veto, percentage: (veto / total) * 100, color: "bg-orange-600", textColor: "text-orange-600" },
+    {
+      label: "Yes",
+      count: yes,
+      percentage: (yes / total) * 100,
+      color: "bg-integra-success",
+      textColor: "text-integra-success",
+    },
+    {
+      label: "No",
+      count: no,
+      percentage: (no / total) * 100,
+      color: "bg-integra-danger",
+      textColor: "text-integra-danger",
+    },
+    {
+      label: "Abstain",
+      count: abstain,
+      percentage: (abstain / total) * 100,
+      color: "bg-muted-foreground/50",
+      textColor: "text-muted-foreground",
+    },
+    {
+      label: "Veto",
+      count: veto,
+      percentage: (veto / total) * 100,
+      color: "bg-integra-warning",
+      textColor: "text-integra-warning",
+    },
   ];
 }
 
@@ -68,7 +116,9 @@ export function VotingBar({ tally, showLabels = false }: VotingBarProps) {
           <div className="flex gap-4 text-xs text-muted-foreground">
             {sections.map((s) => (
               <span key={s.label} className="flex items-center gap-1">
-                <span className={`inline-block size-2 rounded-full ${s.color}`} />
+                <span
+                  className={`inline-block size-2 rounded-full ${s.color}`}
+                />
                 {s.label}: 0
               </span>
             ))}

@@ -31,16 +31,6 @@ export function GradientButton({
         }}
         aria-hidden="true"
       />
-      {/* Shimmer on hover via CSS */}
-      <style>{`
-        .gradient-btn-shimmer:hover > span:first-of-type {
-          animation: shimmer-sweep 0.75s ease-in-out forwards;
-        }
-        @keyframes shimmer-sweep {
-          0% { transform: translateX(-100%); opacity: 1; }
-          100% { transform: translateX(100%); opacity: 1; }
-        }
-      `}</style>
       <span className="relative z-10">{children}</span>
     </button>
   );
@@ -72,15 +62,6 @@ export const GradientButtonWithShimmer = forwardRef<
             "linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent)",
         }}
       />
-      <style>{`
-        .gradient-btn-shimmer:hover > span:first-of-type {
-          animation: shimmer-sweep 0.75s ease-in-out forwards;
-        }
-        @keyframes shimmer-sweep {
-          0% { transform: translateX(-100%); opacity: 1; }
-          100% { transform: translateX(100%); opacity: 1; }
-        }
-      `}</style>
       <span className="relative z-10">{children}</span>
     </button>
   );

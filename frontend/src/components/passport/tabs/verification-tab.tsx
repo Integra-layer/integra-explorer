@@ -21,19 +21,22 @@ const statusConfig = {
     icon: ShieldCheck,
     label: "Verified",
     color: "bg-integra-success/10 text-integra-success",
-    badgeClass: "bg-integra-success/10 text-integra-success border-integra-success/30",
+    badgeClass:
+      "bg-integra-success/10 text-integra-success border-integra-success/30",
   },
   pending: {
     icon: Clock,
     label: "Pending",
-    color: "bg-amber-500/10 text-amber-500",
-    badgeClass: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+    color: "bg-integra-warning/10 text-integra-warning",
+    badgeClass:
+      "bg-integra-warning/10 text-integra-warning border-integra-warning/30",
   },
   rejected: {
     icon: XCircle,
     label: "Rejected",
-    color: "bg-red-500/10 text-red-500",
-    badgeClass: "bg-red-500/10 text-red-500 border-red-500/30",
+    color: "bg-integra-danger/10 text-integra-danger",
+    badgeClass:
+      "bg-integra-danger/10 text-integra-danger border-integra-danger/30",
   },
 };
 
@@ -77,8 +80,8 @@ export function VerificationTab({ data }: VerificationTabProps) {
 
         <GlassCard className="p-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/10">
-              <Clock className="size-5 text-amber-500" />
+            <div className="flex size-10 items-center justify-center rounded-lg bg-integra-warning/10">
+              <Clock className="size-5 text-integra-warning" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Pending</p>
@@ -99,7 +102,9 @@ export function VerificationTab({ data }: VerificationTabProps) {
               <GlassCard key={i} className="p-5">
                 <div className="mb-3 flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <StatusIcon className={`size-5 ${config.color.split(" ")[1]}`} />
+                    <StatusIcon
+                      className={`size-5 ${config.color.split(" ")[1]}`}
+                    />
                     <h4 className="font-semibold">
                       {attestation.documentType}
                     </h4>
@@ -112,9 +117,7 @@ export function VerificationTab({ data }: VerificationTabProps) {
                 <div className="space-y-3">
                   {/* Verifier info */}
                   <div>
-                    <p className="text-xs text-muted-foreground">
-                      Verified by
-                    </p>
+                    <p className="text-xs text-muted-foreground">Verified by</p>
                     <p className="text-sm font-medium">
                       {attestation.verifier.name}
                     </p>

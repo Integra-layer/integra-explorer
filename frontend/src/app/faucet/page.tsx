@@ -64,7 +64,9 @@ export default function FaucetPage() {
           setCooldownEnd(Date.now() + COOLDOWN_MINUTES * 60 * 1000);
           return;
         }
-        throw new Error(data?.error || data?.message || `Request failed (${res.status})`);
+        throw new Error(
+          data?.error || data?.message || `Request failed (${res.status})`,
+        );
       }
 
       setTxHash(data?.txHash || data?.tx_hash || data?.hash || null);
@@ -95,7 +97,9 @@ export default function FaucetPage() {
             <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-2xl bg-integra-brand/10">
               <Droplets className="size-8 text-integra-brand" />
             </div>
-            <h1 className="text-2xl font-bold tracking-tight">Testnet Faucet</h1>
+            <h1 className="text-2xl font-bold tracking-tight">
+              Testnet Faucet
+            </h1>
             <p className="mt-2 text-muted-foreground">
               Get testnet IRL tokens for development and testing
             </p>
@@ -104,9 +108,17 @@ export default function FaucetPage() {
           {/* Main card */}
           <AnimatePresence mode="wait">
             {state === "success" ? (
-              <SuccessCard key="success" txHash={txHash} onReset={handleReset} />
+              <SuccessCard
+                key="success"
+                txHash={txHash}
+                onReset={handleReset}
+              />
             ) : state === "cooldown" ? (
-              <CooldownCard key="cooldown" cooldownEnd={cooldownEnd} onReset={handleReset} />
+              <CooldownCard
+                key="cooldown"
+                cooldownEnd={cooldownEnd}
+                onReset={handleReset}
+              />
             ) : (
               <motion.div
                 key="form"
@@ -120,7 +132,9 @@ export default function FaucetPage() {
                     <p className="text-sm font-medium">You will receive:</p>
                     <p className="mt-1 text-lg font-bold">
                       10 IRL{" "}
-                      <span className="text-sm font-normal text-muted-foreground">+</span>{" "}
+                      <span className="text-sm font-normal text-muted-foreground">
+                        +
+                      </span>{" "}
                       1,000 tUSDI
                     </p>
                   </div>
@@ -129,7 +143,9 @@ export default function FaucetPage() {
 
                   {/* Address input */}
                   <div className="space-y-2">
-                    <label className="text-sm font-medium">Wallet Address</label>
+                    <label className="text-sm font-medium">
+                      Wallet Address
+                    </label>
                     <Input
                       placeholder="0x..."
                       value={address}
@@ -141,8 +157,9 @@ export default function FaucetPage() {
                       }`}
                     />
                     {address && !isValidAddress && (
-                      <p className="text-xs text-red-400">
-                        Please enter a valid EVM address (0x + 40 hex characters)
+                      <p className="text-xs text-integra-danger">
+                        Please enter a valid EVM address (0x + 40 hex
+                        characters)
                       </p>
                     )}
                   </div>
@@ -168,7 +185,7 @@ export default function FaucetPage() {
 
                   {/* Error inline */}
                   {state === "error" && errorMsg && (
-                    <div className="flex items-start gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+                    <div className="flex items-start gap-2 rounded-lg border border-integra-danger/30 bg-red-500/10 p-3 text-sm text-integra-danger">
                       <AlertCircle className="mt-0.5 size-4 shrink-0" />
                       <div>
                         <p>{errorMsg}</p>
@@ -224,14 +241,21 @@ function SuccessCard({
         <motion.div
           initial={{ scale: 0 }}
           animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 300, damping: 20, delay: 0.1 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+            delay: 0.1,
+          }}
           className="mx-auto flex size-20 items-center justify-center rounded-full bg-integra-success/10"
         >
           <CheckCircle2 className="size-10 text-integra-success" />
         </motion.div>
 
         <div>
-          <h3 className="text-xl font-bold text-integra-success">Tokens Sent!</h3>
+          <h3 className="text-xl font-bold text-integra-success">
+            Tokens Sent!
+          </h3>
           <p className="mt-1 text-sm text-muted-foreground">
             10 IRL + 1,000 tUSDI have been sent to your wallet.
           </p>
@@ -271,7 +295,9 @@ function CooldownCard({
   cooldownEnd: number | null;
   onReset: () => void;
 }) {
-  const remaining = cooldownEnd ? Math.max(0, Math.ceil((cooldownEnd - Date.now()) / 60000)) : COOLDOWN_MINUTES;
+  const remaining = cooldownEnd
+    ? Math.max(0, Math.ceil((cooldownEnd - Date.now()) / 60000))
+    : COOLDOWN_MINUTES;
 
   return (
     <motion.div
@@ -280,14 +306,17 @@ function CooldownCard({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
     >
-      <GlassCard className="space-y-4 border-amber-500/30 p-6 text-center">
-        <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-amber-500/10">
-          <Clock className="size-8 text-amber-500" />
+      <GlassCard className="space-y-4 border-integra-warning/30 p-6 text-center">
+        <div className="mx-auto flex size-16 items-center justify-center rounded-full bg-integra-warning/10">
+          <Clock className="size-8 text-integra-warning" />
         </div>
         <div>
-          <h3 className="text-lg font-semibold text-amber-400">Cooldown Active</h3>
+          <h3 className="text-lg font-semibold text-integra-warning">
+            Cooldown Active
+          </h3>
           <p className="mt-1 text-sm text-muted-foreground">
-            Please wait approximately {remaining} minutes before requesting again.
+            Please wait approximately {remaining} minutes before requesting
+            again.
           </p>
         </div>
         <button

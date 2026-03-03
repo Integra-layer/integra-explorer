@@ -27,12 +27,14 @@ const txStatusConfig = {
   pending: {
     icon: Clock,
     label: "Pending",
-    badgeClass: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+    badgeClass:
+      "bg-integra-warning/10 text-integra-warning border-integra-warning/30",
   },
   failed: {
     icon: XCircle,
     label: "Failed",
-    badgeClass: "bg-red-500/10 text-red-500 border-red-500/30",
+    badgeClass:
+      "bg-integra-danger/10 text-integra-danger border-integra-danger/30",
   },
 };
 
@@ -46,9 +48,7 @@ export function HistoryTab({ data }: HistoryTabProps) {
             <History className="size-5 text-integra-brand" />
           </div>
           <div>
-            <p className="text-sm text-muted-foreground">
-              Transaction History
-            </p>
+            <p className="text-sm text-muted-foreground">Transaction History</p>
             <p className="text-xl font-bold">{data.transactions.length}</p>
           </div>
         </div>
@@ -92,10 +92,8 @@ export function HistoryTab({ data }: HistoryTabProps) {
                 {data.transactions.map((tx, i) => {
                   const config = txStatusConfig[tx.status];
                   const StatusIcon = config.icon;
-                  const fromDisplay =
-                    tx.fromDid || tx.fromAddress || "—";
-                  const toDisplay =
-                    tx.toDid || tx.toAddress || "—";
+                  const fromDisplay = tx.fromDid || tx.fromAddress || "—";
+                  const toDisplay = tx.toDid || tx.toAddress || "—";
 
                   return (
                     <tr
@@ -164,10 +162,7 @@ export function HistoryTab({ data }: HistoryTabProps) {
                             {truncateAddress(tx.toAddress)}
                           </Link>
                         ) : tx.toDid ? (
-                          <span
-                            className="font-mono text-xs"
-                            title={tx.toDid}
-                          >
+                          <span className="font-mono text-xs" title={tx.toDid}>
                             {tx.toDid.length > 20
                               ? `${tx.toDid.slice(0, 20)}...`
                               : tx.toDid}
@@ -196,10 +191,7 @@ export function HistoryTab({ data }: HistoryTabProps) {
 
                       {/* Status */}
                       <td className="py-3 text-center">
-                        <Badge
-                          variant="outline"
-                          className={config.badgeClass}
-                        >
+                        <Badge variant="outline" className={config.badgeClass}>
                           <StatusIcon className="mr-1 size-3" />
                           {config.label}
                         </Badge>

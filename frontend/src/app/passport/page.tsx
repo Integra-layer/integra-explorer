@@ -4,13 +4,19 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FileKey2, Lock, Unlock, Crown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { GlassCard, PageTransition, SkeletonShimmer } from "@/components/effects";
+import {
+  GlassCard,
+  PageTransition,
+  SkeletonShimmer,
+} from "@/components/effects";
 import { getPassports } from "@/lib/api/passport";
 import type { AssetPassport } from "@/lib/api/passport-types";
 
 const statusColors: Record<string, string> = {
-  active: "bg-integra-success/10 text-integra-success border-integra-success/30",
-  pending: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+  active:
+    "bg-integra-success/10 text-integra-success border-integra-success/30",
+  pending:
+    "bg-integra-warning/10 text-integra-warning border-integra-warning/30",
   archived: "bg-muted text-muted-foreground border-muted",
 };
 
@@ -30,9 +36,7 @@ export default function PassportListPage() {
         {/* Page heading */}
         <div className="flex items-center gap-3">
           <FileKey2 className="size-6 text-integra-brand" />
-          <h1 className="text-2xl font-bold tracking-tight">
-            Asset Passports
-          </h1>
+          <h1 className="text-2xl font-bold tracking-tight">Asset Passports</h1>
           {passports.length > 0 && (
             <Badge variant="secondary" className="font-mono">
               {passports.length}

@@ -345,7 +345,7 @@ function AbiDecoderTab() {
       </GradientButton>
 
       {error && (
-        <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+        <div className="flex items-center gap-2 rounded-lg border border-integra-danger/30 bg-red-500/10 p-3 text-sm text-integra-danger">
           <AlertCircle className="size-4 shrink-0" />
           {error}
         </div>
@@ -356,7 +356,7 @@ function AbiDecoderTab() {
           <div className="absolute right-2 top-2">
             <CopyButton text={output} />
           </div>
-          <pre className="max-h-96 overflow-auto rounded-lg border border-white/10 bg-black/30 p-4 font-mono text-xs leading-relaxed text-emerald-400">
+          <pre className="max-h-96 overflow-auto rounded-lg border border-white/10 bg-black/30 p-4 font-mono text-xs leading-relaxed text-integra-success">
             {output}
           </pre>
         </div>
@@ -560,7 +560,7 @@ function RpcPlaygroundTab() {
       </GradientButton>
 
       {error && (
-        <div className="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-500/10 p-3 text-sm text-red-400">
+        <div className="flex items-center gap-2 rounded-lg border border-integra-danger/30 bg-red-500/10 p-3 text-sm text-integra-danger">
           <AlertCircle className="size-4 shrink-0" />
           {error}
         </div>
@@ -571,7 +571,7 @@ function RpcPlaygroundTab() {
           <div className="absolute right-2 top-2">
             <CopyButton text={response} />
           </div>
-          <pre className="max-h-96 overflow-auto rounded-lg border border-white/10 bg-black/30 p-4 font-mono text-xs leading-relaxed text-emerald-400">
+          <pre className="max-h-96 overflow-auto rounded-lg border border-white/10 bg-black/30 p-4 font-mono text-xs leading-relaxed text-integra-success">
             {response}
           </pre>
         </div>

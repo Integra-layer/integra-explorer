@@ -79,8 +79,8 @@ export function ValuationTab({ data, fieldPrivacy }: ValuationTabProps) {
         {/* Purchase price */}
         <GlassCard className="p-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/10">
-              <DollarSign className="size-5 text-amber-500" />
+            <div className="flex size-10 items-center justify-center rounded-lg bg-integra-warning/10">
+              <DollarSign className="size-5 text-integra-warning" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Purchase Price</p>
@@ -94,8 +94,8 @@ export function ValuationTab({ data, fieldPrivacy }: ValuationTabProps) {
         {/* Debt */}
         <GlassCard className="p-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-red-500/10">
-              <TrendingUp className="size-5 text-red-500" />
+            <div className="flex size-10 items-center justify-center rounded-lg bg-integra-danger/10">
+              <TrendingUp className="size-5 text-integra-danger" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Outstanding Debt</p>
@@ -118,9 +118,7 @@ export function ValuationTab({ data, fieldPrivacy }: ValuationTabProps) {
             <Calendar className="size-4 text-integra-brand" />
             <h4 className="text-sm font-semibold">Payout Schedule</h4>
           </div>
-          <p className="text-sm text-muted-foreground">
-            {data.payoutSchedule}
-          </p>
+          <p className="text-sm text-muted-foreground">{data.payoutSchedule}</p>
         </GlassCard>
 
         <GlassCard className="p-5">

@@ -97,7 +97,7 @@ function StatusBadge({ status }: { status: "success" | "failed" | "pending" }) {
   }
 
   return (
-    <Badge className="gap-1.5 bg-yellow-500/10 text-yellow-500 hover:bg-yellow-500/20">
+    <Badge className="gap-1.5 bg-integra-warning/10 text-integra-warning hover:bg-integra-warning/20">
       <Clock className="size-3.5" />
       Pending
     </Badge>

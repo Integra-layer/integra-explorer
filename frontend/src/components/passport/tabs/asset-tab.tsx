@@ -1,6 +1,12 @@
 "use client";
 
-import { MapPin, Building2, Ruler, Calendar, Image as ImageIcon } from "lucide-react";
+import {
+  MapPin,
+  Building2,
+  Ruler,
+  Calendar,
+  Image as ImageIcon,
+} from "lucide-react";
 import { GlassCard } from "@/components/effects";
 import { Badge } from "@/components/ui/badge";
 import type { AssetInfo } from "@/lib/api/passport-types";
@@ -11,7 +17,8 @@ interface AssetTabProps {
 }
 
 export function AssetTab({ data, fieldPrivacy }: AssetTabProps) {
-  const isPrivate = (field: string) => fieldPrivacy?.[`asset.${field}`] === true;
+  const isPrivate = (field: string) =>
+    fieldPrivacy?.[`asset.${field}`] === true;
 
   return (
     <div className="space-y-6">
@@ -50,7 +57,9 @@ export function AssetTab({ data, fieldPrivacy }: AssetTabProps) {
               ))
             ) : (
               <div className="flex flex-1 items-center justify-center rounded-lg bg-muted">
-                <p className="text-sm text-muted-foreground">No gallery images</p>
+                <p className="text-sm text-muted-foreground">
+                  No gallery images
+                </p>
               </div>
             )}
           </div>
@@ -105,8 +114,8 @@ export function AssetTab({ data, fieldPrivacy }: AssetTabProps) {
 
         <GlassCard className="p-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/10">
-              <MapPin className="size-5 text-amber-500" />
+            <div className="flex size-10 items-center justify-center rounded-lg bg-integra-warning/10">
+              <MapPin className="size-5 text-integra-warning" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Location</p>

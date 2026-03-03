@@ -70,7 +70,8 @@ interface PassportViewerProps {
 const statusColors: Record<string, string> = {
   active:
     "bg-integra-success/10 text-integra-success border-integra-success/30",
-  pending: "bg-amber-500/10 text-amber-500 border-amber-500/30",
+  pending:
+    "bg-integra-warning/10 text-integra-warning border-integra-warning/30",
   archived: "bg-muted text-muted-foreground border-muted",
 };
 

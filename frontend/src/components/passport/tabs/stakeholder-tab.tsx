@@ -15,9 +15,9 @@ interface StakeholderTabProps {
 const partyTypeColors: Record<string, string> = {
   token_issuer: "bg-integra-brand/10 text-integra-brand",
   property_manager: "bg-integra-info/10 text-integra-info",
-  legal_counsel: "bg-amber-500/10 text-amber-500",
+  legal_counsel: "bg-integra-warning/10 text-integra-warning",
   auditor: "bg-integra-success/10 text-integra-success",
-  regulator: "bg-red-500/10 text-red-500",
+  regulator: "bg-integra-danger/10 text-integra-danger",
 };
 
 function formatPartyType(type: string): string {
@@ -28,8 +28,7 @@ function formatPartyType(type: string): string {
 }
 
 export function StakeholderTab({ data, fieldPrivacy }: StakeholderTabProps) {
-  const isOwnershipPrivate =
-    fieldPrivacy?.["stakeholders.ownerships"] === true;
+  const isOwnershipPrivate = fieldPrivacy?.["stakeholders.ownerships"] === true;
 
   return (
     <div className="space-y-6">
@@ -40,9 +39,7 @@ export function StakeholderTab({ data, fieldPrivacy }: StakeholderTabProps) {
             <Wallet className="size-5 text-integra-brand" />
           </div>
           <h3 className="text-lg font-semibold">Ownership Distribution</h3>
-          <Badge variant="secondary">
-            {data.ownerships.length} holders
-          </Badge>
+          <Badge variant="secondary">{data.ownerships.length} holders</Badge>
         </div>
 
         {isOwnershipPrivate ? (
@@ -111,8 +108,7 @@ export function StakeholderTab({ data, fieldPrivacy }: StakeholderTabProps) {
                         {owner.percentage}%
                       </td>
                       <td className="py-3 text-right font-mono">
-                        {owner.purchasePrice.toLocaleString()}{" "}
-                        {owner.currency}
+                        {owner.purchasePrice.toLocaleString()} {owner.currency}
                       </td>
                     </tr>
                   ))}

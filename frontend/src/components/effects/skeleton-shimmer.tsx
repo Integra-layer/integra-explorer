@@ -15,12 +15,6 @@ export function SkeletonShimmer({
 }: SkeletonShimmerProps) {
   return (
     <>
-      <style>{`
-        @keyframes shimmer {
-          0% { transform: translateX(-100%); }
-          100% { transform: translateX(100%); }
-        }
-      `}</style>
       <div
         className={cn(
           "relative overflow-hidden rounded-md bg-muted",

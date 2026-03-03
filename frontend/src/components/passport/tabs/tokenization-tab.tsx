@@ -118,9 +118,7 @@ export function TokenizationTab({ data }: TokenizationTabProps) {
           {data.subTokenId && (
             <div>
               <p className="text-sm text-muted-foreground">Sub-Token ID</p>
-              <p className="font-mono text-sm font-medium">
-                {data.subTokenId}
-              </p>
+              <p className="font-mono text-sm font-medium">{data.subTokenId}</p>
             </div>
           )}
 
@@ -137,8 +135,8 @@ export function TokenizationTab({ data }: TokenizationTabProps) {
       <div className="grid gap-4 sm:grid-cols-2">
         <GlassCard className="p-5">
           <div className="flex items-center gap-3">
-            <div className="flex size-10 items-center justify-center rounded-lg bg-amber-500/10">
-              <DollarSign className="size-5 text-amber-500" />
+            <div className="flex size-10 items-center justify-center rounded-lg bg-integra-warning/10">
+              <DollarSign className="size-5 text-integra-warning" />
             </div>
             <div>
               <p className="text-sm text-muted-foreground">Valuation</p>

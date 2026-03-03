@@ -213,6 +213,20 @@
   opacity: 1;
 }
 
+/* Shimmer keyframes (used by SkeletonShimmer and GradientButton) */
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+@keyframes shimmer-sweep {
+  0% { transform: translateX(-100%); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+.gradient-btn-shimmer:hover > span:first-of-type {
+  animation: shimmer-sweep 0.75s ease-in-out forwards;
+}
+
 /* Skeleton gradient animation */
 @keyframes shimmer-gradient {
   0% { background-position: -200% 0; }

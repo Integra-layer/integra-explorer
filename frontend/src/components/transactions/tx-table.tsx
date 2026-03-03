@@ -97,7 +97,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                       ) : status === "failed" ? (
                         <XCircle className="size-4 text-integra-error" />
                       ) : (
-                        <Clock className="size-4 text-yellow-500" />
+                        <Clock className="size-4 text-integra-warning" />
                       )}
                     </td>
 

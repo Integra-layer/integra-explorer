@@ -3,7 +3,11 @@
 import { use, useEffect, useState } from "react";
 import { Lock, ArrowLeft, AlertCircle } from "lucide-react";
 import Link from "next/link";
-import { PageTransition, GlassCard, SkeletonShimmer } from "@/components/effects";
+import {
+  PageTransition,
+  GlassCard,
+  SkeletonShimmer,
+} from "@/components/effects";
 import { PassportViewer } from "@/components/passport/passport-viewer";
 import { getPassport, verifyPassportPassword } from "@/lib/api/passport";
 import type { AssetPassport } from "@/lib/api/passport-types";
@@ -139,7 +143,7 @@ export default function PassportDetailPage({
                       autoFocus
                     />
                     {passwordError && (
-                      <p className="mt-2 flex items-center gap-1 text-sm text-red-500">
+                      <p className="mt-2 flex items-center gap-1 text-sm text-integra-danger">
                         <AlertCircle className="size-3.5" />
                         Incorrect password. Please try again.
                       </p>
