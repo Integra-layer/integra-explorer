@@ -26,10 +26,9 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "Blocks", href: "/blocks" },
   { label: "Transactions", href: "/transactions" },
-  { label: "Validators", href: "/validators" },
+  { label: "Staking", href: "/validators" },
   { label: "Tokens", href: "/tokens" },
   { label: "Contracts", href: "/contracts" },
-  { label: "Proposals", href: "/proposals" },
   { label: "Passports", href: "/passport" },
   { label: "Developers", href: "/developers" },
 ];
