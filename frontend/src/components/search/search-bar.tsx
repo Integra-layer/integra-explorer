@@ -39,7 +39,10 @@ export function SearchBar({ variant = "nav", className }: SearchBarProps) {
 
   return (
     <>
-      <NavSearch className={className} onOpenCommand={() => setCommandOpen(true)} />
+      <NavSearch
+        className={className}
+        onOpenCommand={() => setCommandOpen(true)}
+      />
       <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
     </>
   );
@@ -84,14 +87,14 @@ function HeroSearch({ className, onOpenCommand }: InternalSearchProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn("mx-auto w-full max-w-2xl", className)}
+      className={cn("mx-auto w-full max-w-3xl", className)}
     >
       <div
         className={cn(
-          "relative flex items-center rounded-xl border bg-background/60 backdrop-blur-sm transition-all",
+          "relative flex items-center rounded-xl border bg-background/60 backdrop-blur-sm transition-all duration-300",
           focused
-            ? "border-integra-brand ring-2 ring-integra-brand/20"
-            : "border-border hover:border-muted-foreground/30",
+            ? "border-integra-brand ring-2 ring-integra-brand/20 shadow-[0_0_30px_rgba(255,109,73,0.15)] scale-[1.02]"
+            : "border-border hover:border-muted-foreground/30 hover:shadow-[0_0_15px_rgba(255,109,73,0.05)]",
         )}
       >
         <Search className="ml-4 size-5 shrink-0 text-muted-foreground" />
@@ -139,7 +142,7 @@ function NavSearch({ className, onOpenCommand }: InternalSearchProps) {
       size="icon"
       aria-label="Search (Cmd+K)"
       onClick={onOpenCommand}
-      className={cn("relative", className)}
+      className={cn("relative active:scale-95 transition-transform", className)}
     >
       <Search className="size-4" />
       <span className="absolute -bottom-0.5 right-0 text-[8px] font-medium text-muted-foreground">

@@ -35,7 +35,7 @@ export function HeroSection() {
           transition={{ duration: 0.5, delay: 0.2 }}
           className="max-w-lg text-base text-muted-foreground sm:text-lg"
         >
-          Search and explore the Integra Layer blockchain — blocks, transactions,
+          Search and explore the Integra Layer blockchain: blocks, transactions,
           tokens, and more.
         </motion.p>
 

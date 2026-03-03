@@ -36,6 +36,12 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${jetbrainsMono.variable} antialiased overflow-x-hidden`}
       >
+        {/* Ambient background lighting */}
+        <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+          <div className="absolute -top-[40%] -left-[20%] size-[800px] rounded-full bg-integra-brand/[0.03] blur-[120px] animate-ambient-1" />
+          <div className="absolute -bottom-[30%] -right-[15%] size-[600px] rounded-full bg-integra-pink/[0.03] blur-[100px] animate-ambient-2" />
+          <div className="absolute top-[20%] right-[10%] size-[400px] rounded-full bg-integra-brand/[0.02] blur-[80px] animate-ambient-3" />
+        </div>
         <ThemeProvider>
           <QueryProvider>
             <ExplorerProvider>

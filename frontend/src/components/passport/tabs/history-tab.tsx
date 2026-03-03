@@ -92,8 +92,8 @@ export function HistoryTab({ data }: HistoryTabProps) {
                 {data.transactions.map((tx, i) => {
                   const config = txStatusConfig[tx.status];
                   const StatusIcon = config.icon;
-                  const fromDisplay = tx.fromDid || tx.fromAddress || "—";
-                  const toDisplay = tx.toDid || tx.toAddress || "—";
+                  const fromDisplay = tx.fromDid || tx.fromAddress || "-";
+                  const toDisplay = tx.toDid || tx.toAddress || "-";
 
                   return (
                     <tr
@@ -140,14 +140,14 @@ export function HistoryTab({ data }: HistoryTabProps) {
                           </span>
                         ) : (
                           <span className="text-xs text-muted-foreground">
-                            —
+                            -
                           </span>
                         )}
                       </td>
 
                       {/* Arrow */}
                       <td className="py-3 text-center">
-                        {(fromDisplay !== "—" || toDisplay !== "—") && (
+                        {(fromDisplay !== "-" || toDisplay !== "-") && (
                           <ArrowRight className="mx-auto size-3.5 text-muted-foreground" />
                         )}
                       </td>
@@ -169,7 +169,7 @@ export function HistoryTab({ data }: HistoryTabProps) {
                           </span>
                         ) : (
                           <span className="text-xs text-muted-foreground">
-                            —
+                            -
                           </span>
                         )}
                       </td>
