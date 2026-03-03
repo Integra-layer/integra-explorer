@@ -112,7 +112,7 @@ export function Footer() {
                     {"external" in link && link.external ? (
                       <a
                         href={link.href}
-                        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                        className="inline-flex items-center gap-1 text-sm text-muted-foreground transition-colors duration-200 hover:text-integra-brand"
                         target="_blank"
                         rel="noopener noreferrer"
                       >
@@ -122,7 +122,7 @@ export function Footer() {
                     ) : (
                       <Link
                         href={link.href}
-                        className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                        className="text-sm text-muted-foreground transition-colors duration-200 hover:text-integra-brand"
                       >
                         {link.label}
                       </Link>

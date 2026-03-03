@@ -213,6 +213,11 @@
   opacity: 1;
 }
 
+/* Global smooth transitions for interactive elements */
+a, button, [role="button"] {
+  transition: color 0.15s ease, background-color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
 /* Shimmer keyframes (used by SkeletonShimmer and GradientButton) */
 @keyframes shimmer {
   0% { transform: translateX(-100%); }

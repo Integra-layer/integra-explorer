@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
+import { motion } from "framer-motion";
 import { Menu } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -90,7 +91,11 @@ export function Navbar() {
               >
                 {link.label}
                 {active && (
-                  <span className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-integra-brand" />
+                  <motion.span
+                    layoutId="navbar-indicator"
+                    className="absolute inset-x-3 -bottom-[13px] h-0.5 rounded-full bg-integra-brand"
+                    transition={{ type: "spring", stiffness: 350, damping: 30 }}
+                  />
                 )}
               </Link>
             );
