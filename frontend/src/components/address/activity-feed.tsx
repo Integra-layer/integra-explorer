@@ -11,6 +11,8 @@ import {
   LayoutGrid,
   CheckCircle,
   XCircle,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -22,6 +24,7 @@ import {
   formatTxValue,
   formatFee,
 } from "@/lib/format";
+import { classifyTransaction } from "@/lib/tx-classifier";
 import { useAddressTransactions } from "@/lib/hooks/use-transactions";
 import type { Transaction } from "@/lib/api/types";
 
@@ -44,39 +47,62 @@ function ActivityCard({
   address: string;
   index: number;
 }) {
+  const classified = classifyTransaction(tx);
   const lowerAddr = address.toLowerCase();
-  const isReceived = tx.to?.toLowerCase() === lowerAddr;
-  const isSent = tx.from.toLowerCase() === lowerAddr;
-  const isContractCall = tx.data && tx.data !== "0x" && tx.data.length > 2;
-
+  const isReceived = classified.to?.toLowerCase() === lowerAddr;
   const isSuccess = tx.receipt?.status !== false;
 
+  // Pick icon and color based on classified category
   let icon = <ArrowUpRight className="size-5" />;
-  let label = "Sent";
-  let description = "";
   let accentClass = "text-muted-foreground";
+  let iconBgClass = "bg-muted text-muted-foreground";
 
-  if (isReceived && !isSent) {
+  if (isReceived) {
     icon = <ArrowDownLeft className="size-5" />;
-    label = "Received";
-    description = `Received ${formatTxValue(tx)} from`;
     accentClass = "text-integra-success";
-  } else if (isSent && !isReceived) {
-    if (isContractCall) {
-      icon = <FileCode className="size-5" />;
-      label = tx.methodDetails?.name ?? "Contract Call";
-      description = `Called ${tx.methodDetails?.name ?? "function"} on`;
-    } else {
-      label = "Sent";
-      description = `Sent ${formatTxValue(tx)} to`;
-    }
-  } else {
-    // Self-transfer
-    label = "Self";
-    description = `Self-transfer of ${formatTxValue(tx)}`;
+    iconBgClass = "bg-integra-success/10 text-integra-success";
+  } else if (classified.category === "contract-creation") {
+    icon = <FileCode className="size-5" />;
+    iconBgClass = "bg-integra-brand/10 text-integra-brand";
+  } else if (classified.category.startsWith("nft-")) {
+    icon = <FileCode className="size-5" />;
+    iconBgClass = "bg-purple-500/10 text-purple-500";
+  } else if (
+    classified.category.startsWith("erc20-") &&
+    !classified.category.includes("approve")
+  ) {
+    iconBgClass = "bg-blue-500/10 text-blue-500";
+  } else if (classified.category.includes("approve")) {
+    iconBgClass = "bg-amber-500/10 text-amber-500";
   }
 
-  const counterparty = isReceived ? tx.from : tx.to;
+  // Build description from classified data
+  let description = "";
+  const counterparty = isReceived ? classified.from : classified.to;
+
+  if (classified.category === "contract-creation") {
+    description = "Deployed new contract";
+  } else if (classified.category === "native-transfer") {
+    description = isReceived
+      ? `Received ${classified.value} from`
+      : `Sent ${classified.value} to`;
+  } else if (classified.category.startsWith("erc20-transfer")) {
+    description = isReceived
+      ? `Received ${classified.value} from`
+      : `Transferred ${classified.value} to`;
+  } else if (classified.category.includes("approve")) {
+    description = classified.spender
+      ? `Approved ${classified.value} for`
+      : `Approved on`;
+  } else if (classified.category.startsWith("nft-")) {
+    description = classified.tokenId
+      ? `${isReceived ? "Received" : "Transferred"} NFT #${classified.tokenId} ${isReceived ? "from" : "to"}`
+      : `${isReceived ? "Received" : "Transferred"} NFT ${isReceived ? "from" : "to"}`;
+  } else {
+    description = classified.methodName
+      ? `Called ${classified.methodName} on`
+      : `Interacted with`;
+  }
 
   return (
     <motion.div
@@ -88,11 +114,7 @@ function ActivityCard({
         <div className="flex items-start gap-3">
           {/* Icon */}
           <div
-            className={`mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full ${
-              isReceived
-                ? "bg-integra-success/10 text-integra-success"
-                : "bg-muted text-muted-foreground"
-            }`}
+            className={`mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full ${iconBgClass}`}
           >
             {icon}
           </div>
@@ -101,8 +123,13 @@ function ActivityCard({
           <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <span className={`text-sm font-semibold ${accentClass}`}>
-                {label}
+                {classified.label}
               </span>
+              {classified.tokenInfo && (
+                <Badge variant="secondary" className="text-[10px]">
+                  {classified.tokenInfo.standard}
+                </Badge>
+              )}
               {!isSuccess && (
                 <Badge variant="destructive" className="text-[10px]">
                   Failed
@@ -115,12 +142,18 @@ function ActivityCard({
 
             <p className="mt-0.5 text-sm text-muted-foreground">
               {description}{" "}
-              {counterparty && (
+              {(classified.category.includes("approve")
+                ? classified.spender
+                : counterparty) && (
                 <Link
-                  href={`/address/${counterparty}`}
+                  href={`/address/${classified.category.includes("approve") ? classified.spender! : counterparty!}`}
                   className="font-mono text-xs text-integra-brand hover:underline"
                 >
-                  {truncateAddress(counterparty)}
+                  {truncateAddress(
+                    (classified.category.includes("approve")
+                      ? classified.spender
+                      : counterparty)!,
+                  )}
                 </Link>
               )}
             </p>
@@ -132,7 +165,19 @@ function ActivityCard({
               >
                 {truncateHash(tx.hash)}
               </Link>
-              <span className="font-medium">{formatTxValue(tx)}</span>
+              <span className="font-medium">{classified.value}</span>
+              {classified.contractAddress &&
+                classified.category !== "contract-creation" && (
+                  <span className="text-muted-foreground/60">
+                    via{" "}
+                    <Link
+                      href={`/address/${classified.contractAddress}`}
+                      className="font-mono text-integra-brand/70 hover:underline"
+                    >
+                      {truncateAddress(classified.contractAddress)}
+                    </Link>
+                  </span>
+                )}
             </div>
           </div>
         </div>
@@ -173,9 +218,10 @@ function ActivityTable({
         </thead>
         <tbody className="divide-y divide-border/30">
           {transactions.map((tx, i) => {
-            const isReceived = tx.to?.toLowerCase() === lowerAddr;
+            const classified = classifyTransaction(tx);
+            const isReceived = classified.to?.toLowerCase() === lowerAddr;
             const isSuccess = tx.receipt?.status !== false;
-            const counterparty = isReceived ? tx.from : tx.to;
+            const counterparty = isReceived ? classified.from : classified.to;
             const fee = formatFee(tx.gasUsed, tx.gasPrice);
 
             return (
@@ -211,7 +257,7 @@ function ActivityTable({
 
                 <td className="hidden px-4 py-3 md:table-cell">
                   <Badge variant="outline" className="text-[10px]">
-                    {tx.methodDetails?.name ?? "Transfer"}
+                    {classified.label}
                   </Badge>
                 </td>
 
@@ -245,7 +291,7 @@ function ActivityTable({
                 </td>
 
                 <td className="px-4 py-3 text-muted-foreground">
-                  {formatTxValue(tx)}
+                  {classified.value}
                 </td>
 
                 <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
@@ -293,11 +339,20 @@ function FeedSkeleton() {
 // Main component
 // ---------------------------------------------------------------------------
 
+const ITEMS_PER_PAGE = 25;
+
 export function ActivityFeed({ address }: ActivityFeedProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("feed");
-  const { data, isLoading } = useAddressTransactions(address);
+  const [page, setPage] = useState(1);
+  const { data, isLoading } = useAddressTransactions(
+    address,
+    page,
+    ITEMS_PER_PAGE,
+  );
 
   const transactions = data?.items ?? [];
+  const total = data?.total ?? 0;
+  const hasMore = transactions.length === ITEMS_PER_PAGE;
 
   return (
     <div className="space-y-4">
@@ -306,7 +361,9 @@ export function ActivityFeed({ address }: ActivityFeedProps) {
         <p className="text-sm text-muted-foreground">
           {isLoading
             ? "Loading transactions..."
-            : `${transactions.length} transaction${transactions.length !== 1 ? "s" : ""}`}
+            : total > 0
+              ? `${total.toLocaleString()} transaction${total !== 1 ? "s" : ""} total`
+              : `${transactions.length} transaction${transactions.length !== 1 ? "s" : ""}`}
         </p>
 
         <div className="flex items-center gap-1 rounded-lg border border-border/50 p-0.5">
@@ -348,6 +405,35 @@ export function ActivityFeed({ address }: ActivityFeedProps) {
         </div>
       ) : (
         <ActivityTable transactions={transactions} address={address} />
+      )}
+
+      {/* Pagination */}
+      {!isLoading && transactions.length > 0 && (
+        <div className="flex items-center justify-between border-t border-border/50 pt-4">
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+          >
+            <ChevronLeft className="size-4" />
+            Previous
+          </Button>
+
+          <span className="text-sm text-muted-foreground">Page {page}</span>
+
+          <Button
+            variant="outline"
+            size="sm"
+            className="gap-1.5"
+            onClick={() => setPage((p) => p + 1)}
+            disabled={!hasMore}
+          >
+            Next
+            <ChevronRight className="size-4" />
+          </Button>
+        </div>
       )}
     </div>
   );

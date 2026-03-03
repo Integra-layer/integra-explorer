@@ -33,17 +33,22 @@ export function useTransaction(hash: string | undefined) {
 }
 
 /**
- * Fetch transactions for a specific address.
+ * Fetch transactions for a specific address with pagination.
  * Gated on explorer auth being resolved and address being truthy.
  */
-export function useAddressTransactions(address: string) {
+export function useAddressTransactions(
+  address: string,
+  page = 1,
+  itemsPerPage = 25,
+) {
   const isReady = useExplorerReady();
   return useQuery({
-    queryKey: ["address-transactions", address],
+    queryKey: ["address-transactions", address, page, itemsPerPage],
     queryFn: () =>
       fetchApi<PaginatedResponse<Transaction>>("/transactions", {
         address,
-        itemsPerPage: "50",
+        page: String(page),
+        itemsPerPage: String(itemsPerPage),
         order: "DESC",
       }),
     enabled: isReady && !!address,

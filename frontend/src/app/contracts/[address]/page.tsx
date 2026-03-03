@@ -5,12 +5,21 @@ import { useQuery } from "@tanstack/react-query";
 import { FileCode, CheckCircle, XCircle, Copy, Check } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { PageTransition, GlassCard, SkeletonShimmer, CopyButton } from "@/components/effects";
+import {
+  PageTransition,
+  GlassCard,
+  SkeletonShimmer,
+  CopyButton,
+} from "@/components/effects";
 import { DetailRow } from "@/components/ui/detail-row";
 import { ReadContract } from "@/components/contracts/read-contract";
 import { WriteContract } from "@/components/contracts/write-contract";
 import { ContractEvents } from "@/components/contracts/contract-events";
-import { getContract, parseAbiFunctions, parseAbiEvents } from "@/lib/api/contracts";
+import {
+  getContract,
+  parseAbiFunctions,
+  parseAbiEvents,
+} from "@/lib/api/contracts";
 import { truncateAddress } from "@/lib/format";
 import { useExplorerReady } from "@/lib/explorer-provider";
 
@@ -60,7 +69,9 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
   const isVerified = contract?.verificationStatus === "verified";
   const allFunctions = parseAbiFunctions(contract?.abi ?? null);
   const allEvents = parseAbiEvents(contract?.abi ?? null);
-  const abiString = contract?.abi ? JSON.stringify(contract.abi, null, 2) : null;
+  const abiString = contract?.abi
+    ? JSON.stringify(contract.abi, null, 2)
+    : null;
 
   async function copyAbi() {
     if (!abiString) return;
@@ -95,7 +106,9 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
                 <FileCode className="size-6 text-integra-brand" />
                 <h1 className="text-2xl font-bold tracking-tight font-mono">
                   <span className="hidden md:inline">{address}</span>
-                  <span className="md:hidden">{truncateAddress(address, 8)}</span>
+                  <span className="md:hidden">
+                    {truncateAddress(address, 8)}
+                  </span>
                 </h1>
                 <CopyButton text={address} />
                 {contract?.name && (
@@ -109,7 +122,10 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
                     Verified
                   </Badge>
                 ) : (
-                  <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                  <Badge
+                    variant="outline"
+                    className="gap-1.5 text-muted-foreground"
+                  >
                     <XCircle className="size-3" />
                     Unverified
                   </Badge>
@@ -158,7 +174,9 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
                       <>
                         <Separator />
                         <DetailRow label="Contract Name">
-                          <span className="text-sm font-medium">{contract.name}</span>
+                          <span className="text-sm font-medium">
+                            {contract.name}
+                          </span>
                         </DetailRow>
                       </>
                     )}
@@ -171,7 +189,10 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
                           Verified
                         </Badge>
                       ) : (
-                        <Badge variant="outline" className="gap-1.5 text-muted-foreground">
+                        <Badge
+                          variant="outline"
+                          className="gap-1.5 text-muted-foreground"
+                        >
                           <XCircle className="size-3" />
                           Unverified
                         </Badge>
@@ -198,26 +219,42 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
                       </p>
                       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
                         <div>
-                          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Name</p>
-                          <p className="mt-1 text-sm font-medium">{contract.tokenName}</p>
+                          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                            Name
+                          </p>
+                          <p className="mt-1 text-sm font-medium">
+                            {contract.tokenName}
+                          </p>
                         </div>
                         {contract.tokenSymbol && (
                           <div>
-                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Symbol</p>
-                            <p className="mt-1 text-sm font-medium">{contract.tokenSymbol}</p>
+                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                              Symbol
+                            </p>
+                            <p className="mt-1 text-sm font-medium">
+                              {contract.tokenSymbol}
+                            </p>
                           </div>
                         )}
                         {contract.tokenDecimals !== null && (
                           <div>
-                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Decimals</p>
-                            <p className="mt-1 text-sm font-medium">{contract.tokenDecimals}</p>
+                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                              Decimals
+                            </p>
+                            <p className="mt-1 text-sm font-medium">
+                              {contract.tokenDecimals}
+                            </p>
                           </div>
                         )}
                         {contract.tokenTotalSupply && (
                           <div>
-                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">Total Supply</p>
+                            <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                              Total Supply
+                            </p>
                             <p className="mt-1 text-sm font-medium">
-                              {Number(contract.tokenTotalSupply).toLocaleString()}
+                              {Number(
+                                contract.tokenTotalSupply,
+                              ).toLocaleString()}
                             </p>
                           </div>
                         )}
@@ -245,18 +282,22 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
 
               {/* READ CONTRACT */}
               {activeTab === "read" && (
-                <ReadContract functions={allFunctions} />
+                <ReadContract
+                  functions={allFunctions}
+                  contractAddress={address}
+                />
               )}
 
               {/* WRITE CONTRACT */}
               {activeTab === "write" && (
-                <WriteContract functions={allFunctions} walletConnected={false} />
+                <WriteContract
+                  functions={allFunctions}
+                  contractAddress={address}
+                />
               )}
 
               {/* EVENTS */}
-              {activeTab === "events" && (
-                <ContractEvents events={allEvents} />
-              )}
+              {activeTab === "events" && <ContractEvents events={allEvents} />}
 
               {/* ABI */}
               {activeTab === "abi" && (

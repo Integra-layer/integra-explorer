@@ -183,6 +183,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
       title="Search"
       description="Search blocks, transactions, addresses, and more"
       showCloseButton={false}
+      shouldFilter={false}
     >
       <div className="relative">
         <CommandInput
@@ -206,15 +207,14 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
       </div>
 
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>
+          {query.trim() ? "Press Enter to search" : "No results found."}
+        </CommandEmpty>
 
         {/* Go-to action when query is present */}
         {query.trim() && (
           <CommandGroup heading="Go to">
-            <CommandItem
-              onSelect={handleSearchSubmit}
-              className="gap-2"
-            >
+            <CommandItem onSelect={handleSearchSubmit} className="gap-2">
               {searchTypeIcon(detectedType)}
               <span>
                 {detectedType !== "unknown"
@@ -246,10 +246,7 @@ export function CommandPalette({ open, onOpenChange }: CommandPaletteProps) {
                   <span className="flex-1 truncate font-mono text-xs">
                     {recent.query}
                   </span>
-                  <Badge
-                    variant="outline"
-                    className="text-[10px]"
-                  >
+                  <Badge variant="outline" className="text-[10px]">
                     {searchTypeLabels[recent.type]}
                   </Badge>
                 </CommandItem>
