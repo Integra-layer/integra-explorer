@@ -54,20 +54,18 @@ function ActivityCard({
   const isReceived = classified.to?.toLowerCase() === lowerAddr;
   const isSuccess = tx.receipt?.status !== false;
 
-  // Pick icon and color based on classified category
-  let icon = <ArrowUpRight className="size-5" />;
-  let accentClass = "text-muted-foreground";
+  // Icon + color by category
+  let icon = <ArrowUpRight className="size-4" />;
   let iconBgClass = "bg-muted text-muted-foreground";
 
   if (isReceived) {
-    icon = <ArrowDownLeft className="size-5" />;
-    accentClass = "text-integra-success";
+    icon = <ArrowDownLeft className="size-4" />;
     iconBgClass = "bg-integra-success/10 text-integra-success";
   } else if (classified.category === "contract-creation") {
-    icon = <FileCode className="size-5" />;
+    icon = <FileCode className="size-4" />;
     iconBgClass = "bg-integra-brand/10 text-integra-brand";
   } else if (classified.category.startsWith("nft-")) {
-    icon = <FileCode className="size-5" />;
+    icon = <FileCode className="size-4" />;
     iconBgClass = "bg-purple-500/10 text-purple-500";
   } else if (
     classified.category.startsWith("erc20-") &&
@@ -78,108 +76,122 @@ function ActivityCard({
     iconBgClass = "bg-amber-500/10 text-amber-500";
   }
 
-  // Build description from classified data
-  let description = "";
-  const counterparty = isReceived ? classified.from : classified.to;
-
-  if (classified.category === "contract-creation") {
-    description = "Deployed new contract";
-  } else if (classified.category === "native-transfer") {
-    description = isReceived
-      ? `Received ${classified.value} from`
-      : `Sent ${classified.value} to`;
-  } else if (classified.category.startsWith("erc20-transfer")) {
-    description = isReceived
-      ? `Received ${classified.value} from`
-      : `Transferred ${classified.value} to`;
-  } else if (classified.category.includes("approve")) {
-    description = classified.spender
-      ? `Approved ${classified.value} for`
-      : `Approved on`;
-  } else if (classified.category.startsWith("nft-")) {
-    description = classified.tokenId
-      ? `${isReceived ? "Received" : "Transferred"} NFT #${classified.tokenId} ${isReceived ? "from" : "to"}`
-      : `${isReceived ? "Received" : "Transferred"} NFT ${isReceived ? "from" : "to"}`;
-  } else {
-    description = classified.methodName
-      ? `Called ${classified.methodName} on`
-      : `Interacted with`;
-  }
-
   return (
     <motion.div
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.2, delay: index * 0.02 }}
+      transition={{ duration: 0.15, delay: index * 0.015 }}
     >
-      <GlassCard className="p-4 transition-colors hover:bg-muted/30">
-        <div className="flex items-start gap-3">
+      <GlassCard className="px-4 py-3 transition-colors hover:bg-muted/30">
+        <div className="flex items-center gap-3">
           {/* Icon */}
           <div
-            className={`mt-0.5 flex size-10 shrink-0 items-center justify-center rounded-full ${iconBgClass}`}
+            className={`flex size-8 shrink-0 items-center justify-center rounded-full ${iconBgClass}`}
           >
             {icon}
           </div>
 
-          {/* Content */}
-          <div className="min-w-0 flex-1">
+          {/* Main content */}
+          <div className="min-w-0 flex-1 space-y-1.5">
+            {/* Row 1: Label + badges + time */}
             <div className="flex items-center gap-2">
-              <span className={`text-sm font-semibold ${accentClass}`}>
+              <span className="text-sm font-semibold text-foreground">
                 {classified.label}
               </span>
               {classified.tokenInfo && (
-                <Badge variant="secondary" className="text-[10px]">
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
                   {classified.tokenInfo.standard}
                 </Badge>
               )}
               {!isSuccess && (
-                <Badge variant="destructive" className="text-[10px]">
+                <Badge
+                  variant="destructive"
+                  className="text-[10px] px-1.5 py-0"
+                >
                   Failed
                 </Badge>
               )}
-              <span className="ml-auto text-xs text-muted-foreground">
+              <span className="ml-auto shrink-0 text-xs text-muted-foreground">
                 {timeAgo(tx.timestamp)}
               </span>
             </div>
 
-            <p className="mt-0.5 text-sm text-muted-foreground">
-              {description}{" "}
-              {(classified.category.includes("approve")
-                ? classified.spender
-                : counterparty) && (
-                <Link
-                  href={`/address/${classified.category.includes("approve") ? classified.spender! : counterparty!}`}
-                  className="font-mono text-xs text-integra-brand hover:underline"
-                >
-                  {truncateAddress(
-                    (classified.category.includes("approve")
-                      ? classified.spender
-                      : counterparty)!,
-                  )}
-                </Link>
-              )}
-            </p>
+            {/* Row 2: From → Amount → To */}
+            <div className="flex flex-wrap items-center gap-x-1.5 gap-y-0.5 text-xs">
+              {/* From */}
+              <Link
+                href={`/address/${classified.from}`}
+                className="font-mono text-muted-foreground hover:text-integra-brand hover:underline"
+              >
+                {truncateAddress(classified.from)}
+              </Link>
 
-            <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
+              {/* Arrow + Amount */}
+              <span className="text-muted-foreground/50">&rarr;</span>
+              <span className="font-semibold text-foreground">
+                {classified.value}
+              </span>
+              <span className="text-muted-foreground/50">&rarr;</span>
+
+              {/* To */}
+              {classified.to ? (
+                <Link
+                  href={`/address/${classified.to}`}
+                  className="font-mono text-muted-foreground hover:text-integra-brand hover:underline"
+                >
+                  {truncateAddress(classified.to)}
+                </Link>
+              ) : classified.category === "contract-creation" ? (
+                <span className="text-muted-foreground italic">
+                  New Contract
+                </span>
+              ) : (
+                <span className="text-muted-foreground">—</span>
+              )}
+            </div>
+
+            {/* Row 3: Tx hash + Contract info */}
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-0.5 text-[11px] text-muted-foreground/70">
               <Link
                 href={`/transactions/${tx.hash}`}
-                className="font-mono text-integra-brand hover:underline"
+                className="font-mono hover:text-integra-brand hover:underline"
               >
                 {truncateHash(tx.hash)}
               </Link>
-              <span className="font-medium">{classified.value}</span>
+
+              {/* Contract with name/symbol */}
               {classified.contractAddress &&
                 classified.category !== "contract-creation" && (
-                  <span className="text-muted-foreground/60">
-                    via{" "}
+                  <span className="flex items-center gap-1">
+                    <FileCode className="size-3" />
                     <Link
                       href={`/address/${classified.contractAddress}`}
-                      className="font-mono text-integra-brand/70 hover:underline"
+                      className="font-mono hover:text-integra-brand hover:underline"
                     >
-                      {truncateAddress(classified.contractAddress)}
+                      {classified.tokenInfo
+                        ? `${classified.tokenInfo.name} (${classified.tokenInfo.symbol})`
+                        : truncateAddress(classified.contractAddress)}
                     </Link>
                   </span>
                 )}
+
+              {/* NFT token ID */}
+              {classified.tokenId && (
+                <span className="font-mono">Token #{classified.tokenId}</span>
+              )}
+
+              {/* Spender for approvals */}
+              {classified.spender && (
+                <span className="flex items-center gap-1">
+                  Spender:{" "}
+                  <Link
+                    href={`/address/${classified.spender}`}
+                    className="font-mono hover:text-integra-brand hover:underline"
+                  >
+                    {truncateAddress(classified.spender)}
+                  </Link>
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -199,8 +211,6 @@ function ActivityTable({
   transactions: Transaction[];
   address: string;
 }) {
-  const lowerAddr = address.toLowerCase();
-
   return (
     <div className="overflow-x-auto rounded-lg border border-border/50 bg-card/50 backdrop-blur-sm">
       <table className="w-full text-sm">
@@ -209,95 +219,106 @@ function ActivityTable({
         </caption>
         <thead className="sticky top-0 z-10 border-b border-border/50 bg-muted/80 backdrop-blur-sm">
           <tr className="text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
-            <th className="px-4 py-3">Status</th>
-            <th className="px-4 py-3">Tx Hash</th>
-            <th className="hidden px-4 py-3 md:table-cell">Method</th>
-            <th className="px-4 py-3">Direction</th>
-            <th className="px-4 py-3">Counterparty</th>
-            <th className="px-4 py-3">Value</th>
-            <th className="hidden px-4 py-3 lg:table-cell">Fee</th>
+            <th className="w-8 px-3 py-3" />
+            <th className="px-3 py-3">Tx Hash</th>
+            <th className="hidden px-3 py-3 md:table-cell">Type</th>
+            <th className="px-3 py-3">From</th>
+            <th className="px-3 py-3">To</th>
+            <th className="px-3 py-3">Value</th>
+            <th className="hidden px-3 py-3 lg:table-cell">Contract</th>
           </tr>
         </thead>
         <tbody className="divide-y divide-border/30">
           {transactions.map((tx, i) => {
             const classified = classifyTransaction(tx);
-            const isReceived = classified.to?.toLowerCase() === lowerAddr;
             const isSuccess = tx.receipt?.status !== false;
-            const counterparty = isReceived ? classified.from : classified.to;
-            const fee = formatFee(tx.gasUsed, tx.gasPrice);
 
             return (
               <motion.tr
                 key={tx.hash}
-                initial={{ opacity: 0, y: 8 }}
+                initial={{ opacity: 0, y: 6 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.2, delay: i * 0.015 }}
+                transition={{ duration: 0.15, delay: i * 0.015 }}
                 className="border-l-2 border-transparent transition-all duration-150 hover:border-l-integra-brand/50 hover:bg-muted/30"
               >
-                <td className="px-4 py-3">
+                {/* Status */}
+                <td className="px-3 py-2.5">
                   {isSuccess ? (
                     <CheckCircle
-                      className="size-4 text-integra-success"
+                      className="size-3.5 text-integra-success"
                       aria-label="Success"
                     />
                   ) : (
                     <XCircle
-                      className="size-4 text-integra-error"
+                      className="size-3.5 text-integra-error"
                       aria-label="Failed"
                     />
                   )}
                 </td>
 
-                <td className="px-4 py-3">
+                {/* Hash */}
+                <td className="px-3 py-2.5">
                   <Link
                     href={`/transactions/${tx.hash}`}
-                    className="font-mono text-xs font-medium text-integra-brand hover:underline"
+                    className="font-mono text-xs text-integra-brand hover:underline"
                   >
                     {truncateHash(tx.hash)}
                   </Link>
                 </td>
 
-                <td className="hidden px-4 py-3 md:table-cell">
+                {/* Type */}
+                <td className="hidden px-3 py-2.5 md:table-cell">
                   <Badge variant="outline" className="text-[10px]">
                     {classified.label}
                   </Badge>
                 </td>
 
-                <td className="px-4 py-3">
-                  {isReceived ? (
-                    <Badge className="gap-1 bg-integra-success/10 text-integra-success hover:bg-integra-success/20 text-[10px]">
-                      <ArrowDownLeft className="size-3" />
-                      IN
-                    </Badge>
-                  ) : (
-                    <Badge variant="outline" className="gap-1 text-[10px]">
-                      <ArrowUpRight className="size-3" />
-                      OUT
-                    </Badge>
-                  )}
+                {/* From */}
+                <td className="px-3 py-2.5">
+                  <Link
+                    href={`/address/${classified.from}`}
+                    className="font-mono text-xs text-muted-foreground hover:text-integra-brand hover:underline"
+                  >
+                    {truncateAddress(classified.from)}
+                  </Link>
                 </td>
 
-                <td className="px-4 py-3">
-                  {counterparty ? (
+                {/* To */}
+                <td className="px-3 py-2.5">
+                  {classified.to ? (
                     <Link
-                      href={`/address/${counterparty}`}
+                      href={`/address/${classified.to}`}
                       className="font-mono text-xs text-muted-foreground hover:text-integra-brand hover:underline"
                     >
-                      {truncateAddress(counterparty)}
+                      {truncateAddress(classified.to)}
                     </Link>
                   ) : (
-                    <Badge variant="secondary" className="text-[10px]">
+                    <span className="text-xs text-muted-foreground italic">
                       Contract Create
-                    </Badge>
+                    </span>
                   )}
                 </td>
 
-                <td className="px-4 py-3 text-muted-foreground">
+                {/* Value */}
+                <td className="px-3 py-2.5 text-xs font-medium text-foreground">
                   {classified.value}
                 </td>
 
-                <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
-                  {fee}
+                {/* Contract */}
+                <td className="hidden px-3 py-2.5 lg:table-cell">
+                  {classified.contractAddress &&
+                  classified.category !== "contract-creation" ? (
+                    <Link
+                      href={`/address/${classified.contractAddress}`}
+                      className="text-xs text-muted-foreground hover:text-integra-brand hover:underline"
+                    >
+                      {classified.tokenInfo
+                        ? `${classified.tokenInfo.name} (${classified.tokenInfo.symbol})`
+                        : truncateAddress(classified.contractAddress)}
+                    </Link>
+                  ) : (
+                    <span className="text-xs text-muted-foreground">—</span>
+                  )}
                 </td>
               </motion.tr>
             );
