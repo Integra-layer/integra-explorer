@@ -87,7 +87,7 @@ function HeroSearch({ className, onOpenCommand }: InternalSearchProps) {
   return (
     <form
       onSubmit={handleSubmit}
-      className={cn("mx-auto w-full max-w-3xl", className)}
+      className={cn("mx-auto w-full max-w-4xl", className)}
     >
       <div
         className={cn(
@@ -106,7 +106,7 @@ function HeroSearch({ className, onOpenCommand }: InternalSearchProps) {
           onBlur={() => setFocused(false)}
           onKeyDown={handleKeyDown}
           placeholder="Search any address, transaction, or block..."
-          className="h-12 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground sm:h-14 sm:text-base"
+          className="h-14 flex-1 bg-transparent px-3 text-sm outline-none placeholder:text-muted-foreground sm:h-16 sm:text-base"
           aria-label="Search the blockchain"
         />
         {query.trim() && detectedType !== "unknown" && (

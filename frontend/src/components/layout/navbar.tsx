@@ -15,8 +15,11 @@ import {
   SheetClose,
 } from "@/components/ui/sheet";
 import { SearchBar } from "@/components/search/search-bar";
+import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
+
+const isTestnet = process.env.NEXT_PUBLIC_NETWORK_MODE === "testnet";
 
 const navLinks = [
   { label: "Home", href: "/" },
@@ -74,6 +77,14 @@ export function Navbar() {
               Explorer
             </span>
           </div>
+          {isTestnet && (
+            <Badge
+              variant="outline"
+              className="ml-2 border-integra-warning/50 bg-integra-warning/10 text-integra-warning text-[10px] font-bold uppercase tracking-wider"
+            >
+              Testnet
+            </Badge>
+          )}
         </Link>
 
         {/* Center: Desktop nav links */}
@@ -137,6 +148,14 @@ export function Navbar() {
                       Explorer
                     </span>
                   </div>
+                  {isTestnet && (
+                    <Badge
+                      variant="outline"
+                      className="ml-1 border-integra-warning/50 bg-integra-warning/10 text-integra-warning text-[10px] font-bold uppercase tracking-wider"
+                    >
+                      Testnet
+                    </Badge>
+                  )}
                 </SheetTitle>
               </SheetHeader>
               <nav className="flex flex-col gap-1 px-4">

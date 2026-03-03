@@ -38,9 +38,9 @@ export default function RootLayout({
       >
         {/* Ambient background lighting */}
         <div className="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
-          <div className="absolute -top-[30%] -left-[10%] size-[1000px] rounded-full bg-integra-brand/[0.08] blur-[150px] animate-ambient-1" />
-          <div className="absolute -bottom-[20%] -right-[10%] size-[800px] rounded-full bg-integra-pink/[0.07] blur-[130px] animate-ambient-2" />
-          <div className="absolute top-[30%] right-[15%] size-[600px] rounded-full bg-integra-brand/[0.05] blur-[100px] animate-ambient-3" />
+          <div className="absolute -top-[30%] -left-[10%] size-[1000px] rounded-full bg-integra-brand/[0.15] dark:bg-integra-brand/[0.08] blur-[150px] animate-ambient-1" />
+          <div className="absolute -bottom-[20%] -right-[10%] size-[800px] rounded-full bg-integra-pink/[0.12] dark:bg-integra-pink/[0.07] blur-[130px] animate-ambient-2" />
+          <div className="absolute top-[30%] right-[15%] size-[600px] rounded-full bg-integra-brand/[0.10] dark:bg-integra-brand/[0.05] blur-[100px] animate-ambient-3" />
         </div>
         <ThemeProvider>
           <QueryProvider>
