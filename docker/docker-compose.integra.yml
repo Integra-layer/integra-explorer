@@ -273,6 +273,7 @@ services:
         NEXT_PUBLIC_PUSHER_HOST: "testnet.explorer.integralayer.com"
         NEXT_PUBLIC_WORKSPACE_ID: "Integra Testnet"
         NEXT_PUBLIC_COSMOS_API_URL: "https://testnet.integralayer.com/api"
+        NEXT_PUBLIC_REOWN_PROJECT_ID: "756784dbf1dab05a3b5395d45c07c0e7"
     container_name: integra-explorer-frontend
     restart: unless-stopped
     networks:
