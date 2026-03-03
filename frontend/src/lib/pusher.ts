@@ -10,6 +10,9 @@ const globalPusher = globalThis as unknown as {
 };
 let pusherInstance: Pusher | null = globalPusher.__pusherInstance ?? null;
 
+// Ethernal workspace DB id (single-workspace explorer)
+const WORKSPACE_ID = "1";
+
 export function getPusher(): Pusher | null {
   if (typeof window === "undefined") return null;
 
@@ -28,16 +31,15 @@ export function getPusher(): Pusher | null {
       disableStats: true,
       enabledTransports: ["ws", "wss"],
       cluster: "mt1",
+      channelAuthorization: {
+        endpoint: "/pusher-auth",
+        transport: "ajax",
+      },
     });
     globalPusher.__pusherInstance = pusherInstance;
   }
 
   return pusherInstance;
-}
-
-export function getChannelName(): string {
-  const workspaceId = process.env.NEXT_PUBLIC_WORKSPACE_ID || "1";
-  return `public-explorer-${workspaceId}`;
 }
 
 export function usePusherInvalidation() {
@@ -47,29 +49,41 @@ export function usePusherInvalidation() {
     const pusher = getPusher();
     if (!pusher) return;
 
-    const channelName = getChannelName();
-    const channel = pusher.subscribe(channelName);
+    // Subscribe to the Ethernal backend's private channels
+    const blocksChannel = pusher.subscribe(
+      `private-blocks;workspace=${WORKSPACE_ID}`,
+    );
+    const txChannel = pusher.subscribe(
+      `private-transactions;workspace=${WORKSPACE_ID}`,
+    );
+    const contractsChannel = pusher.subscribe(
+      `private-contracts;workspace=${WORKSPACE_ID}`,
+    );
 
-    channel.bind("new-block", () => {
+    blocksChannel.bind("new", () => {
       queryClient.invalidateQueries({ queryKey: ["blocks"] });
       queryClient.invalidateQueries({ queryKey: ["block"] });
       queryClient.invalidateQueries({ queryKey: ["block-transactions"] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
     });
 
-    channel.bind("new-transaction", () => {
+    txChannel.bind("new", () => {
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
       queryClient.invalidateQueries({ queryKey: ["transaction"] });
       queryClient.invalidateQueries({ queryKey: ["stats"] });
     });
 
-    channel.bind("new-contract", () => {
+    contractsChannel.bind("new", () => {
       queryClient.invalidateQueries({ queryKey: ["contracts"] });
     });
 
     return () => {
-      channel.unbind_all();
-      pusher.unsubscribe(channelName);
+      blocksChannel.unbind_all();
+      txChannel.unbind_all();
+      contractsChannel.unbind_all();
+      pusher.unsubscribe(`private-blocks;workspace=${WORKSPACE_ID}`);
+      pusher.unsubscribe(`private-transactions;workspace=${WORKSPACE_ID}`);
+      pusher.unsubscribe(`private-contracts;workspace=${WORKSPACE_ID}`);
     };
   }, [queryClient]);
 }

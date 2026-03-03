@@ -63,6 +63,8 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: "0.0.0.0"
       SOKETI_PORT: "6001"
+      SOKETI_SCHEME: "http"
+      SOKETI_USE_TLS: ""
 
   backend:
     image: antoinedc44/ethernal-backend:latest
@@ -98,6 +100,8 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
+      SOKETI_SCHEME: "http"
+      SOKETI_USE_TLS: ""
       # App config
       # Admin domain (must differ from public explorer domain)
       APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
@@ -147,6 +151,8 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
+      SOKETI_SCHEME: "http"
+      SOKETI_USE_TLS: ""
       # Admin domain (must differ from public explorer domain)
       APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
       APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
@@ -187,6 +193,8 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
+      SOKETI_SCHEME: "http"
+      SOKETI_USE_TLS: ""
       # Admin domain (must differ from public explorer domain)
       APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
       APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
@@ -227,6 +235,8 @@ services:
       SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
       SOKETI_HOST: soketi
       SOKETI_PORT: "6001"
+      SOKETI_SCHEME: "http"
+      SOKETI_USE_TLS: ""
       # Admin domain (must differ from public explorer domain)
       APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
       APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
@@ -283,3 +293,6 @@ services:
     depends_on:
       backend:
         condition: service_started
+    environment:
+      SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
+      SOKETI_DEFAULT_APP_SECRET: ${SOKETI_SECRET}
