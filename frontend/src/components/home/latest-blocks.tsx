@@ -27,6 +27,13 @@ export function LatestBlocks() {
         <div className="flex items-center gap-2">
           <Box className="size-4 text-integra-brand" />
           <h2 className="text-base font-semibold">Latest Blocks</h2>
+          <span className="flex items-center gap-1.5 text-xs text-integra-success">
+            <span className="relative flex size-2">
+              <span className="absolute inline-flex size-full animate-ping rounded-full bg-integra-success/75" />
+              <span className="relative inline-flex size-2 rounded-full bg-integra-success" />
+            </span>
+            Live
+          </span>
         </div>
         <Link
           href="/blocks"

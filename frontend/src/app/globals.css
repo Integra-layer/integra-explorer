@@ -237,3 +237,17 @@
   background-size: 200% 100%;
   animation: shimmer-gradient 2s ease-in-out infinite;
 }
+
+/* Animated gradient text */
+@keyframes gradient-shift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+.gradient-brand-text-animated {
+  background: linear-gradient(135deg, #FFAFD6, #F34499, #FC4E23, #F71227, #FFAFD6);
+  background-size: 200% 200%;
+  animation: gradient-shift 4s ease-in-out infinite;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
