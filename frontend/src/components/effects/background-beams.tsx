@@ -40,10 +40,10 @@ export function BackgroundBeams({ className }: BackgroundBeamsProps) {
             key={i}
             d={d}
             stroke="url(#beam-gradient)"
-            strokeWidth={1.5}
+            strokeWidth={2}
             strokeLinecap="round"
             initial={{ pathLength: 0, opacity: 0 }}
-            animate={{ pathLength: 1, opacity: [0, 0.4, 0.2] }}
+            animate={{ pathLength: 1, opacity: [0, 0.6, 0.3] }}
             transition={{
               pathLength: {
                 duration: 3 + i * 0.5,

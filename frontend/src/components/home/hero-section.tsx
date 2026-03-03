@@ -9,7 +9,7 @@ export function HeroSection() {
   return (
     <section className="relative flex min-h-[40vh] items-center justify-center overflow-hidden md:min-h-[60vh]">
       {/* Background decoration — animated beams */}
-      <BackgroundBeams className="opacity-30" />
+      <BackgroundBeams className="opacity-60" />
 
       {/* Animated gradient orb */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
