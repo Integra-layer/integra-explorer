@@ -293,18 +293,21 @@ a, button, [role="button"] {
 
 /* Ambient background lighting animations */
 @keyframes ambient-float-1 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(30px, -40px) scale(1.05); }
-  66% { transform: translate(-20px, 20px) scale(0.95); }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.8; }
+  25% { transform: translate(80px, -60px) scale(1.15); opacity: 1; }
+  50% { transform: translate(-40px, 40px) scale(0.9); opacity: 0.6; }
+  75% { transform: translate(60px, 20px) scale(1.1); opacity: 0.9; }
 }
 @keyframes ambient-float-2 {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  33% { transform: translate(-40px, 30px) scale(1.08); }
-  66% { transform: translate(25px, -15px) scale(0.92); }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.7; }
+  25% { transform: translate(-70px, 50px) scale(1.2); opacity: 1; }
+  50% { transform: translate(50px, -30px) scale(0.85); opacity: 0.5; }
+  75% { transform: translate(-30px, -40px) scale(1.1); opacity: 0.9; }
 }
 @keyframes ambient-float-3 {
-  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.5; }
-  50% { transform: translate(-30px, 40px) scale(1.1); opacity: 1; }
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.6; }
+  33% { transform: translate(-60px, 70px) scale(1.25); opacity: 1; }
+  66% { transform: translate(40px, -50px) scale(0.8); opacity: 0.4; }
 }
 .animate-ambient-1 {
   animation: ambient-float-1 20s ease-in-out infinite;
