@@ -108,7 +108,7 @@ export function ProposalCard({ proposal }: ProposalCardProps) {
   return (
     <Link href={`/proposals/${proposal.id}`}>
       <HoverLift className="h-full rounded-xl">
-        <Card className="h-full cursor-pointer transition-colors hover:border-integra-brand/30">
+        <Card className="h-full cursor-pointer transition-all duration-200 hover:border-integra-brand/20 hover:shadow-[0_0_20px_rgba(255,109,73,0.08)]">
           <CardContent className="space-y-3">
             {/* Top: ID + Status */}
             <div className="flex items-start justify-between gap-2">

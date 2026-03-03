@@ -88,7 +88,7 @@ export function TxTable({ transactions, isLoading }: TxTableProps) {
                     initial={{ opacity: 0, y: 8 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.2, delay: i * 0.015 }}
-                    className="transition-colors hover:bg-muted/50"
+                    className="border-l-2 border-transparent transition-all duration-150 hover:border-l-integra-brand/50 hover:bg-muted/30"
                   >
                     {/* Status */}
                     <td className="px-4 py-3">
