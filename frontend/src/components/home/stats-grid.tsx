@@ -3,8 +3,7 @@
 import { motion } from "framer-motion";
 import { Activity, Users, Clock, Box } from "lucide-react";
 import { useQuery } from "@tanstack/react-query";
-import { NumberTicker } from "@/components/effects";
-import { Skeleton } from "@/components/ui/skeleton";
+import { NumberTicker, SkeletonShimmer } from "@/components/effects";
 import { useStats } from "@/lib/hooks/use-stats";
 import { getBlocks } from "@/lib/api/blocks";
 import { useExplorerReady } from "@/lib/explorer-provider";
@@ -49,7 +48,7 @@ function StatCard({
         </div>
         <div className="mt-2">
           {isLoading || value === undefined ? (
-            <Skeleton className="h-8 w-24" />
+            <SkeletonShimmer className="h-8 w-24" />
           ) : (
             <div className="flex items-baseline gap-1">
               <NumberTicker

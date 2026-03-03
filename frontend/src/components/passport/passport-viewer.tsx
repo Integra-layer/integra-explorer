@@ -13,12 +13,11 @@ import {
 } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
-import { GlassCard, CopyButton } from "@/components/effects";
-import { Skeleton } from "@/components/ui/skeleton";
+import { GlassCard, CopyButton, SkeletonShimmer } from "@/components/effects";
 import type { AssetPassport } from "@/lib/api/passport-types";
 
 // Lazy-load passport tabs for performance — only the active tab is rendered
-const TabLoading = () => <Skeleton className="h-48 w-full rounded-xl" />;
+const TabLoading = () => <SkeletonShimmer className="h-48 w-full rounded-xl" />;
 
 const AssetTab = dynamic(
   () => import("./tabs/asset-tab").then((m) => ({ default: m.AssetTab })),

@@ -4,9 +4,8 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, Box } from "lucide-react";
-import { GlassCard } from "@/components/effects";
+import { GlassCard, SkeletonShimmer } from "@/components/effects";
 import { Badge } from "@/components/ui/badge";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getBlocks } from "@/lib/api/blocks";
 import { useExplorerReady } from "@/lib/explorer-provider";
 import { truncateAddress, timeAgo, formatGas } from "@/lib/format";
@@ -49,12 +48,12 @@ export function LatestBlocks() {
         {isLoading ? (
           Array.from({ length: 6 }).map((_, i) => (
             <div key={i} className="flex items-center gap-4 px-5 py-3">
-              <Skeleton className="h-5 w-16" />
-              <Skeleton className="h-4 w-14" />
-              <Skeleton className="hidden h-4 w-28 sm:block" />
+              <SkeletonShimmer className="h-5 w-16" />
+              <SkeletonShimmer className="h-4 w-14" />
+              <SkeletonShimmer className="hidden h-4 w-28 sm:block" />
               <div className="ml-auto flex gap-3">
-                <Skeleton className="h-5 w-12" />
-                <Skeleton className="hidden h-4 w-20 sm:block" />
+                <SkeletonShimmer className="h-5 w-12" />
+                <SkeletonShimmer className="hidden h-4 w-20 sm:block" />
               </div>
             </div>
           ))
