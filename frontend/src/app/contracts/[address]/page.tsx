@@ -66,7 +66,9 @@ export default function ContractDetailPage({ params }: ContractPageProps) {
     refetchInterval: 60_000,
   });
 
-  const isVerified = contract?.verificationStatus === "verified";
+  const isVerified =
+    contract?.verificationStatus === "verified" ||
+    contract?.verificationStatus === "success";
   const allFunctions = parseAbiFunctions(contract?.abi ?? null);
   const allEvents = parseAbiEvents(contract?.abi ?? null);
   const abiString = contract?.abi

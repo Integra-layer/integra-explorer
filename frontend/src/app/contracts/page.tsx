@@ -7,7 +7,11 @@ import Link from "next/link";
 import { useQuery } from "@tanstack/react-query";
 import { Badge } from "@/components/ui/badge";
 import { PaginationControls } from "@/components/ui/pagination-controls";
-import { PageTransition, GlassCard, SkeletonShimmer } from "@/components/effects";
+import {
+  PageTransition,
+  GlassCard,
+  SkeletonShimmer,
+} from "@/components/effects";
 import { getContracts } from "@/lib/api/contracts";
 import { truncateAddress } from "@/lib/format";
 import { useExplorerReady } from "@/lib/explorer-provider";
@@ -21,21 +25,41 @@ function ContractsTableSkeleton() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-border/50">
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Address</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Name</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Standards</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Verified</th>
-              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Token</th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Address
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Name
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Standards
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Verified
+              </th>
+              <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                Token
+              </th>
             </tr>
           </thead>
           <tbody>
             {Array.from({ length: 8 }).map((_, i) => (
               <tr key={i} className="border-b border-border/30 last:border-0">
-                <td className="px-4 py-3"><SkeletonShimmer className="h-4 w-36" /></td>
-                <td className="px-4 py-3"><SkeletonShimmer className="h-4 w-24" /></td>
-                <td className="px-4 py-3"><SkeletonShimmer className="h-5 w-16" /></td>
-                <td className="px-4 py-3"><SkeletonShimmer className="h-5 w-20" /></td>
-                <td className="px-4 py-3"><SkeletonShimmer className="h-4 w-12" /></td>
+                <td className="px-4 py-3">
+                  <SkeletonShimmer className="h-4 w-36" />
+                </td>
+                <td className="px-4 py-3">
+                  <SkeletonShimmer className="h-4 w-24" />
+                </td>
+                <td className="px-4 py-3">
+                  <SkeletonShimmer className="h-5 w-16" />
+                </td>
+                <td className="px-4 py-3">
+                  <SkeletonShimmer className="h-5 w-20" />
+                </td>
+                <td className="px-4 py-3">
+                  <SkeletonShimmer className="h-4 w-12" />
+                </td>
               </tr>
             ))}
           </tbody>
@@ -95,16 +119,28 @@ function ContractsPageContent() {
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-border/50">
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Address</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Name</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Standards</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Verified</th>
-                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">Token</th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      Address
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      Name
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      Standards
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      Verified
+                    </th>
+                    <th className="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground">
+                      Token
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {contracts.map((contract) => {
-                    const isVerified = contract.verificationStatus === "verified";
+                    const isVerified =
+                      contract.verificationStatus === "verified" ||
+                      contract.verificationStatus === "success";
                     return (
                       <tr
                         key={contract.id}
@@ -116,8 +152,12 @@ function ContractsPageContent() {
                             href={`/contracts/${contract.address}`}
                             className="font-mono text-sm text-integra-brand hover:underline"
                           >
-                            <span className="hidden md:inline">{truncateAddress(contract.address, 6)}</span>
-                            <span className="md:hidden">{truncateAddress(contract.address, 4)}</span>
+                            <span className="hidden md:inline">
+                              {truncateAddress(contract.address, 6)}
+                            </span>
+                            <span className="md:hidden">
+                              {truncateAddress(contract.address, 4)}
+                            </span>
                           </Link>
                         </td>
 
@@ -133,13 +173,19 @@ function ContractsPageContent() {
                           {contract.patterns.length > 0 ? (
                             <div className="flex flex-wrap gap-1">
                               {contract.patterns.map((p) => (
-                                <Badge key={p} variant="secondary" className="text-xs">
+                                <Badge
+                                  key={p}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
                                   {p}
                                 </Badge>
                               ))}
                             </div>
                           ) : (
-                            <span className="text-sm text-muted-foreground">—</span>
+                            <span className="text-sm text-muted-foreground">
+                              —
+                            </span>
                           )}
                         </td>
 
@@ -151,7 +197,10 @@ function ContractsPageContent() {
                               Verified
                             </Badge>
                           ) : (
-                            <Badge variant="outline" className="gap-1 text-muted-foreground">
+                            <Badge
+                              variant="outline"
+                              className="gap-1 text-muted-foreground"
+                            >
                               <XCircle className="size-3" />
                               Unverified
                             </Badge>
@@ -161,7 +210,9 @@ function ContractsPageContent() {
                         {/* Token symbol */}
                         <td className="px-4 py-3 text-sm font-medium">
                           {contract.tokenSymbol ? (
-                            <span className="text-integra-brand">{contract.tokenSymbol}</span>
+                            <span className="text-integra-brand">
+                              {contract.tokenSymbol}
+                            </span>
                           ) : (
                             <span className="text-muted-foreground">—</span>
                           )}

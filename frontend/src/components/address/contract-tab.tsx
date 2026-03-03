@@ -50,7 +50,9 @@ export function ContractTab({ contract, isLoading }: ContractTabProps) {
     );
   }
 
-  const isVerified = contract.verificationStatus === "verified";
+  const isVerified =
+    contract.verificationStatus === "verified" ||
+    contract.verificationStatus === "success";
   const hasAbi = contract.abi && contract.abi.length > 0;
   const abiString = hasAbi ? JSON.stringify(contract.abi, null, 2) : null;
 
