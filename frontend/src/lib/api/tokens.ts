@@ -19,7 +19,7 @@ export interface KnownToken {
   decimals: number;
   totalSupply?: string;
   featured?: boolean;
-  standard?: "ERC-20" | "ERC-721";
+  standard?: "ERC-20" | "ERC-721" | "ERC-1155";
 }
 
 export const KNOWN_TOKENS: KnownToken[] = [
@@ -31,6 +31,22 @@ export const KNOWN_TOKENS: KnownToken[] = [
     totalSupply: "1000000000000000000000000000", // 1B * 10^18
     featured: true,
     standard: "ERC-20",
+  },
+  {
+    address: "0x8ebAE4219f149e822f73948B926a1fc57A5a7963",
+    name: "Integra Collectibles",
+    symbol: "INTC",
+    decimals: 0,
+    featured: true,
+    standard: "ERC-721",
+  },
+  {
+    address: "0x9640937D9F696427766a0188fbC16E4af073accF",
+    name: "Integra Assets",
+    symbol: "INTG",
+    decimals: 0,
+    featured: true,
+    standard: "ERC-1155",
   },
 ];
 

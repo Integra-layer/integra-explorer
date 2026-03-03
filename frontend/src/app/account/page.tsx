@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useAppKitAccount, AppKitButton } from "@reown/appkit/react";
+import { useAppKitAccount } from "@reown/appkit/react";
+import { ConnectButton } from "@/components/wallet/connect-button";
 import { useBalance } from "wagmi";
 import { Wallet, ExternalLink, Copy, CheckCircle } from "lucide-react";
 import { useState } from "react";
@@ -91,7 +92,7 @@ function ConnectedView({ address }: { address: string }) {
 
       {/* Disconnect button */}
       <div className="flex justify-end">
-        <AppKitButton />
+        <ConnectButton />
       </div>
     </div>
   );
@@ -110,7 +111,7 @@ function DisconnectedView() {
           history on Integra Layer.
         </p>
       </div>
-      <AppKitButton />
+      <ConnectButton />
     </div>
   );
 }

@@ -18,7 +18,7 @@ import { SearchBar } from "@/components/search/search-bar";
 import { Badge } from "@/components/ui/badge";
 import { ThemeToggle } from "./theme-toggle";
 import { cn } from "@/lib/utils";
-import { AppKitButton } from "@reown/appkit/react";
+import { ConnectButton } from "@/components/wallet/connect-button";
 
 const isTestnet = process.env.NEXT_PUBLIC_NETWORK_MODE === "testnet";
 
@@ -120,9 +120,7 @@ export function Navbar() {
         <div className="flex items-center gap-2 md:gap-3">
           <ThemeToggle />
           <SearchBar variant="nav" className="hidden sm:flex" />
-          <div className="hidden sm:flex">
-            <AppKitButton />
-          </div>
+          <ConnectButton size="sm" className="hidden sm:flex" />
 
           {/* Mobile: Hamburger */}
           <Sheet>
@@ -179,7 +177,7 @@ export function Navbar() {
                 })}
               </nav>
               <div className="mt-4 px-4">
-                <AppKitButton />
+                <ConnectButton />
               </div>
             </SheetContent>
           </Sheet>
