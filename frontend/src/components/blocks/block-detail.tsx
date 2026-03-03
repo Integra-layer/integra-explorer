@@ -264,7 +264,7 @@ export function BlockDetail({ block, isLoading }: BlockDetailProps) {
         <div className="flex items-center gap-2 border-b border-border/50 px-6 py-4">
           <ArrowRightLeft className="size-4 text-integra-brand" />
           <h2 className="text-base font-semibold">
-            Transactions ({block.transactionsCount})
+            Transactions ({txData?.total ?? block.transactionsCount})
           </h2>
         </div>
 
