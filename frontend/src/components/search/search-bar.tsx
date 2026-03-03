@@ -85,10 +85,7 @@ function HeroSearch({ className, onOpenCommand }: InternalSearchProps) {
   );
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className={cn("mx-auto w-full max-w-4xl", className)}
-    >
+    <form onSubmit={handleSubmit} className={cn("mx-auto w-full", className)}>
       <div
         className={cn(
           "relative flex items-center rounded-xl border bg-background/60 backdrop-blur-sm transition-all duration-300",
