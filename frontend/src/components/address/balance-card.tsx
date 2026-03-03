@@ -5,7 +5,6 @@ import { GlassCard, NumberTicker, SkeletonShimmer } from "@/components/effects";
 
 interface BalanceCardProps {
   balance: string;
-  address: string;
   isContract: boolean;
   isLoading: boolean;
 }

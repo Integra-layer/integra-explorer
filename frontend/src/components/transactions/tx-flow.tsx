@@ -67,7 +67,7 @@ export function TxFlow({ transaction }: TxFlowProps) {
           animate={{ opacity: 1, scaleX: 1 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <div className="h-px w-8 bg-integra-brand/50" />
+          <div className="h-0.5 flex-1 bg-gradient-to-r from-integra-brand/40 via-integra-pink/60 to-integra-brand/40" />
           <ArrowRight className="size-5 text-integra-brand" />
         </motion.div>
 
@@ -82,14 +82,20 @@ export function TxFlow({ transaction }: TxFlowProps) {
         </motion.div>
 
         {/* Value label */}
-        <motion.span
-          className="rounded-full bg-integra-brand/10 px-3 py-1 text-xs font-medium text-integra-brand"
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.3, delay: 0.35 }}
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{
+            type: "spring",
+            stiffness: 300,
+            damping: 20,
+            delay: 0.2,
+          }}
         >
-          {formattedValue}
-        </motion.span>
+          <span className="rounded-full bg-integra-brand/10 px-3 py-1 text-xs font-medium text-integra-brand">
+            {formattedValue}
+          </span>
+        </motion.div>
       </div>
 
       {/* To Card */}

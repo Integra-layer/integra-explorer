@@ -61,7 +61,6 @@ export default function AddressPage({ params }: AddressPageProps) {
             <div>
               <BalanceCard
                 balance={addressData?.balance ?? "0"}
-                address={address}
                 isContract={isContract}
                 isLoading={isLoading}
               />

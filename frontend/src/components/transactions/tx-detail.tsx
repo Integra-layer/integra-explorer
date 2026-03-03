@@ -154,9 +154,15 @@ export function TxDetail({ transaction: tx, isLoading }: TxDetailProps) {
         <h1 className="text-2xl font-bold tracking-tight">
           Transaction Details
         </h1>
-        <StatusBadge
-          status={receiptStatus as "success" | "failed" | "pending"}
-        />
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.3, delay: 0.1 }}
+        >
+          <StatusBadge
+            status={receiptStatus as "success" | "failed" | "pending"}
+          />
+        </motion.div>
       </div>
 
       {/* ------------------------------------------------------------------ */}
