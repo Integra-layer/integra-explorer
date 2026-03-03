@@ -9,7 +9,7 @@ import type { Address } from "@/lib/api/types";
 
 const publicClient = createPublicClient({
   chain: integraTestnet,
-  transport: http(),
+  transport: http(typeof window !== "undefined" ? "/evm" : undefined),
 });
 
 /**

@@ -23,7 +23,7 @@ import type { AbiFunction } from "@/lib/api/contracts";
 // ---------------------------------------------------------------------------
 const publicClient = createPublicClient({
   chain: integraTestnet,
-  transport: http(),
+  transport: http(typeof window !== "undefined" ? "/evm" : undefined),
 });
 
 // ---------------------------------------------------------------------------
@@ -388,7 +388,10 @@ function FunctionCard({ fn, index, contractAddress }: FunctionCardProps) {
 // ---------------------------------------------------------------------------
 // ReadContract
 // ---------------------------------------------------------------------------
-export function ReadContract({ functions, contractAddress }: ReadContractProps) {
+export function ReadContract({
+  functions,
+  contractAddress,
+}: ReadContractProps) {
   const readable = functions.filter(
     (fn) => fn.stateMutability === "view" || fn.stateMutability === "pure",
   );
