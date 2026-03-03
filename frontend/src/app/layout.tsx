@@ -22,7 +22,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 const BASE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "https://scan.integralayer.com";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://scan.integralayer.com";
 
 export const metadata: Metadata = {
   title: {
