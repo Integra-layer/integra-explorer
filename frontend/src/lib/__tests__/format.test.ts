@@ -38,7 +38,7 @@ describe("truncateAddress", () => {
 
   it("respects a custom chars parameter", () => {
     const addr = "0x5551ff857fc71597511c34c8cc62a78c9d6748fb";
-    expect(truncateAddress(addr, 6)).toBe("0x5551ff...748fb");
+    expect(truncateAddress(addr, 6)).toBe("0x5551ff...6748fb");
   });
 });
 
@@ -50,7 +50,7 @@ describe("truncateHash", () => {
   it("truncates a 66-char tx hash with default 6-char display", () => {
     const hash =
       "0x988c09b72d769dd5129cc475efac67b700c4eed9d68a3c327bc945bbb80334f3";
-    expect(truncateHash(hash)).toBe("0x988c09...334f3");
+    expect(truncateHash(hash)).toBe("0x988c09...0334f3");
   });
 
   it("returns empty string for an empty input", () => {
@@ -116,9 +116,9 @@ describe("formatIRL", () => {
     expect(formatIRL("0")).toBe("0 IRL");
   });
 
-  it("returns '<0.001 IRL' for a value smaller than 0.001 IRL", () => {
-    // 0.0001 IRL = 100000000000000 wei
-    expect(formatIRL("100000000000000")).toBe("<0.001 IRL");
+  it("returns the fractional amount for a value smaller than 0.001 IRL", () => {
+    // 0.0001 IRL = 100000000000000 wei — shows 4 decimal places
+    expect(formatIRL("100000000000000")).toBe("0.0001 IRL");
   });
 
   it("formats 1 IRL (1e18 wei) correctly", () => {
@@ -152,7 +152,7 @@ describe("parseErc20Amount", () => {
 
   it("parses the amount from a valid ERC-20 transfer calldata", () => {
     // 1000 tokens (no decimals here, raw uint256)
-    const calldata = buildCalldata((1000n).toString(16));
+    const calldata = buildCalldata(1000n.toString(16));
     expect(parseErc20Amount(calldata)).toBe(1000n);
   });
 
@@ -192,7 +192,9 @@ describe("parseErc20Amount", () => {
 
 describe("formatTokenAmount", () => {
   it("formats a whole token amount with no fractional part", () => {
-    expect(formatTokenAmount(1000n * 10n ** 18n, 18, "tUSDI")).toBe("1,000 tUSDI");
+    expect(formatTokenAmount(1000n * 10n ** 18n, 18, "tUSDI")).toBe(
+      "1,000 tUSDI",
+    );
   });
 
   it("formats a fractional token amount, trimming trailing zeros", () => {
@@ -360,16 +362,25 @@ describe("formatTxValue", () => {
   // Build a valid ERC-20 transfer calldata for 500 tUSDI (500 * 10^18)
   const tUSDIAddress = "0xa640D8B5C9Cb3b989881B8E63B0f30179C78a04f";
   const amount500tUSDI = (500n * 10n ** 18n).toString(16).padStart(64, "0");
-  const erc20Calldata =
-    "0xa9059cbb" + "0".repeat(64) + amount500tUSDI;
+  const erc20Calldata = "0xa9059cbb" + "0".repeat(64) + amount500tUSDI;
 
   it("falls back to IRL formatting for a native transfer", () => {
-    const tx = { value: "1000000000000000000", to: "0xrecipient", data: "0x", methodDetails: null };
+    const tx = {
+      value: "1000000000000000000",
+      to: "0xrecipient",
+      data: "0x",
+      methodDetails: null,
+    };
     expect(formatTxValue(tx)).toBe("1 IRL");
   });
 
   it("returns IRL for a transaction with no 'to' address", () => {
-    const tx = { value: "1000000000000000000", to: null, data: "0x", methodDetails: null };
+    const tx = {
+      value: "1000000000000000000",
+      to: null,
+      data: "0x",
+      methodDetails: null,
+    };
     expect(formatTxValue(tx)).toContain("IRL");
   });
 
@@ -408,12 +419,22 @@ describe("isErc20Transfer", () => {
   const erc20Calldata = "0xa9059cbb" + "0".repeat(64) + amount;
 
   it("returns true for a known ERC-20 token transfer", () => {
-    const tx = { value: "0", to: tUSDIAddress, data: erc20Calldata, methodDetails: null };
+    const tx = {
+      value: "0",
+      to: tUSDIAddress,
+      data: erc20Calldata,
+      methodDetails: null,
+    };
     expect(isErc20Transfer(tx)).toBe(true);
   });
 
   it("returns false for a native IRL transfer", () => {
-    const tx = { value: "1000000000000000000", to: "0xrecipient", data: "0x", methodDetails: null };
+    const tx = {
+      value: "1000000000000000000",
+      to: "0xrecipient",
+      data: "0x",
+      methodDetails: null,
+    };
     expect(isErc20Transfer(tx)).toBe(false);
   });
 
@@ -428,7 +449,12 @@ describe("isErc20Transfer", () => {
   });
 
   it("returns false when 'to' is null", () => {
-    const tx = { value: "0", to: null, data: erc20Calldata, methodDetails: null };
+    const tx = {
+      value: "0",
+      to: null,
+      data: erc20Calldata,
+      methodDetails: null,
+    };
     expect(isErc20Transfer(tx)).toBe(false);
   });
 });

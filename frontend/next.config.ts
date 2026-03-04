@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { withSentryConfig } from "@sentry/nextjs";
 
 const securityHeaders = [
   { key: "X-Frame-Options", value: "DENY" },
@@ -17,10 +18,10 @@ const securityHeaders = [
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://*.integralayer.com",
-      "connect-src 'self' https://*.integralayer.com wss://*.integralayer.com",
-      "font-src 'self' data:",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https://*.integralayer.com https://api.web3modal.org https://*.walletconnect.com",
+      "connect-src 'self' https://*.integralayer.com wss://*.integralayer.com https://api.web3modal.org https://*.walletconnect.com https://*.walletconnect.org https://*.reown.com wss://*.walletconnect.com wss://*.walletconnect.org wss://*.reown.com",
+      "font-src 'self' data: https://fonts.googleapis.com https://fonts.gstatic.com",
       "frame-ancestors 'none'",
     ].join("; "),
   },
@@ -46,4 +47,10 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSentryConfig(nextConfig, {
+  org: "integra",
+  project: "explorer",
+  silent: true,
+  widenClientFileUpload: true,
+  disableLogger: true,
+});

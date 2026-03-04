@@ -93,10 +93,10 @@ describe("detectSearchType", () => {
     expect(detectSearchType("   ")).toBe("unknown");
   });
 
-  it("returns 'unknown' for a bech32 cosmos address", () => {
-    expect(detectSearchType("integra124gllptlcu2ew5guxnyvcc483jwkwj8mlv58sk")).toBe(
-      "unknown",
-    );
+  it("returns 'address' for a bech32 cosmos address", () => {
+    expect(
+      detectSearchType("integra124gllptlcu2ew5guxnyvcc483jwkwj8mlv58sk"),
+    ).toBe("address");
   });
 
   it("returns 'unknown' for a plain text search term", () => {
@@ -158,9 +158,12 @@ describe("getSearchRoute", () => {
     expect(getSearchRoute("foo bar")).toBe("/search?q=foo%20bar");
   });
 
-  it("URL-encodes bech32 cosmos addresses in the search fallback", () => {
+  it("routes bech32 cosmos addresses to /address/ with EVM conversion", () => {
     const bech = "integra124gllptlcu2ew5guxnyvcc483jwkwj8mlv58sk";
-    expect(getSearchRoute(bech)).toBe(`/search?q=${encodeURIComponent(bech)}`);
+    // bech32 is detected as address and converted to EVM hex
+    expect(getSearchRoute(bech)).toBe(
+      "/address/0x5551ff857fc71597511c34c8cc62a78c9d6748fb",
+    );
   });
 
   it("trims whitespace from the query before building the route", () => {
@@ -177,7 +180,13 @@ describe("getSearchRoute", () => {
 // ---------------------------------------------------------------------------
 
 describe("searchTypeLabels", () => {
-  const allTypes: SearchType[] = ["address", "transaction", "block", "token", "unknown"];
+  const allTypes: SearchType[] = [
+    "address",
+    "transaction",
+    "block",
+    "token",
+    "unknown",
+  ];
 
   it("provides a non-empty label for every SearchType", () => {
     for (const type of allTypes) {

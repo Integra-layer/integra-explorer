@@ -198,6 +198,9 @@
   --sidebar-ring: #FF6D49;
 }
 
+/* Force site font on Reown/WalletConnect modals */
+w3m-modal, appkit-modal { font-family: inherit !important; }
+
 @layer base {
   * {
     @apply border-border outline-ring/50;

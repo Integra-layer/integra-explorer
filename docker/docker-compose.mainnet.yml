@@ -1,5 +1,5 @@
-# Integra Explorer — Docker Compose for Hetzner Gateway (46.225.231.81)
-# Usage: docker compose -f docker/docker-compose.integra.yml --env-file docker/.env.integra up -d
+# Integra Explorer — Docker Compose for Mainnet
+# Usage: docker compose -f docker/docker-compose.mainnet.yml --env-file docker/.env.mainnet up -d
 #
 # Host already runs: Caddy (reverse proxy), integra-portal (port 3000),
 # testnet validator, Blockscout, PM2 processes.
@@ -10,15 +10,15 @@ networks:
     driver: bridge
 
 volumes:
-  pgdata:
+  mainnet_pgdata:
     driver: local
-  redisdata:
+  mainnet_redisdata:
     driver: local
 
 services:
   postgres:
     image: timescale/timescaledb:2.11.1-pg14
-    container_name: integra-explorer-postgres
+    container_name: integra-mainnet-postgres
     restart: unless-stopped
     networks:
       - explorer
@@ -27,7 +27,7 @@ services:
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       POSTGRES_DB: ethernal
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - mainnet_pgdata:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
@@ -36,13 +36,13 @@ services:
 
   redis:
     image: redis:6.2-alpine
-    container_name: integra-explorer-redis
+    container_name: integra-mainnet-redis
     restart: unless-stopped
     networks:
       - explorer
     command: redis-server --save 20 1 --loglevel warning
     volumes:
-      - redisdata:/data
+      - mainnet_redisdata:/data
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
@@ -51,12 +51,12 @@ services:
 
   soketi:
     image: quay.io/soketi/soketi:1.6.1-16-debian
-    container_name: integra-explorer-soketi
+    container_name: integra-mainnet-soketi
     restart: unless-stopped
     networks:
       - explorer
     ports:
-      - "6002:6001"
+      - "6003:6001"
     environment:
       SOKETI_DEFAULT_APP_ID: default-app
       SOKETI_DEFAULT_APP_KEY: ${SOKETI_KEY}
@@ -68,12 +68,12 @@ services:
 
   backend:
     image: antoinedc44/ethernal-backend:latest
-    container_name: integra-explorer-backend
+    container_name: integra-mainnet-backend
     restart: unless-stopped
     networks:
       - explorer
     ports:
-      - "8890:8888"
+      - "8891:8888"
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
@@ -108,14 +108,13 @@ services:
       SOKETI_SCHEME: "http"
       SOKETI_USE_TLS: ""
       # App config
-      # Admin domain (must differ from public explorer domain)
-      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
+      APP_DOMAIN: ${APP_DOMAIN:-admin.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       PORT: "8888"
       NODE_ENV: production
-      CORS_DOMAIN: "https://testnet.explorer.integralayer.com"
+      CORS_DOMAIN: "https://scan.integralayer.com"
       # Auth
       AUTH_SECRET: ${AUTH_SECRET}
       FIREBASE_SIGNER_KEY: ${FIREBASE_SIGNER_KEY}
@@ -131,7 +130,7 @@ services:
 
   high_priority_worker:
     image: antoinedc44/ethernal-backend:latest
-    container_name: integra-explorer-worker-high
+    container_name: integra-mainnet-worker-high
     restart: unless-stopped
     networks:
       - explorer
@@ -162,9 +161,8 @@ services:
       SOKETI_PORT: "6001"
       SOKETI_SCHEME: "http"
       SOKETI_USE_TLS: ""
-      # Admin domain (must differ from public explorer domain)
-      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
+      APP_DOMAIN: ${APP_DOMAIN:-admin.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       NODE_ENV: production
@@ -177,7 +175,7 @@ services:
 
   medium_priority_worker:
     image: antoinedc44/ethernal-backend:latest
-    container_name: integra-explorer-worker-medium
+    container_name: integra-mainnet-worker-medium
     restart: unless-stopped
     networks:
       - explorer
@@ -208,9 +206,8 @@ services:
       SOKETI_PORT: "6001"
       SOKETI_SCHEME: "http"
       SOKETI_USE_TLS: ""
-      # Admin domain (must differ from public explorer domain)
-      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
+      APP_DOMAIN: ${APP_DOMAIN:-admin.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       NODE_ENV: production
@@ -223,7 +220,7 @@ services:
 
   low_priority_worker:
     image: antoinedc44/ethernal-backend:latest
-    container_name: integra-explorer-worker-low
+    container_name: integra-mainnet-worker-low
     restart: unless-stopped
     networks:
       - explorer
@@ -254,9 +251,8 @@ services:
       SOKETI_PORT: "6001"
       SOKETI_SCHEME: "http"
       SOKETI_USE_TLS: ""
-      # Admin domain (must differ from public explorer domain)
-      APP_DOMAIN: ${APP_DOMAIN:-admin.testnet.explorer.integralayer.com}
-      APP_URL: ${APP_URL:-admin.testnet.explorer.integralayer.com}
+      APP_DOMAIN: ${APP_DOMAIN:-admin.explorer.integralayer.com}
+      APP_URL: ${APP_URL:-admin.explorer.integralayer.com}
       SELF_HOSTED: "true"
       DEFAULT_PLAN_SLUG: self-hosted
       NODE_ENV: production
@@ -269,7 +265,7 @@ services:
 
   pm2:
     image: antoinedc44/ethernal-pm2:latest
-    container_name: integra-explorer-pm2
+    container_name: integra-mainnet-pm2
     restart: unless-stopped
     networks:
       - explorer
@@ -285,7 +281,7 @@ services:
       DEFAULT_POLLING_INTERVAL: "2000"
       NODE_ENV: production
     healthcheck:
-      test: ["CMD-SHELL", "pm2 pid integra-testnet 2>/dev/null | tail -1 | grep -qE '^[1-9][0-9]*$'"]
+      test: ["CMD-SHELL", "pm2 pid integra-mainnet 2>/dev/null | tail -1 | grep -qE '^[1-9][0-9]*$'"]
       interval: 60s
       timeout: 10s
       retries: 3
@@ -298,18 +294,19 @@ services:
       args:
         NEXT_PUBLIC_API_URL: /api
         NEXT_PUBLIC_PUSHER_KEY: ${SOKETI_KEY}
-        NEXT_PUBLIC_PUSHER_HOST: "testnet.explorer.integralayer.com"
-        NEXT_PUBLIC_WORKSPACE_ID: "Integra Testnet"
-        NEXT_PUBLIC_COSMOS_API_URL: "https://testnet.integralayer.com/api"
-        NEXT_PUBLIC_REOWN_PROJECT_ID: "756784dbf1dab05a3b5395d45c07c0e7"
-        NEXT_PUBLIC_FIREBASE_USER_ID: "0d4a8564-79e2-4797-9c51-4207514197a9"
-        NEXT_PUBLIC_SENTRY_DSN: ${SENTRY_DSN:-}
-    container_name: integra-explorer-frontend
+        NEXT_PUBLIC_PUSHER_HOST: "scan.integralayer.com"
+        NEXT_PUBLIC_NETWORK_MODE: mainnet
+        NEXT_PUBLIC_WORKSPACE_ID: "Integra Mainnet"
+        NEXT_PUBLIC_COSMOS_API_URL: "https://mainnet.integralayer.com/api"
+        NEXT_PUBLIC_SITE_URL: "https://scan.integralayer.com"
+        NEXT_PUBLIC_REOWN_PROJECT_ID: ${REOWN_PROJECT_ID}
+        NEXT_PUBLIC_FIREBASE_USER_ID: ${FIREBASE_USER_ID}
+    container_name: integra-mainnet-frontend
     restart: unless-stopped
     networks:
       - explorer
     ports:
-      - "3200:3000"
+      - "3201:3000"
     depends_on:
       backend:
         condition: service_started

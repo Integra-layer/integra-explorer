@@ -1,70 +1,18 @@
-"use client";
+import { QueryClient, dehydrate, HydrationBoundary } from "@tanstack/react-query";
+import { getBlocks } from "@/lib/api/blocks";
+import BlocksClient from "./_client";
 
-import { useSearchParams, useRouter } from "next/navigation";
-import { Suspense } from "react";
-import { Box } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
-import { PaginationControls } from "@/components/ui/pagination-controls";
-import { PageTransition } from "@/components/effects";
-import { BlocksTable } from "@/components/blocks/blocks-table";
-import { useBlocks } from "@/lib/hooks/use-blocks";
-
-const ITEMS_PER_PAGE = 25;
-
-function BlocksPageContent() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const page = Number(searchParams.get("page")) || 1;
-
-  const { data, isLoading, error } = useBlocks(page, ITEMS_PER_PAGE);
-  const total = data?.total ?? 0;
-  const totalPages = Math.max(1, Math.ceil(total / ITEMS_PER_PAGE));
-
-  function goToPage(newPage: number) {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", String(newPage));
-    router.push(`/blocks?${params.toString()}`);
-  }
-
+export default async function BlocksPage() {
+  const queryClient = new QueryClient();
+  await Promise.allSettled([
+    queryClient.prefetchQuery({
+      queryKey: ["blocks", 1, 25],
+      queryFn: () => getBlocks({ page: 1, itemsPerPage: 25 }),
+    }),
+  ]);
   return (
-    <PageTransition>
-      <section className="container mx-auto space-y-6 px-4 py-8">
-        {/* Page heading */}
-        <div className="flex items-center gap-3">
-          <Box className="size-6 text-integra-brand" />
-          <h1 className="text-2xl font-bold tracking-tight">Blocks</h1>
-          {total > 0 && (
-            <Badge variant="secondary" className="font-mono">
-              {total.toLocaleString()}
-            </Badge>
-          )}
-        </div>
-
-        {/* Error state */}
-        {error && (
-          <div className="rounded-lg border border-destructive/50 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-            Failed to load blocks. Please try again.
-          </div>
-        )}
-
-        {/* Table */}
-        <BlocksTable blocks={data?.items ?? []} isLoading={isLoading} />
-
-        {/* Pagination controls */}
-        <PaginationControls
-          page={page}
-          totalPages={totalPages}
-          onPageChange={goToPage}
-        />
-      </section>
-    </PageTransition>
-  );
-}
-
-export default function BlocksPage() {
-  return (
-    <Suspense>
-      <BlocksPageContent />
-    </Suspense>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+      <BlocksClient />
+    </HydrationBoundary>
   );
 }

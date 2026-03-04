@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import Link from "next/link";
+import * as Sentry from "@sentry/nextjs";
 
 export default function Error({
   error,
@@ -11,12 +12,7 @@ export default function Error({
   reset: () => void;
 }) {
   useEffect(() => {
-    // TODO: Integrate Sentry or similar error tracking service for production monitoring
-    console.error("[ErrorBoundary]", {
-      message: error.message,
-      digest: error.digest,
-      stack: error.stack,
-    });
+    Sentry.captureException(error);
   }, [error]);
 
   return (

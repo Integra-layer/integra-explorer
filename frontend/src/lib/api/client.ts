@@ -22,7 +22,10 @@ let resolvedWorkspaceName: string | null =
 
 // The firebaseUserId is required by every Ethernal data endpoint.
 // Resolved from the explorer config's admin.firebaseUserId field.
-let resolvedFirebaseUserId: string | null = null;
+// Can also be set via environment variable so it's available at module init
+// (avoids race condition where hooks fire before async config resolution).
+let resolvedFirebaseUserId: string | null =
+  process.env.NEXT_PUBLIC_FIREBASE_USER_ID || null;
 
 export class ApiError extends Error {
   constructor(
