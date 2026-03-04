@@ -10,8 +10,8 @@ const globalPusher = globalThis as unknown as {
 };
 let pusherInstance: Pusher | null = globalPusher.__pusherInstance ?? null;
 
-// Ethernal workspace DB id (single-workspace explorer)
-const WORKSPACE_ID = "1";
+// Ethernal workspace DB id — configurable via env, defaults to "1"
+const WORKSPACE_ID = process.env.NEXT_PUBLIC_ETHERNAL_WORKSPACE_DB_ID ?? "1";
 
 export function getPusher(): Pusher | null {
   if (typeof window === "undefined") return null;

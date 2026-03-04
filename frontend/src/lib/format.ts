@@ -43,12 +43,17 @@ export function formatIRL(weiValue: string): string {
   if (!weiValue || weiValue === "0") return "0 IRL";
   try {
     const wei = BigInt(weiValue);
-    const whole = wei / BigInt(1e18);
-    const remainder = wei % BigInt(1e18);
-    const decimal = Number(remainder) / 1e18;
-    const num = Number(whole) + decimal;
-    if (num < 0.001) return "<0.001 IRL";
-    return `${num.toLocaleString(undefined, { maximumFractionDigits: 4 })} IRL`;
+    const divisor = BigInt("1000000000000000000"); // 10^18
+    const whole = wei / divisor;
+    const remainder = wei % divisor;
+    const fracStr = remainder
+      .toString()
+      .padStart(18, "0")
+      .slice(0, 4)
+      .replace(/0+$/, "");
+    if (whole === BigInt(0) && !fracStr) return "<0.001 IRL";
+    const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return fracStr ? `${wholeStr}.${fracStr} IRL` : `${wholeStr} IRL`;
   } catch {
     return "0 IRL";
   }
@@ -81,16 +86,17 @@ export function formatTokenAmount(
   const divisor = BigInt(10 ** decimals);
   const whole = raw / divisor;
   const frac = raw % divisor;
+  const wholeStr = whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   if (frac === BigInt(0)) {
-    return `${whole.toLocaleString()} ${symbol}`;
+    return `${wholeStr} ${symbol}`;
   }
   const fracStr = frac
     .toString()
     .padStart(decimals, "0")
     .slice(0, 4)
     .replace(/0+$/, "");
-  if (!fracStr) return `${whole.toLocaleString()} ${symbol}`;
-  return `${whole.toLocaleString()}.${fracStr} ${symbol}`;
+  if (!fracStr) return `${wholeStr} ${symbol}`;
+  return `${wholeStr}.${fracStr} ${symbol}`;
 }
 
 // ERC-20 transfer(address,uint256) function selector
@@ -199,10 +205,8 @@ export function formatStakedIRL(airlAmount: string): string {
   if (!airlAmount || airlAmount === "0") return "0";
   try {
     const wei = BigInt(airlAmount);
-    const whole = wei / BigInt(1e18);
-    return Number(whole).toLocaleString(undefined, {
-      maximumFractionDigits: 0,
-    });
+    const whole = wei / BigInt("1000000000000000000"); // 10^18
+    return whole.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   } catch {
     return "0";
   }

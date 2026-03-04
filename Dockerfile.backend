@@ -29,8 +29,13 @@ COPY run/scheduler.js .
 COPY run/instrument.js .
 
 # Install sequelize-cli globally for migrations
-RUN npm install -g sequelize-cli && \
-    npm install -g nodemon
+RUN npm install -g sequelize-cli
+
+# Run as non-root user
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 appuser && \
+    chown -R appuser:nodejs /app
+USER appuser
 
 EXPOSE 8888
-CMD ["node", "index.js"] 
+CMD ["node", "index.js"]

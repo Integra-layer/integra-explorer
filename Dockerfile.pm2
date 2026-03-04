@@ -14,4 +14,8 @@ CMD ["yarn", "run", "start:dev"]
 
 FROM base AS prod
 RUN yarn --prod
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 appuser && \
+    chown -R appuser:nodejs /app
+USER appuser
 CMD ["yarn", "run", "start"]

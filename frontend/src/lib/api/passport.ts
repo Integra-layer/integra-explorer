@@ -361,24 +361,35 @@ const MOCK_PASSPORTS: AssetPassport[] = [MOCK_PASSPORT, MOCK_PASSPORT_PRIVATE];
 export async function getPassports(): Promise<AssetPassport[]> {
   try {
     const res = await fetch(`${PASSPORT_API}/assets`);
-    if (!res.ok) return MOCK_PASSPORTS;
+    if (!res.ok) {
+      if (process.env.NODE_ENV === "development") return MOCK_PASSPORTS;
+      return [];
+    }
     return res.json();
   } catch {
-    // API not connected — return mock data for development
-    return MOCK_PASSPORTS;
+    // API not connected — return mock data only in development
+    if (process.env.NODE_ENV === "development") return MOCK_PASSPORTS;
+    return [];
   }
 }
 
 export async function getPassport(id: string): Promise<AssetPassport | null> {
+  // Validate id to prevent path traversal
+  if (!/^[a-zA-Z0-9_-]+$/.test(id)) return null;
   try {
-    const res = await fetch(`${PASSPORT_API}/assets/${id}`);
+    const res = await fetch(`${PASSPORT_API}/assets/${encodeURIComponent(id)}`);
     if (!res.ok) {
-      // Fallback to mock data
-      return MOCK_PASSPORTS.find((p) => p.id === id) ?? null;
+      if (process.env.NODE_ENV === "development") {
+        return MOCK_PASSPORTS.find((p) => p.id === id) ?? null;
+      }
+      return null;
     }
     return res.json();
   } catch {
-    return MOCK_PASSPORTS.find((p) => p.id === id) ?? null;
+    if (process.env.NODE_ENV === "development") {
+      return MOCK_PASSPORTS.find((p) => p.id === id) ?? null;
+    }
+    return null;
   }
 }
 

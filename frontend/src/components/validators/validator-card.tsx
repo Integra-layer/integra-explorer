@@ -39,9 +39,11 @@ export function ValidatorCard({ validator, totalBonded }: ValidatorCardProps) {
   const status = getStatusInfo(validator);
   const StatusIcon = status.icon;
 
+  const totalBondedBig = BigInt(totalBonded || "0");
+  const tokensBig = BigInt(validator.tokens || "0");
   const votingPower =
-    Number(totalBonded) > 0
-      ? (Number(validator.tokens) / Number(totalBonded)) * 100
+    totalBondedBig > BigInt(0)
+      ? Number((tokensBig * BigInt(10000)) / totalBondedBig) / 100
       : 0;
 
   return (

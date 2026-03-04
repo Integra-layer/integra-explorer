@@ -54,7 +54,8 @@ function buildUrl(
     url.searchParams.set("workspace", resolvedWorkspaceName);
   }
 
-  // Inject firebaseUserId if we have one and it is not already provided
+  // firebaseUserId is primarily sent as a header (see fetchApi),
+  // but kept as query param for backwards compatibility with unpatched backends
   if (resolvedFirebaseUserId && !params?.firebaseUserId) {
     url.searchParams.set("firebaseUserId", resolvedFirebaseUserId);
   }
@@ -82,12 +83,15 @@ export async function fetchApi<T>(
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS);
 
+  const headers: Record<string, string> = { Accept: "application/json" };
+  if (resolvedFirebaseUserId) {
+    headers["X-Firebase-User-Id"] = resolvedFirebaseUserId;
+  }
+
   let res: Response;
   try {
     res = await fetch(url, {
-      headers: {
-        Accept: "application/json",
-      },
+      headers,
       signal: controller.signal,
     });
   } catch (err) {

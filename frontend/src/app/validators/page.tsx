@@ -30,15 +30,23 @@ function StakingGovernanceContent() {
   // Sort validators by tokens (highest first)
   const sortedValidators = useMemo(() => {
     if (!validators) return [];
-    return [...validators].sort((a, b) => Number(b.tokens) - Number(a.tokens));
+    return [...validators].sort((a, b) => {
+      const bTokens = BigInt(b.tokens || "0");
+      const aTokens = BigInt(a.tokens || "0");
+      return bTokens > aTokens ? 1 : bTokens < aTokens ? -1 : 0;
+    });
   }, [validators]);
 
   const totalBonded = pool?.bonded_tokens || "0";
   const totalNotBonded = pool?.not_bonded_tokens || "0";
-  const totalSupply = Number(totalBonded) + Number(totalNotBonded);
+  const totalBondedBig = BigInt(totalBonded || "0");
+  const totalNotBondedBig = BigInt(totalNotBonded || "0");
+  const totalSupplyBig = totalBondedBig + totalNotBondedBig;
   const bondedRatio =
-    totalSupply > 0 ? (Number(totalBonded) / totalSupply) * 100 : 0;
-  const totalStakedIRL = Number(totalBonded) / 1e18;
+    totalSupplyBig > BigInt(0)
+      ? Number((totalBondedBig * BigInt(10000)) / totalSupplyBig) / 100
+      : 0;
+  const totalStakedIRL = Number(totalBondedBig / BigInt("1000000000000000000"));
   const activeCount = sortedValidators.filter(
     (v) => v.status === "BOND_STATUS_BONDED",
   ).length;
