@@ -77,6 +77,7 @@ services:
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
       - ../run/lib/firebase.js:/app/lib/firebase.js:ro
+      - ../run/constants:/app/constants:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
       - ../run/app.js:/app/app.js:ro
@@ -140,6 +141,7 @@ services:
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
       - ../run/lib/firebase.js:/app/lib/firebase.js:ro
+      - ../run/constants:/app/constants:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
@@ -187,6 +189,7 @@ services:
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
       - ../run/lib/firebase.js:/app/lib/firebase.js:ro
+      - ../run/constants:/app/constants:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
@@ -234,6 +237,7 @@ services:
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
       - ../run/lib/firebase.js:/app/lib/firebase.js:ro
+      - ../run/constants:/app/constants:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
