@@ -163,8 +163,7 @@ export interface SyncStatus {
 
 export interface PaginatedResponse<T> {
   items: T[];
-  total: number;
-  count: number;
+  total?: number;
 }
 
 // --- Search ---

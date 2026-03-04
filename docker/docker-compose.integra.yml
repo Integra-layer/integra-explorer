@@ -76,6 +76,7 @@ services:
       - "8890:8888"
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
       - ../run/app.js:/app/app.js:ro
@@ -138,6 +139,7 @@ services:
     command: node workers/highPriority.js
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
@@ -184,6 +186,7 @@ services:
     command: node workers/mediumPriority.js
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
@@ -230,6 +233,7 @@ services:
     command: node workers/lowPriority.js
     volumes:
       - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
       - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
       - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
