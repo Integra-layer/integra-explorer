@@ -74,6 +74,10 @@ services:
       - explorer
     ports:
       - "8890:8888"
+    volumes:
+      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
+      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -131,6 +135,10 @@ services:
     networks:
       - explorer
     command: node workers/highPriority.js
+    volumes:
+      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
+      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -173,6 +181,10 @@ services:
     networks:
       - explorer
     command: node workers/mediumPriority.js
+    volumes:
+      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
+      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -215,6 +227,10 @@ services:
     networks:
       - explorer
     command: node workers/lowPriority.js
+    volumes:
+      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
+      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
+      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy
