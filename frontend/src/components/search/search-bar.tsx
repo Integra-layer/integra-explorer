@@ -2,7 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Search } from "lucide-react";
+import { Search, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -101,12 +101,20 @@ function HeroSearch({ className, onOpenCommand }: InternalSearchProps) {
         {query.trim() && detectedType !== "unknown" && (
           <Badge
             variant="secondary"
-            className="mr-3 shrink-0 text-[10px] font-semibold"
+            className="mr-1.5 shrink-0 text-[10px] font-semibold"
           >
             {searchTypeLabels[detectedType]}
           </Badge>
         )}
-        {!query.trim() && (
+        {query.trim() ? (
+          <button
+            type="submit"
+            className="mr-2 flex size-8 shrink-0 items-center justify-center rounded-lg bg-integra-brand text-white transition-colors hover:bg-integra-brand/80 active:scale-95 sm:size-9"
+            aria-label="Search"
+          >
+            <ArrowRight className="size-4 sm:size-5" />
+          </button>
+        ) : (
           <button
             type="button"
             onClick={onOpenCommand}
