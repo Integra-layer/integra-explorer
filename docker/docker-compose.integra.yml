@@ -67,20 +67,16 @@ services:
       SOKETI_USE_TLS: ""
 
   backend:
-    image: antoinedc44/ethernal-backend:latest
+    build:
+      context: ..
+      dockerfile: Dockerfile.backend
+    image: integra-explorer-backend:latest
     container_name: integra-explorer-backend
     restart: unless-stopped
     networks:
       - explorer
     ports:
       - "8890:8888"
-    volumes:
-      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
-      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
-      - ../run/constants:/app/constants:ro
-      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
-      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
-      - ../run/app.js:/app/app.js:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -132,18 +128,12 @@ services:
       BULLBOARD_PASSWORD: ${BULLBOARD_PASSWORD}
 
   high_priority_worker:
-    image: antoinedc44/ethernal-backend:latest
+    image: integra-explorer-backend:latest
     container_name: integra-explorer-worker-high
     restart: unless-stopped
     networks:
       - explorer
     command: node workers/highPriority.js
-    volumes:
-      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
-      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
-      - ../run/constants:/app/constants:ro
-      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
-      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -180,18 +170,12 @@ services:
       PM2_SECRET: ${PM2_SECRET}
 
   medium_priority_worker:
-    image: antoinedc44/ethernal-backend:latest
+    image: integra-explorer-backend:latest
     container_name: integra-explorer-worker-medium
     restart: unless-stopped
     networks:
       - explorer
     command: node workers/mediumPriority.js
-    volumes:
-      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
-      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
-      - ../run/constants:/app/constants:ro
-      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
-      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -228,18 +212,12 @@ services:
       PM2_SECRET: ${PM2_SECRET}
 
   low_priority_worker:
-    image: antoinedc44/ethernal-backend:latest
+    image: integra-explorer-backend:latest
     container_name: integra-explorer-worker-low
     restart: unless-stopped
     networks:
       - explorer
     command: node workers/lowPriority.js
-    volumes:
-      - ../run/lib/crypto.js:/app/lib/crypto.js:ro
-      - ../run/lib/firebase.js:/app/lib/firebase.js:ro
-      - ../run/constants:/app/constants:ro
-      - ../run/middlewares/auth.js:/app/middlewares/auth.js:ro
-      - ../run/middlewares/workspaceAuth.js:/app/middlewares/workspaceAuth.js:ro
     depends_on:
       postgres:
         condition: service_healthy

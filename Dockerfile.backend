@@ -38,4 +38,4 @@ RUN addgroup --system --gid 1001 nodejs && \
 USER appuser
 
 EXPOSE 8888
-CMD ["node", "index.js"]
+CMD ["sh", "-c", "sequelize-cli db:migrate && node index.js"]
