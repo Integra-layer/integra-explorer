@@ -4,14 +4,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "nodemon index.js",
+    "start": "nodemon -r dotenv/config index.js",
     "test": "jest",
     "test:update": "jest -u",
     "test:handles": "jest  --detectOpenHandles",
     "test:coverage": "jest --coverage",
-    "worker:high": "nodemon ./workers/highPriority.js",
-    "worker:medium": "nodemon ./workers/mediumPriority.js",
-    "worker:low": "nodemon ./workers/lowPriority.js"
+    "worker:high": "nodemon -r dotenv/config ./workers/highPriority.js",
+    "worker:medium": "nodemon -r dotenv/config ./workers/mediumPriority.js",
+    "worker:low": "nodemon -r dotenv/config ./workers/lowPriority.js",
+    "db:migrate": "node -r dotenv/config ./node_modules/.bin/sequelize db:migrate",
+    "db:seed": "node -r dotenv/config ./node_modules/.bin/sequelize db:seed:all"
   },
   "engines": {
     "node": ">= 16.0.0"
@@ -32,6 +34,7 @@
     "bullmq": "^5.1.0",
     "cls-hooked": "^4.2.2",
     "cors": "^2.8.5",
+    "dotenv": "^17.3.1",
     "ethers": "^5.6.4",
     "express": "^4.17.3",
     "express-rate-limit": "^6.7.0",
@@ -67,6 +70,7 @@
   },
   "devDependencies": {
     "jest": "^29.2.1",
+    "nodemon": "^3.1.14",
     "sequelize-cli": "^6.5.2",
     "supertest": "^6.2.3"
   },

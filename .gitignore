@@ -15,7 +15,8 @@ ethernal-95a14-19f78a7e26cc.json
 run/logfile
 run/seeders/private/
 run/dump.rdb
-docs/
+docs/*
+!docs/LOCAL_DEVELOPMENT.md
 screenshots/
 
 functions/report*
@@ -25,6 +26,9 @@ qn-marketplace-cli
 
 # local env files
 .env.*
+!.env.example
+!run/.env.example
+!pm2-server/.env.example
 functions/.runtimeconfig.json
 /ganache-db
 
@@ -72,3 +76,5 @@ ethernal-95a14-19f78a7e26cc.json
 docker/.env.integra
 !docker/.env.integra.example
 .env.integra
+
+.env

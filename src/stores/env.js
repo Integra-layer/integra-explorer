@@ -55,6 +55,12 @@ export const useEnvStore = defineStore('env', {
                 name: 'Arbitrum',
                 token: 'Ether',
                 scanner: 'Arbiscan'
+            },
+            anvil: {
+                slug: 'anvil',
+                name: 'Anvil (Local)',
+                token: 'ETH',
+                scanner: 'Etherscan'
             }
         }
     }),
